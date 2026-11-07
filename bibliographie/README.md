@@ -2,6 +2,7 @@
 
 Les ouvrages ci-dessous peuvent servir de références à l'enseignant et aux étudiants selon la disponibilité à la bibliothèque :
 
+- https://1drv.ms/f/c/96b64801aa91c5f7/IgAeyOl6SXpjQqUMtOPB-HCXAfqw7rGSz6T-iPxWjCMJWtQ?e=81Va71
 - Jean-Marie Monier, *Analyse MPSI*, Dunod.
 - Jean-Marie Monier, *Analyse MP/MP\**, Dunod.
 - Walter Rudin, *Principes d'analyse mathématique*.
@@ -9,4 +10,4 @@ Les ouvrages ci-dessous peuvent servir de références à l'enseignant et aux é
 - Erwin Kreyszig, *Advanced Engineering Mathematics*.
 - James R. Holton et Gregory J. Hakim, *An Introduction to Dynamic Meteorology* (applications).
 
-**Important :** ces ouvrages ne sont pas tous librement redistribuables. Ne déposer que vos propres documents, des ressources sous licence adaptée ou des liens vers des éditions légalement accessibles.
+**Important :** ces ouvrages ne sont pas tous librement redistribuables.
