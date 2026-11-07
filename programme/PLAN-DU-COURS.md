@@ -5,9 +5,8 @@
 **Module :** Analyse 3 (MTH 1101)  
 **Crédits :** 3  
 **Année universitaire :** 2026–2027  
-**Enseignant :** M. Bakary TRAORE  
-**Ressources :** [Site pédagogique du cours](https://btraore850.github.io/cours-analyse-l1-meteo/)  
-**Document de référence :** [Présentation du programme — source LaTeX](Pr%C3%A9sentation%20du%20programme.tex)
+**Enseignant :** M. Bakary TRAORE, MSc.  
+**Ressources :** [Site pédagogique du cours](https://btraore850.github.io/cours-analyse-l1-meteo/)
 
 > **Statut :** ce plan reprend la présentation Beamer « Présentation du programme.tex », déposée dans le même dossier. Les volumes, le calendrier et les pondérations sont **proposés ou indicatifs**, sous réserve de validation par les instances pédagogiques compétentes.
 
