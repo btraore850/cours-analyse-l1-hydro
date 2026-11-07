@@ -1,6 +1,6 @@
 # Bibliographie indicative
 
-Les ouvrages ci-dessous peuvent servir de références à l'enseignant et aux étudiants selon la disponibilité à la bibliothèque :
+Les ouvrages ci-dessous peuvent servir de références aux étudiants selon la disponibilité à la bibliothèque :
 
 - https://1drv.ms/f/c/96b64801aa91c5f7/IgAeyOl6SXpjQqUMtOPB-HCXAfqw7rGSz6T-iPxWjCMJWtQ?e=81Va71
 - Jean-Marie Monier, *Analyse MPSI*, Dunod.
