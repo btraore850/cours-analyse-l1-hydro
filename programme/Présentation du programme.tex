@@ -1,0 +1,647 @@
+% =====================================================================
+% ANALYSE 3 — MTH 1101 — Licence en météorologie
+% Présentation d'ouverture du cours (version Beamer modifiable)
+% Source : « PROGRAMME DÉTAILLÉ DU COURS D’ANALYSE 3 » (fichier fourni)
+% Compilation : pdflatex Presentation_Analyse_3_Meteo_UNZ.tex
+% Placer logo_unz_officiel.png et logo_unz_sigle.png dans le même dossier que ce .tex.
+% Avec TeXstudio : ouvrir ce .tex et appuyer sur F5.
+% Deux compilations conseillées pour mettre à jour le compteur de pages.
+% =====================================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathreplacing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[most]{tcolorbox}
+
+% Palette inspirée de l'atmosphère : nuit, bleu océan, turquoise, lumière
+\definecolor{nuit}{HTML}{10283F}
+\definecolor{bleu}{HTML}{176D8E}
+\definecolor{turquoise}{HTML}{118F86}
+\definecolor{soleil}{HTML}{EDAA47}
+\definecolor{encre}{HTML}{25384B}
+\definecolor{gris}{HTML}{637588}
+\definecolor{pale}{HTML}{EFF5F8}
+\definecolor{palevert}{HTML}{EAF6F3}
+\definecolor{paleorange}{HTML}{FFF6E7}
+\definecolor{blanc}{HTML}{FFFFFF}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{normal text}{fg=encre,bg=blanc}
+\setbeamercolor{frametitle}{fg=nuit,bg=blanc}
+\setbeamercolor{structure}{fg=bleu}
+\setbeamercolor{itemize item}{fg=turquoise}
+\setbeamercolor{itemize subitem}{fg=bleu}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{footline}{size=\scriptsize}
+\setlength{\parskip}{0pt}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{frametitle}{%
+  \vspace{0.23cm}\hspace{0.48cm}\insertframetitle\par
+  \vspace{0.06cm}\hspace{0.50cm}{\color{turquoise}\rule{0.87\paperwidth}{1.1pt}}\vspace{0.16cm}
+}
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox{%
+   \begin{beamercolorbox}[wd=.79\paperwidth,ht=0.42cm,dp=.09cm,leftskip=.38cm]{normal text}%
+     \raisebox{-0.015cm}{\includegraphics[height=0.33cm]{logo_unz_sigle.png}}\hspace{0.20cm}%
+     {\color{gris}\scriptsize Université de N'Zérékoré \quad\textbullet MTH 1101 -- Analyse \quad| \hspace{0.1cm} M. Bakary TRAORE (btraore850@gmail.com)}
+   \end{beamercolorbox}%
+   \begin{beamercolorbox}[wd=.21\paperwidth,ht=0.42cm,dp=.09cm,rightskip=.50cm plus1fil]{normal text}%
+    \hfill {\color{bleu}\insertframenumber\,/\,\inserttotalframenumber}
+   \end{beamercolorbox}}
+}
+
+\tcbset{enhanced,boxrule=0pt,sharp corners=south,arc=2mm,
+  left=3mm,right=3mm,top=0.95mm,bottom=0.95mm}
+\newcommand{\meta}[1]{{\small\bfseries\color{turquoise} #1}\par\vspace{0.07cm}}
+\newcommand{\emphase}[1]{{\color{bleu}\bfseries #1}}
+\newcommand{\formule}[2]{\begin{tcolorbox}[colback=pale,colframe=pale]
+  {\small\bfseries\color{bleu}#1}\par\vspace{0.13cm}
+  \centering {\large\color{nuit}$\displaystyle #2$}\par
+\end{tcolorbox}}
+\newcommand{\takeaway}[1]{\vfill\begin{tcolorbox}[colback=palevert,colframe=palevert]
+{\small\color{encre}\textbf{À retenir —} #1}\end{tcolorbox}}
+\newcommand{\smalllist}{\setlength{\itemsep}{0.04cm}\setlength{\parskip}{0pt}}
+
+% Identité institutionnelle : ajuster ces informations si nécessaire.
+\title[Analyse 3]{Analyse 3}
+\subtitle{Présentation du programme avant le début du cours}
+\author{} % Nom de l'enseignant à compléter si souhaité
+\institute[UNZ]{Université de N'Zérékoré\\Licence en Météorologie -- MTH 1101}
+\date{Année universitaire 2026--2027}
+
+\begin{document}
+
+
+% 01 -------------------------------------------------------------------
+\begin{frame}[plain]
+	\begin{tikzpicture}[remember picture,overlay]
+		% Fond bleu plein écran
+		\fill[black!75] (current page.south west) rectangle (current page.north east);
+		
+		% Décor léger optionnel
+		\draw[white,opacity=.10,line width=0.8pt]
+		([xshift=4cm,yshift=1.5cm]current page.south west) circle (2.0cm);
+		\draw[white,opacity=.10,line width=0.8pt]
+		([xshift=10.5cm,yshift=4.5cm]current page.south west) circle (2.8cm);
+		\draw[white,opacity=.08,line width=0.8pt]
+		([xshift=7.5cm,yshift=3cm]current page.south west) circle (3.5cm);
+	\end{tikzpicture}
+	
+	\vfill
+	\begin{center}
+		{\color{white}\Large\bfseries UNIVERSITÉ DE N'ZÉRÉKORÉ\par}
+		\vspace{0.3cm}
+		
+		{\color{white!85}\large\bfseries LICENCE EN MÉTÉOROLOGIE \quad -- \quad MTH 1101\par}
+		\vspace{0.5cm}
+		
+		{\color{white}\fontsize{30}{35}\selectfont\bfseries ANALYSE\par}
+		\vspace{0.5cm}
+		
+		{\color{white!95}\fontsize{20}{24}\selectfont
+			Comprendre les outils mathématiques\\
+			pour modéliser l’atmosphère\par}
+		\vspace{0.5cm}
+		
+		{\color{soleil}\Large\bfseries Présentation du programme\par}
+		\vspace{0.3cm}
+		
+		{\color{white!85}\normalsize
+			Lien d'accès aux ressources du cours : \\ {\color{blue!60}\url{https://btraore850.github.io/cours-analyse-l1-meteo/}\par}}
+		\vspace{0.3cm}
+		
+		{\color{white!75}\large Année universitaire 2026--2027\par}
+	\end{center}
+	\vfill
+\end{frame}
+
+% 02 -------------------------------------------------------------------
+\begin{frame}{Une question pour commencer}
+\meta{DE LA MESURE À LA COMPRÉHENSION}
+\begin{center}
+{\Large\bfseries Comment décrire mathématiquement un phénomène météorologique ?}
+\end{center}
+\vspace{0.28cm}
+\begin{columns}[T,onlytextwidth]
+\column{.31\textwidth}
+\begin{tcolorbox}[colback=pale,colframe=pale,height=3.02cm]
+\centering {\color{bleu}\large\bfseries 01. Observer}\par\vspace{0.33cm}
+\small Température, pression et précipitations varient dans le temps.
+\vfill
+$T(t),\; p(t),\; I(t)$
+\end{tcolorbox}
+\column{.31\textwidth}
+\begin{tcolorbox}[colback=palevert,colframe=palevert,height=3.02cm]
+\centering {\color{turquoise}\large\bfseries 02. Analyser}\par\vspace{0.33cm}
+\small Calculer une variation, un cumul, une limite ou une composante périodique.
+\vfill
+$\dfrac{dT}{dt},\;\int I(t)\,dt$
+\end{tcolorbox}
+\column{.31\textwidth}
+\begin{tcolorbox}[colback=paleorange,colframe=paleorange,height=3.02cm]
+\centering {\color{nuit}\large\bfseries 03. Modéliser}\par\vspace{0.33cm}
+\small Formuler une évolution par une équation différentielle ou un bilan.
+\vfill
+$\dfrac{dQ}{dt}=F_{\rm in}-F_{\rm out}+S$
+\end{tcolorbox}
+\end{columns}
+\vspace{0.16cm}
+\begin{center}{\small\color{gris}L'Analyse relie ces trois démarches.}\end{center}
+\end{frame}
+
+% 03 -------------------------------------------------------------------
+\begin{frame}{La carte d'identité du cours}
+\meta{ORGANISATION GÉNÉRALE PRÉVUE}
+\begin{columns}[T,onlytextwidth]
+\column{.32\textwidth}
+\begin{tcolorbox}[colback=nuit,colframe=nuit,height=2.05cm]
+\centering {\color{white}\fontsize{28}{30}\selectfont\bfseries 3}\par
+{\color{white!85}\large crédits}\par\vspace{0.08cm}
+{\color{white!70}\scriptsize MTH 1101}
+\end{tcolorbox}
+\column{.32\textwidth}
+\begin{tcolorbox}[colback=bleu,colframe=bleu,height=2.05cm]
+\centering {\color{white}\fontsize{28}{30}\selectfont\bfseries 45 h}\par
+{\color{white!85}\large volume proposé}\par\vspace{0.08cm}
+{\color{white!70}\scriptsize CM + TD + TP}
+\end{tcolorbox}
+\column{.32\textwidth}
+\begin{tcolorbox}[colback=turquoise,colframe=turquoise,height=2.05cm]
+\centering {\color{white}\fontsize{28}{30}\selectfont\bfseries 15}\par
+{\color{white!85}\large semaines}\par\vspace{0.08cm}
+{\color{white!70}\scriptsize progression prévue}
+\end{tcolorbox}
+\end{columns}
+\vspace{0.25cm}
+\begin{center}
+\begin{tikzpicture}[x=0.095\textwidth,y=0.48cm]
+\fill[bleu] (0,0) rectangle (5.56,1);
+\fill[turquoise] (5.56,0) rectangle (8.89,1);
+\fill[soleil] (8.89,0) rectangle (10,1);
+\node[white,font=\small\bfseries] at (2.78,.5) {CM : 25 h};
+\node[white,font=\small\bfseries] at (7.22,.5) {TD : 15 h};
+\node[nuit,font=\scriptsize\bfseries] at (9.44,.5) {TP : 5 h};
+\end{tikzpicture}
+\end{center}
+\vspace{0.08cm}
+{\small\color{gris}\textbf{Public :} étudiants de Licence en Météorologie. \quad
+\textbf{Outils :} calculatrice scientifique, tableur, ordinateur.}
+\end{frame}
+
+% 04 -------------------------------------------------------------------
+\begin{frame}{Ce que vous saurez faire à l'issue du module}
+\meta{OBJECTIF GÉNÉRAL DU PROGRAMME}
+\begin{tcolorbox}[colback=pale,colframe=pale]
+Acquérir les connaissances fondamentales d'\emphase{analyse mathématique} pour comprendre et modéliser des phénomènes météorologiques, avec un accent sur les \emphase{suites, séries, modes de convergence et équations différentielles}.
+\end{tcolorbox}
+\vspace{0.12cm}
+\begin{columns}[T,onlytextwidth]
+\column{.48\textwidth}
+\begin{tcolorbox}[colback=palevert,colframe=palevert,height=1.24cm]
+{\bfseries\color{turquoise}01 \quad Étudier la convergence}\par
+\small Décider si une suite ou une série possède une limite.
+\end{tcolorbox}
+\begin{tcolorbox}[colback=pale,colframe=pale,height=1.24cm]
+{\bfseries\color{bleu}03 \quad Approcher des fonctions}\par
+\small Utiliser Taylor et les séries entières.
+\end{tcolorbox}
+\column{.48\textwidth}
+\begin{tcolorbox}[colback=pale,colframe=pale,height=1.24cm]
+{\bfseries\color{bleu}02 \quad Comparer les convergences}\par
+\small Distinguer convergence simple, uniforme et normale.
+\end{tcolorbox}
+\begin{tcolorbox}[colback=palevert,colframe=palevert,height=1.24cm]
+{\bfseries\color{turquoise}04 \quad Modéliser une évolution}\par
+\small Analyser cycles, équations différentielles et bilans.
+\end{tcolorbox}
+\end{columns}
+\end{frame}
+
+% 05 -------------------------------------------------------------------
+\begin{frame}{Notre parcours : 7 chapitres}
+\meta{DU CALCUL FONDAMENTAL AUX MODÈLES MÉTÉOROLOGIQUES}
+\renewcommand{\arraystretch}{.86}
+\begin{tcolorbox}[colback=pale,colframe=pale]
+\small
+\begin{tabular}{@{}>{\bfseries\color{bleu}}p{1.25cm} p{8.8cm} >{\bfseries\color{turquoise}}r@{}}
+01 & Rappels fondamentaux d'analyse & 6 h\\
+02 & Suites et séries numériques à termes positifs & 6 h\\
+03 & Séries numériques à termes quelconques & 3 h\\
+04 & Suites et séries de fonctions & 6 h\\
+05 & Séries entières et développements de Taylor & 6 h\\
+06 & Séries de Fourier & 6 h\\
+07 & Équations différentielles et lois de conservation & 9 h\\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.09cm}
+\begin{center}{\small\bfseries\color{nuit}42 h de chapitres \quad + \quad 3 h de révision et d'évaluation \quad = \quad 45 h}\end{center}
+\end{frame}
+
+% 06 -------------------------------------------------------------------
+\begin{frame}{Chapitre 1 — Rappels d'analyse}
+\meta{SEMAINES 1–2 \quad\textbullet\quad 6 HEURES}
+\begin{columns}[T,onlytextwidth]
+\column{.51\textwidth}
+{\bfseries\color{nuit}Nous réactivons les outils indispensables :}
+\begin{itemize}\smalllist
+\item Fonctions usuelles et leurs propriétés ;
+\item Limites, continuité, théorèmes classiques ;
+\item Dérivées, variations, extrema, Taylor ;
+\item Primitives, intégrales et méthodes de calcul.
+\end{itemize}
+\column{.46\textwidth}
+\formule{Variation de la température}{\frac{dT}{dt}}
+\formule{Cumul d'une intensité de pluie}{P=\int_{t_0}^{t_1}I(t)\,dt}
+\end{columns}
+\takeaway{La dérivée mesure une évolution instantanée ; l'intégrale permet d'accumuler une grandeur.}
+\end{frame}
+
+% 07 -------------------------------------------------------------------
+\begin{frame}{Chapitre 2 — Suites et séries positives}
+\meta{SEMAINES 3–4 \quad\textbullet\quad 6 HEURES}
+\begin{columns}[T,onlytextwidth]
+\column{.53\textwidth}
+{\bfseries\color{nuit}Les questions principales}
+\begin{itemize}\smalllist
+\item Une suite converge-t-elle ? (monotonie, bornes, Cauchy) ;
+\item Que devient une somme de plus en plus longue ?
+\item Quels critères utiliser pour les séries positives ?
+\item Comparaison, d'Alembert, Cauchy, critère intégral.
+\end{itemize}
+\column{.44\textwidth}
+\formule{Série numérique}{\sum_{n=1}^{\infty}u_n}
+\begin{tcolorbox}[colback=paleorange,colframe=paleorange]
+\small\bfseries\color{nuit}Repère classique : série de Riemann\\[3pt]
+\centering $\displaystyle\sum_{n=1}^\infty\frac1{n^p}$ converge pour $p>1$.
+\end{tcolorbox}
+\end{columns}
+\takeaway{Une somme infinie n'a pas nécessairement une valeur finie : il faut le démontrer.}
+\end{frame}
+
+% 08 -------------------------------------------------------------------
+\begin{frame}{Chapitre 3 — Séries à signes quelconques}
+\meta{SEMAINE 5 \quad\textbullet\quad 3 HEURES}
+\begin{columns}[T,onlytextwidth]
+\column{.53\textwidth}
+{\bfseries\color{nuit}Les distinctions à maîtriser}
+\begin{itemize}\smalllist
+\item Séries à signes positifs et négatifs ;
+\item Convergence absolue et conditionnelle ;
+\item Séries alternées et critère de Leibniz ;
+\item Estimation du reste d'une somme ;
+\item Effet des réarrangements (complément).
+\end{itemize}
+\column{.44\textwidth}
+\formule{Exemple d'une série alternée}{1-\frac12+\frac13-\frac14+\cdots}
+\begin{tcolorbox}[colback=palevert,colframe=palevert]
+\small Cette série converge, mais la série des valeurs absolues diverge.
+\end{tcolorbox}
+\end{columns}
+\takeaway{Converger absolument est une propriété plus forte que converger simplement.}
+\end{frame}
+
+% 09 -------------------------------------------------------------------
+\begin{frame}{Chapitre 4 — Suites et séries de fonctions}
+\meta{SEMAINES 6–7 \quad\textbullet\quad 6 HEURES}
+\begin{columns}[T,onlytextwidth]
+\column{.52\textwidth}
+{\bfseries\color{nuit}Nous comparerons :}
+\begin{itemize}\smalllist
+\item Convergence simple et uniforme ;
+\item Norme et critère de Cauchy uniformes ;
+\item Convergence normale pour les séries ;
+\item Critère de Weierstrass ;
+\item Passage à la limite et opérations sur les fonctions, sous hypothèses adaptées.
+\end{itemize}
+\column{.45\textwidth}
+\formule{Exemple à étudier}{f_n(x)=x^n,\quad x\in[0,1]}
+\begin{tcolorbox}[colback=paleorange,colframe=paleorange]
+\small $f_n(x)\to 0$ si $x<1$, mais $f_n(1)=1$ : la limite est discontinue en $1$.
+\end{tcolorbox}
+\end{columns}
+\takeaway{La convergence uniforme est essentielle pour certaines opérations de passage à la limite.}
+\end{frame}
+
+% 10 -------------------------------------------------------------------
+\begin{frame}{Chapitre 5 — Séries entières et Taylor}
+\meta{SEMAINES 8–9 \quad\textbullet\quad 6 HEURES}
+\begin{columns}[T,onlytextwidth]
+\column{.52\textwidth}
+{\bfseries\color{nuit}Les outils d'approximation}
+\begin{itemize}\smalllist
+\item Séries entières et rayon de convergence ;
+\item Lemme d'Abel, formule de Cauchy–Hadamard ;
+\item Dérivation et intégration terme à terme ;
+\item Formules de Taylor et Maclaurin ;
+\item Estimation de l'erreur d'approximation.
+\end{itemize}
+\column{.45\textwidth}
+\formule{Approcher une exponentielle}{e^x=1+x+\frac{x^2}{2!}+\cdots}
+\begin{tcolorbox}[colback=palevert,colframe=palevert]
+\small \textbf{En météorologie :} approximations locales et linéarisation de relations physiques.
+\end{tcolorbox}
+\end{columns}
+\takeaway{Un modèle complexe devient parfois plus simple grâce à une approximation contrôlée.}
+\end{frame}
+
+% 11 -------------------------------------------------------------------
+\begin{frame}{Chapitre 6 — Séries de Fourier}
+\meta{SEMAINES 10–11 \quad\textbullet\quad 6 HEURES}
+\begin{columns}[T,onlytextwidth]
+\column{.43\textwidth}
+{\bfseries\color{nuit}Décomposer des phénomènes périodiques}
+\begin{itemize}\smalllist
+\item Fonctions périodiques ;
+\item Coefficients et série de Fourier ;
+\item Conditions de convergence ;
+\item Introduction à Parseval ;
+\item Cycle journalier et saisonnier.
+\end{itemize}
+\column{.54\textwidth}
+\begin{tcolorbox}[colback=pale,colframe=pale]
+\centering\scriptsize\color{bleu}\bfseries Exemple schématique d'un cycle diurne\par
+\begin{tikzpicture}
+\begin{axis}[width=6.5cm,height=2.17cm,xmin=0,xmax=24,ymin=14,ymax=27,
+  axis lines=left,xtick={0,6,12,18,24},ytick={15,20,25},
+  xlabel={\scriptsize Heure},ylabel={\scriptsize $T$ (°C)},
+  tick label style={font=\scriptsize},label style={font=\scriptsize},
+  axis line style={gray!70},grid=major,grid style={pale}]
+\addplot[domain=0:24,samples=120,very thick,color=turquoise]
+  {20+4*cos(360*x/24-175)+1.0*cos(720*x/24+40)};
+\end{axis}
+\end{tikzpicture}
+\centering\scriptsize\color{gris}Illustration, pas des données observées.
+\end{tcolorbox}
+\end{columns}
+\takeaway{Une variation périodique peut se décomposer en composantes harmoniques.}
+\end{frame}
+
+% 12 -------------------------------------------------------------------
+\begin{frame}{Chapitre 7 — Équations différentielles et bilans}
+\meta{SEMAINES 12–14 \quad\textbullet\quad 9 HEURES}
+\begin{columns}[T,onlytextwidth]
+\column{.52\textwidth}
+{\bfseries\color{nuit}Passer de la formule à un modèle d'évolution}
+\begin{itemize}\smalllist
+\item Problèmes de Cauchy et conditions initiales ;
+\item Équations du premier ordre ;
+\item Équations linéaires du second ordre ;
+\item Refroidissement et réchauffement ;
+\item Conservation de masse et d'énergie.
+\end{itemize}
+\column{.45\textwidth}
+\formule{Structure d'un bilan}{\frac{dQ}{dt}=F_{\mathrm{in}}-F_{\mathrm{out}}+S}
+\begin{tcolorbox}[colback=paleorange,colframe=paleorange]
+\small $Q$ : quantité stockée ; $F_{\mathrm{in}}$ et $F_{\mathrm{out}}$ : flux ; $S$ : source nette.
+\end{tcolorbox}
+\end{columns}
+\takeaway{Une loi de conservation décrit l'évolution d'un stock sous l'effet des flux et des sources.}
+\end{frame}
+
+% 13 -------------------------------------------------------------------
+\begin{frame}{Trois applications météorologiques que nous aborderons}
+\meta{LES MATHÉMATIQUES AU SERVICE DE L'INTERPRÉTATION}
+\begin{tcolorbox}[colback=pale,colframe=pale]
+\begin{columns}[c,onlytextwidth]
+\column{.15\textwidth}\centering {\color{bleu}\fontsize{24}{26}\selectfont\bfseries 01}
+\column{.52\textwidth}{\bfseries Température et pression}\par\small Étudier une vitesse de variation instantanée.
+\column{.28\textwidth}\centering $\dfrac{dT}{dt}$\par\scriptsize Analyse différentielle
+\end{columns}
+\end{tcolorbox}
+\vspace{0.06cm}
+\begin{tcolorbox}[colback=palevert,colframe=palevert]
+\begin{columns}[c,onlytextwidth]
+\column{.15\textwidth}\centering {\color{turquoise}\fontsize{24}{26}\selectfont\bfseries 02}
+\column{.52\textwidth}{\bfseries Pluviométrie}\par\small Accumuler une intensité au cours du temps.
+\column{.28\textwidth}\centering $\displaystyle\int_{t_0}^{t_1}I(t)\,dt$\par\scriptsize Intégration
+\end{columns}
+\end{tcolorbox}
+\vspace{0.06cm}
+\begin{tcolorbox}[colback=paleorange,colframe=paleorange]
+\begin{columns}[c,onlytextwidth]
+\column{.15\textwidth}\centering {\color{soleil!70!nuit}\fontsize{24}{26}\selectfont\bfseries 03}
+\column{.52\textwidth}{\bfseries Cycle journalier de température}\par\small Décrire des variations périodiques.
+\column{.28\textwidth}\centering $\displaystyle\sum_k a_k\cos(k\omega t)$\par\scriptsize Fourier (illustration)
+\end{columns}
+\end{tcolorbox}
+\end{frame}
+
+% 14 -------------------------------------------------------------------
+\begin{frame}{Travaux dirigés et travaux pratiques}
+\meta{APPRENDRE EN RÉSOLVANT ET EN SIMULANT}
+\begin{columns}[T,onlytextwidth]
+\column{.49\textwidth}
+\begin{tcolorbox}[colback=pale,colframe=pale,height=4.05cm]
+{\color{bleu}\large\bfseries Travaux dirigés (15 h)}\par\vspace{0.28cm}
+\small
+\begin{itemize}\smalllist
+\item Limites, dérivées et intégrales ;
+\item Convergence des séries numériques ;
+\item Convergences des fonctions ;
+\item Séries entières et Taylor ;
+\item Équations différentielles avec conditions initiales.
+\end{itemize}
+\end{tcolorbox}
+\column{.49\textwidth}
+\begin{tcolorbox}[colback=palevert,colframe=palevert,height=4.05cm]
+{\color{turquoise}\large\bfseries Travaux pratiques (5 h)}\par\vspace{0.28cm}
+\small
+\begin{itemize}\smalllist
+\item \textbf{Fourier :} représenter un cycle journalier de température avec un tableur ;
+\item \textbf{Modèle thermique :} comparer simulation numérique et solution analytique ;
+\item Temps de TP également prévu dans la séance de révision / évaluation.
+\end{itemize}
+\end{tcolorbox}
+\end{columns}
+\end{frame}
+
+% 15 -------------------------------------------------------------------
+\begin{frame}{Comment nous travaillerons}
+\meta{TROIS FORMATS COMPLÉMENTAIRES}
+\begin{columns}[T,onlytextwidth]
+\column{.32\textwidth}
+\begin{tcolorbox}[colback=pale,colframe=pale,height=3.07cm]
+\centering {\color{bleu}\LARGE\bfseries CM}\par
+{\bfseries\color{nuit}25 heures}\par\vspace{0.18cm}
+\small Définitions, théorèmes, méthodes, démonstrations et exemples commentés.
+\end{tcolorbox}
+\column{.32\textwidth}
+\begin{tcolorbox}[colback=palevert,colframe=palevert,height=3.07cm]
+\centering {\color{turquoise}\LARGE\bfseries TD}\par
+{\bfseries\color{nuit}15 heures}\par\vspace{0.18cm}
+\small Exercices, calculs, interprétation de séries et résolution de problèmes.
+\end{tcolorbox}
+\column{.32\textwidth}
+\begin{tcolorbox}[colback=paleorange,colframe=paleorange,height=3.07cm]
+\centering {\color{nuit}\LARGE\bfseries TP}\par
+{\bfseries\color{nuit}5 heures}\par\vspace{0.18cm}
+\small Tableur et ordinateur pour visualiser et simuler des phénomènes.
+\end{tcolorbox}
+\end{columns}
+\vspace{0.27cm}
+\begin{center}{\small\color{gris}\textbf{Conseil pratique :} apporter une calculatrice ; préparer les TD et conserver les résultats numériques.}\end{center}
+\end{frame}
+
+% 16 -------------------------------------------------------------------
+\begin{frame}{Une progression sur 15 semaines}
+\meta{CALENDRIER INDICATIF TIRÉ DU PROGRAMME}
+\begin{tcolorbox}[colback=pale,colframe=pale]
+\scriptsize\renewcommand{\arraystretch}{.96}
+\begin{tabular}{@{}>{\bfseries\color{bleu}}p{2.0cm}p{8.6cm}r@{}}
+\toprule
+Semaines & Thème & Durée\\
+\midrule
+1–2 & Rappels d'analyse & 6 h\\
+3–4 & Suites et séries positives & 6 h\\
+5 & Séries à termes quelconques & 3 h\\
+6–7 & Suites et séries de fonctions & 6 h\\
+8–9 & Séries entières et Taylor & 6 h\\
+10–11 & Séries de Fourier & 6 h\\
+12–14 & Équations différentielles et bilans & 9 h\\
+15 & Révision et évaluation & 3 h\\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+% Calendrier indicatif tiré du plan fourni.
+\end{frame}
+
+% 17 -------------------------------------------------------------------
+\begin{frame}{Comment vos acquis seront évalués}
+\meta{MODALITÉS ET PONDÉRATIONS PROPOSÉES DANS LE DOCUMENT}
+\begin{center}
+\begin{tikzpicture}[x=0.108cm,y=.68cm]
+\fill[bleu] (0,0) rectangle (10,1);
+\fill[turquoise] (10,0) rectangle (25,1);
+\fill[soleil] (25,0) rectangle (60,1);
+\fill[nuit] (60,0) rectangle (100,1);
+\node[white,font=\footnotesize\bfseries] at (5,.5) {10\%};
+\node[white,font=\footnotesize\bfseries] at (17.5,.5) {15\%};
+\node[nuit,font=\footnotesize\bfseries] at (42.5,.5) {35\%};
+\node[white,font=\footnotesize\bfseries] at (80,.5) {40\%};
+\end{tikzpicture}
+\end{center}
+\vspace{0.12cm}
+\begin{tcolorbox}[colback=pale,colframe=pale]
+\small\renewcommand{\arraystretch}{1.24}
+\begin{tabular}{@{}p{.65cm}p{9.2cm}r@{}}
+\textcolor{bleu}{\rule{.35cm}{.22cm}} & Devoir surveillé 1 : séries numériques & \textbf{10\%}\\
+\textcolor{turquoise}{\rule{.35cm}{.22cm}} & Devoir surveillé 2 : convergence des fonctions & \textbf{15\%}\\
+\textcolor{soleil}{\rule{.35cm}{.22cm}} & Travaux dirigés et pratiques & \textbf{35\%}\\
+\textcolor{nuit}{\rule{.35cm}{.22cm}} & Examen final & \textbf{40\%}\\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.08cm}
+{\small\color{gris} NB: Les Devoirs surveillés (1 et 2) représentent la première note N1, Travaux dirigés et pratiques représente la deuxième note N2 et Examen final représente la troisième note N3.}
+\end{frame}
+
+% 18 -------------------------------------------------------------------
+\begin{frame}{Les ouvrages pour aller plus loin}
+\meta{BIBLIOGRAPHIE EXTRAITE DU PROGRAMME}
+\begin{columns}[T,onlytextwidth]
+\column{.49\textwidth}
+\begin{tcolorbox}[colback=pale,colframe=pale,height=4.08cm]
+{\bfseries\color{bleu}Analyse mathématique}\par\vspace{0.20cm}
+\small
+\begin{enumerate}\setlength{\itemsep}{0.08cm}
+\item J.-M. Monier, \emph{Analyse MPSI}, Dunod.
+\item J.-M. Monier, \emph{Analyse MP/MP*}, Dunod.
+\item W. Rudin, \emph{Principes d'analyse mathématique}.
+\item T. M. Apostol, \emph{Calculus}, vol. 1 et 2.
+\end{enumerate}
+\end{tcolorbox}
+\column{.49\textwidth}
+\begin{tcolorbox}[colback=palevert,colframe=palevert,height=4.08cm]
+{\bfseries\color{turquoise}Méthodes et météorologie}\par\vspace{0.20cm}
+\small
+\begin{enumerate}\setcounter{enumi}{4}\setlength{\itemsep}{0.15cm}
+\item E. Kreyszig, \emph{Advanced Engineering Mathematics}.
+\item J. R. Holton et G. J. Hakim, \emph{An Introduction to Dynamic Meteorology}.
+\end{enumerate}
+\vfill
+{\scriptsize\color{gris}Cette liste constitue une bibliographie de référence, sans obligation d'acquérir tous les livres.}
+\end{tcolorbox}
+\end{columns}
+\end{frame}
+
+% 19 -------------------------------------------------------------------
+\begin{frame}{Avant le premier chapitre : les prérequis}
+\meta{POUR ENTRER DANS LE COURS AVEC DE BONNES BASES}
+\begin{columns}[T,onlytextwidth]
+\column{.50\textwidth}
+\begin{tcolorbox}[colback=pale,colframe=pale,height=3.80cm]
+{\bfseries\color{bleu}Prérequis du programme}\par\vspace{0.25cm}
+\small
+\begin{itemize}\smalllist
+\item Baccalauréat scientifique ou technique ;
+\item Notions fondamentales d'analyse ;
+\item Fonctions usuelles et calcul algébrique ;
+\item Limites, dérivées et intégrales élémentaires.
+\end{itemize}
+\end{tcolorbox}
+\column{.47\textwidth}
+\begin{tcolorbox}[colback=palevert,colframe=palevert,height=3.80cm]
+{\bfseries\color{turquoise}Pour bien progresser}\par\vspace{0.25cm}
+\small
+\begin{itemize}\smalllist
+\item Revoir les définitions après chaque CM ;
+\item Résoudre les exercices de TD ;
+\item Vérifier calculs et représentations avec les outils ;
+\item Relier les résultats aux grandeurs météorologiques.
+\end{itemize}
+\end{tcolorbox}
+\end{columns}
+% Les conseils de travail personnel à droite sont ajoutés à titre pédagogique.
+
+\end{frame}
+
+% 20 -------------------------------------------------------------------
+\begin{frame}{Question d'ouverture : à vous de jouer !}
+\meta{TROIS PETITES SITUATIONS À DISCUTER ORALEMENT}
+\begin{tcolorbox}[colback=pale,colframe=pale]
+{\color{bleu}\bfseries Situation 1 — Température}\par
+\footnotesize La température augmente de $18\,^{\circ}\mathrm{C}$ à $24\,^{\circ}\mathrm{C}$ en trois heures. Quelle est sa variation moyenne par heure ?
+\end{tcolorbox}
+\vspace{0.05cm}
+\begin{tcolorbox}[colback=palevert,colframe=palevert]
+{\color{turquoise}\bfseries Situation 2 — Précipitations}\par
+\footnotesize Si une intensité de pluie reste constante à $4$ mm/h pendant deux heures, quel est le cumul des précipitations ?
+\end{tcolorbox}
+\vspace{0.05cm}
+\begin{tcolorbox}[colback=paleorange,colframe=paleorange]
+{\color{nuit}\bfseries Situation 3 — Périodicité}\par
+\footnotesize Pourquoi une fonction sinusoïdale pourrait-elle être utile pour décrire une partie du cycle journalier de température ?
+\end{tcolorbox}
+% Réponses (pour l'enseignant) : 2 °C/h ; 8 mm ; décomposition périodique.
+\end{frame}
+
+% 21 -------------------------------------------------------------------
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+\fill[nuit] (current page.south west) rectangle (current page.north east);
+\fill[bleu!38!nuit] ([xshift=9.0cm]current page.south west) rectangle (current page.north east);
+\draw[soleil,opacity=.9,line width=2pt,smooth] plot[domain=0:7,samples=90]
+ ({7.8+\x*.7},{2.7+.48*sin(100*\x)});
+\node[anchor=north east,fill=white,rounded corners=3pt,inner sep=5pt]
+  at ([xshift=-0.84cm,yshift=-0.74cm]current page.north east)
+  {\includegraphics[height=1.82cm]{logo_unz_officiel.png}};
+\node[anchor=south east,fill=white,rounded corners=3pt,inner sep=5pt]
+  at ([xshift=-0.81cm,yshift=0.68cm]current page.south east)
+  {\includegraphics[width=2.42cm]{logo_unz_sigle.png}};
+\end{tikzpicture}
+\vspace{1.25cm}
+{\color{turquoise!30!white}\small\bfseries ANALYSE 3 — MTH 1101}\par\vspace{0.43cm}
+{\color{white}\fontsize{30}{34}\selectfont\bfseries Des questions ?}\par\vspace{0.32cm}
+{\color{white!86}\Large Prêts à faire parler les mathématiques\par au service de la météorologie ?}\par
+\vspace{0.83cm}
+{\color{soleil}\bfseries Début du cours : les rappels d'analyse mathématique.}
+\end{frame}
+
+\end{document}
