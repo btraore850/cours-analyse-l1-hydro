@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Espace pédagogique du cours d’Analyse (MTH 1101) — Licence 1, Département de Météorologie : cours, TD, Beamer et applications.">
+<title>Analyse L1 — Météorologie | Ressources pédagogiques</title>
+<style>
+:root{--navy:#123454;--blue:#14678c;--pale:#eaf5fa;--ink:#21384c;--muted:#53677a;--line:#dce7ed;--bg:#f5f8fb;--white:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:#075e85;text-underline-offset:3px}a:focus-visible{outline:3px solid #f2ad39;outline-offset:3px}
+.wrap{width:min(1100px,calc(100% - 38px));margin:0 auto}
+header{background:linear-gradient(116deg,#103654,#1c6684);color:#fff;padding:65px 0 55px}
+.kicker{font-size:.82rem;letter-spacing:.12em;font-weight:700;text-transform:uppercase;color:#ccecf5}
+h1{font-size:clamp(2.3rem,6vw,4.2rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 10px}
+header p{font-size:1.13rem;max-width:690px;margin:0;color:#e3f2f7}
+.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.tags span{border:1px solid #9dc8d9;padding:5px 13px;border-radius:25px;font-size:.86rem}
+nav{background:#0d2f4b;position:sticky;top:0;z-index:5}
+nav .wrap{display:flex;align-items:center;flex-wrap:wrap;gap:23px;padding:12px 0}
+nav a{color:#fff;text-decoration:none;font-size:.94rem;font-weight:650}
+main{padding:38px 0 65px}section{margin:0 0 37px}
+h2{font-size:1.56rem;margin:0 0 15px;letter-spacing:-.02em}
+.lead,.panel,.card{background:#fff;border:1px solid var(--line);border-radius:15px}
+.lead,.panel{padding:24px 27px}.lead p{margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.card{padding:23px;box-shadow:0 3px 16px #0d385608}
+.card h3{font-size:1.15rem;margin:0 0 8px}
+.card p{margin:0 0 14px;color:var(--muted)}
+.card .symbol{font-size:1.8rem}
+.card a{font-weight:650}
+.status{display:inline-block;border-radius:6px;background:#f0f3f6;color:#536270;padding:3px 9px;font-size:.84rem;font-weight:600}
+ol{padding-left:23px;margin:0}ol li{padding:5px 0}
+.note{border-left:4px solid #2585aa;background:var(--pale);padding:17px 21px;border-radius:0 9px 9px 0}
+.action{display:inline-block;background:#fdfefe;color:#075e85;border:1px solid #91c1d1;padding:8px 14px;border-radius:9px;text-decoration:none;font-weight:700}
+footer{background:#e4eef3;color:#435b6c;padding:24px 0;font-size:.93rem}
+@media(max-width:700px){header{padding:46px 0}.grid{grid-template-columns:1fr}.card,.lead,.panel{padding:20px}nav .wrap{gap:13px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="kicker">Espace pédagogique universitaire</div>
+  <h1>Analyse mathématique</h1>
+  <p>Licence 1 · Département de Météorologie<br>Supports de cours, présentations, exercices et applications aux sciences atmosphériques.</p>
+  <div class="tags"><span>MTH 1101</span><span>Licence 1</span><span>3 crédits</span><span>Accès libre aux ressources publiées</span></div>
+</div></header>
+<nav aria-label="Menu"><div class="wrap">
+  <a href="#bienvenue">Accueil</a><a href="#programme">Programme</a><a href="#ressources">Ressources</a><a href="#informations">Informations</a>
+</div></nav>
+<main class="wrap">
+<section id="bienvenue" class="lead">
+  <h2>Bienvenue</h2>
+  <p>Ce site rassemble les documents mis à disposition des étudiants en Analyse (L1 Météorologie). Les contenus sont classés par type et seront publiés progressivement pendant le semestre. Conservez ce lien et consultez-le avant chaque séance.</p>
+</section>
+<section id="programme">
+  <h2>Programme indicatif</h2>
+  <div class="panel">
+    <ol>
+      <li>Fonctions usuelles, limites et continuité</li>
+      <li>Dérivation et applications</li>
+      <li>Calcul intégral et applications</li>
+      <li>Suites et séries numériques : critères de convergence</li>
+      <li>Introduction aux équations différentielles</li>
+      <li>Applications en météorologie : bilans et lois de conservation</li>
+    </ol>
+    <p>Le calendrier et l'ordre détaillé des séances restent soumis au programme officiel et aux annonces de l'enseignant.</p>
+    <a class="action" href="https://github.com/btraore850/cours-analyse-l1-meteo/blob/main/programme/PLAN-DU-COURS.md">Consulter le plan du cours</a>
+  </div>
+</section>
+<section id="ressources">
+  <h2>Bibliothèque du cours</h2>
+  <div class="grid">
+    <article class="card"><div class="symbol" aria-hidden="true">📘</div><h3>Cours et polycopiés</h3><p>Chapitres et notes de cours en PDF.</p><p><span class="status">PDF à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/cours">Accéder au dossier des cours</a></article>
+    <article class="card"><div class="symbol" aria-hidden="true">🖥️</div><h3>Présentations Beamer</h3><p>Diaporamas utilisés en cours magistral.</p><p><span class="status">PDF à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/presentations">Accéder aux présentations</a></article>
+    <article class="card"><div class="symbol" aria-hidden="true">✍️</div><h3>Travaux dirigés</h3><p>Exercices à préparer avant les séances.</p><p><span class="status">TD à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/td">Accéder aux TD</a></article>
+    <article class="card"><div class="symbol" aria-hidden="true">✅</div><h3>Corrigés</h3><p>Solutions communiquées après les TD.</p><p><span class="status">Corrigés à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/corriges">Accéder aux corrigés</a></article>
+    <article class="card"><div class="symbol" aria-hidden="true">🌦️</div><h3>Applications météorologiques</h3><p>Exemples, données, tableurs et scripts R/Python.</p><p><span class="status">Ressources à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/applications-meteo">Consulter les applications</a></article>
+    <article class="card"><div class="symbol" aria-hidden="true">📚</div><h3>Bibliographie</h3><p>Références et liens vers des ressources légalement accessibles.</p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/blob/main/bibliographie/README.md">Consulter la bibliographie</a></article>
+  </div>
+</section>
+<section id="informations">
+  <h2>Informations aux étudiants</h2>
+  <div class="note">Téléchargez les supports avant les séances et préparez les travaux dirigés. Les documents sont ajoutés à mesure de l'avancement du cours. Les corrigés seront mis à disposition selon les indications de l'enseignant.</div>
+  <p>Vous pouvez aussi explorer le <a href="https://github.com/btraore850/cours-analyse-l1-meteo">dépôt GitHub du cours</a>, où se trouvent les fichiers originaux et leur historique de mise à jour.</p>
+</section>
+</main>
+<footer><div class="wrap">Analyse mathématique · Licence 1 · Département de Météorologie<br>Plateforme pédagogique en cours d'enrichissement.</div></footer>
+</body>
+</html>
