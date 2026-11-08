@@ -1,29 +1,46 @@
-# Analyse mathématique — Licence 1, Météorologie
+# Analyse 3 — MTH 1101 | Licence 1 en Hydrologie
 
-Plateforme pédagogique du cours **MTH 1101 — Analyse** (3 crédits), destiné aux étudiants de Licence 1 du Département de Météorologie.
+**Université de N'Zérékoré — Année universitaire 2026–2027**
 
-## Accès étudiants
+Plateforme pédagogique du cours **Analyse 3 (MTH 1101)**, destiné aux étudiants de **Licence 1 en Hydrologie** (3 crédits).
 
-**Site du cours (à activer dans GitHub Pages) :** https://btraore850.github.io/cours-analyse-l1-meteo/
+## 🌊 Accès à la plateforme
 
-## Ressources disponibles
+**Site du cours :** https://btraore850.github.io/cours-analyse-l1-meteo/
+
+> L'URL conserve le nom technique historique du dépôt pour éviter de rompre les liens déjà diffusés ; le contenu pédagogique de la plateforme est désormais présenté pour la Licence en Hydrologie.
+
+## 📚 Ressources
 
 | Rubrique | Contenu |
 |---|---|
-| [Programme](programme/PLAN-DU-COURS.md) | Objectifs, compétences et progression indicative |
-| [Cours](cours/) | Polycopiés et chapitres PDF, à publier |
-| [Présentations](presentations/) | Diaporamas Beamer, à publier |
-| [Travaux dirigés](td/) | Feuilles d'exercices, à publier |
-| [Corrigés](corriges/) | Solutions publiées après les TD |
-| [Applications météo](applications-meteo/) | Calculs, données et scripts, à publier |
-| [Bibliographie](bibliographie/) | Ouvrages de référence et consignes de diffusion |
+| [Programme détaillé](programme/PLAN-DU-COURS.md) | 7 chapitres ; 45 h proposées sur 15 semaines |
+| [Polycopiés](cours/) | Notes de cours, chapitres et PDF |
+| [Présentations](presentations/) | Diaporamas Beamer et sources |
+| [Travaux dirigés](td/) | Exercices et activités |
+| [Corrigés](corriges/) | Solutions mises à disposition après les séances |
+| [Applications hydrologiques](applications-hydrologie/) | Précipitations, écoulements, débits et bilans hydriques |
+| [Bibliographie](bibliographie/) | Références et ressources disponibles légalement |
+
+## 🎯 Finalité du cours
+
+Mobiliser les limites, dérivées, intégrales, suites et séries, séries de Fourier et équations différentielles pour résoudre des problèmes mathématiques et comprendre des phénomènes hydrologiques : intensité des précipitations, variation du débit, volumes écoulés, stockage et conservation de l'eau.
+
+## 📝 Organisation pédagogique
+
+- **Cours magistraux :** 25 h
+- **Travaux dirigés :** 15 h
+- **Travaux pratiques :** 5 h
+- **Total proposé :** 45 h sur 15 semaines
+
+Les pondérations d'évaluation, la progression et les horaires sont indicatifs, sous réserve de validation par l'établissement.
 
 ## Aux étudiants
 
-Consultez régulièrement la page du cours, téléchargez les supports et préparez les TD avant les séances.
+Consultez les nouvelles ressources, préparez les exercices de TD et téléchargez les supports utiles avant les séances.
 
-## À l'enseignant
+## Administration du site
 
-Pour activer le site et ajouter de nouveaux documents, voir le [guide de publication](GUIDE-DE-PUBLICATION.md).
+[Guide de publication](GUIDE-DE-PUBLICATION.md) · [Page d'accueil HTML](index.html)
 
-> Le site et la structure sont en place ; les supports PDF seront ajoutés progressivement. Le plan proposé est indicatif, dans l'attente des précisions du syllabus officiel.
+> Le dépôt a conservé son nom historique `cours-analyse-l1-meteo` et certains documents sources antérieurs font encore référence à la météorologie. Les pages de présentation et le programme Markdown ont été adaptés à l'hydrologie sans modifier le contenu des fichiers LaTeX d'origine.
