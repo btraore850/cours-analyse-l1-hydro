@@ -1,9 +1,8 @@
-# Présentations Beamer
+# Présentations du cours — Licence 1 Hydrologie
 
-Les diaporamas PDF du cours sont déposés ici.
+Les supports suivants sont maintenant publiés :
 
-Nommage recommandé : `beamer-chapitre-01.pdf`.
+- [Présentation générale du programme — PDF](../programme/Presentation_Programme_Hydrologie.pdf)
+- [Présentation du chapitre 1 — PDF](Chapitre1_Hydrologie.pdf)
 
-On peut également placer les sources LaTeX `.tex` correspondantes si leur diffusion est souhaitée.
-
-**État :** aucun diaporama publié pour le moment.
+Les prochaines présentations seront ajoutées progressivement dans ce dossier.
