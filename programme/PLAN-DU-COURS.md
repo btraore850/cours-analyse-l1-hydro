@@ -1,26 +1,26 @@
 # Programme du cours d’Analyse 3 — MTH 1101
 
 **Université :** Université de N'Zérékoré (UNZ)  
-**Formation :** Licence en Météorologie — Niveau L1  
+**Formation :** Licence en Hydrologie — Niveau L1  
 **Module :** Analyse 3 (MTH 1101)  
 **Crédits :** 3  
 **Année universitaire :** 2026–2027  
 **Enseignant :** M. Bakary TRAORE, MSc.  
 **Ressources :** [Site pédagogique du cours](https://btraore850.github.io/cours-analyse-l1-meteo/)
 
-> **Statut :** ce plan reprend la présentation Beamer « Présentation du programme.tex », déposée dans le même dossier. Les volumes, le calendrier et les pondérations sont **proposés ou indicatifs**, sous réserve de validation par les instances pédagogiques compétentes.
+> **Statut :** ce plan est une adaptation à la **Licence en Hydrologie** de la présentation Beamer « Présentation du programme.tex » (initialement rédigée pour la météorologie). La structure mathématique, le volume, le calendrier et les pondérations proposés sont conservés, sous réserve de validation par les instances pédagogiques compétentes. Le fichier LaTeX original n'a pas été modifié.
 
 ## 1. Présentation et intérêt du cours
 
-L'analyse mathématique fournit des outils pour **observer, analyser et modéliser** des phénomènes météorologiques : variations de température et de pression, cumuls de précipitations, cycles journaliers ou saisonniers et bilans physiques.
+L'analyse mathématique fournit des outils pour **observer, analyser et modéliser** des phénomènes hydrologiques : intensités de précipitation, débits des cours d'eau, volumes écoulés, infiltration, stockage et bilans hydriques.
 
 Les concepts de dérivée, d'intégrale, de convergence, de séries de fonctions et d'équations différentielles permettent de passer des observations à des modèles quantitatifs.
 
 Quelques exemples :
 
-- **Variation instantanée de température :** $\dfrac{dT}{dt}$.
+- **Variation instantanée du débit :** $\dfrac{dQ}{dt}$, où $Q(t)$ désigne un débit.
 - **Cumul des précipitations :** $P = \int_{t_0}^{t_1} I(t)\,dt$, si $I(t)$ représente l'intensité de pluie.
-- **Bilan d'une quantité physique :** $\dfrac{dQ}{dt} = F_{\mathrm{in}} - F_{\mathrm{out}} + S$.
+- **Bilan du volume d'eau stocké :** $\dfrac{dV}{dt} = Q_{\mathrm{in}} - Q_{\mathrm{out}} + R$, avec $R$ représentant les apports et pertes nets supplémentaires (en volume par unité de temps).
 
 ## 2. Fiche d'organisation du module
 
@@ -28,7 +28,7 @@ Quelques exemples :
 |---|---|
 | Code | MTH 1101 |
 | Intitulé | Analyse 3 |
-| Niveau | Licence en Météorologie (L1) |
+| Niveau | Licence en Hydrologie (L1) |
 | Crédits | 3 |
 | Volume horaire global proposé | **45 heures** |
 | Cours magistraux (CM) | 25 heures |
@@ -39,7 +39,7 @@ Quelques exemples :
 
 ## 3. Objectif général
 
-Acquérir les connaissances fondamentales d’**analyse mathématique** nécessaires à la compréhension et à la modélisation de phénomènes météorologiques, notamment par l’étude des **suites, séries, modes de convergence, approximations et équations différentielles**.
+Acquérir les connaissances fondamentales d’**analyse mathématique** nécessaires à la compréhension et à la modélisation de phénomènes hydrologiques, notamment par l’étude des **suites, séries, modes de convergence, approximations et équations différentielles**.
 
 ## 4. Compétences attendues
 
@@ -52,7 +52,7 @@ Acquérir les connaissances fondamentales d’**analyse mathématique** nécessa
 5. Utiliser des séries entières et des développements de Taylor pour approcher des fonctions et contrôler les erreurs.
 6. Comprendre les principes d'une décomposition en **série de Fourier** pour des phénomènes périodiques.
 7. Résoudre des équations différentielles élémentaires avec conditions initiales.
-8. Formuler et interpréter des bilans simples de masse ou d'énergie en météorologie.
+8. Formuler et interpréter des bilans simples de masse ou d'énergie en hydrologie.
 
 ## 5. Programme détaillé : sept chapitres
 
@@ -62,7 +62,7 @@ Acquérir les connaissances fondamentales d’**analyse mathématique** nécessa
 - Limites, continuité et principaux théorèmes.
 - Dérivées, variations, extrema et rappels de Taylor.
 - Primitives, intégrales et méthodes élémentaires de calcul.
-- **Application :** vitesse de variation de la température ; accumulation d'une intensité de pluie.
+- **Application :** variation d'un débit dans le temps ; cumul des précipitations à partir d'une intensité de pluie.
 
 **Acquis visé :** réactiver les outils de calcul nécessaires aux autres chapitres.
 
@@ -104,7 +104,7 @@ Acquérir les connaissances fondamentales d’**analyse mathématique** nécessa
 - Formules de Taylor et de Maclaurin.
 - Estimation de l'erreur de troncature et approximations locales.
 
-**Application :** linéarisation de relations physiques utilisées dans des modèles météorologiques.
+**Application :** linéarisation de relations physiques utilisées dans des modèles hydrologiques.
 
 ### Chapitre 6 — Séries de Fourier (6 h ; semaines 10–11)
 
@@ -112,16 +112,16 @@ Acquérir les connaissances fondamentales d’**analyse mathématique** nécessa
 - Coefficients et séries de Fourier.
 - Conditions de convergence.
 - Introduction à l'identité de Parseval.
-- **Application :** représentation de cycles journaliers ou saisonniers de température.
+- **Application :** représentation de cycles saisonniers de débits ou de précipitations.
 
 ### Chapitre 7 — Équations différentielles et lois de conservation (9 h ; semaines 12–14)
 
 - Problèmes de Cauchy et conditions initiales.
 - Équations différentielles du premier ordre.
 - Équations linéaires du second ordre.
-- Modèles élémentaires de refroidissement et réchauffement.
-- Lois de conservation de la masse et de l'énergie.
-- **Application :** bilan $\frac{dQ}{dt} = F_{\mathrm{in}} - F_{\mathrm{out}} + S$.
+- Modèles élémentaires de variation du stockage et de vidange d'un réservoir.
+- Lois de conservation de la masse et bilans hydriques (avec rappels éventuels sur l'énergie).
+- **Application :** bilan de stockage $\frac{dV}{dt} = Q_{\mathrm{in}} - Q_{\mathrm{out}} + R$.
 
 **Acquis visé :** traduire une évolution ou un bilan physique en équation différentielle et interpréter sa solution.
 
@@ -161,8 +161,8 @@ Exercices individuels ou en binôme portant notamment sur :
 
 ### Travaux pratiques — 5 h
 
-- **Fourier :** représenter et analyser un cycle journalier de température avec un tableur.
-- **Modèle thermique :** comparer une simulation numérique et une solution analytique.
+- **Fourier :** représenter et analyser un cycle saisonnier de débit ou de pluie avec un tableur.
+- **Modèle de stockage :** comparer une simulation numérique d'un réservoir simple et sa solution analytique.
 - Une partie des TP peut être mobilisée dans la séance de révision ou d'évaluation, conformément à l'organisation présentée.
 
 **Matériel conseillé :** calculatrice scientifique, tableur et, lorsque possible, ordinateur.
@@ -199,7 +199,7 @@ Les modalités de calcul des notes N1, N2 et N3, ainsi que leur validation offic
 - Relire les définitions et théorèmes après chaque CM.
 - Préparer les exercices avant les TD.
 - Vérifier les calculs et représentations à l'aide des outils disponibles.
-- Relier les résultats mathématiques à des grandeurs observables en météorologie.
+- Relier les résultats mathématiques à des grandeurs observables en hydrologie.
 - Consulter régulièrement les ressources publiées sur ce dépôt.
 
 ## 10. Bibliographie de référence
@@ -209,7 +209,7 @@ Les modalités de calcul des notes N1, N2 et N3, ainsi que leur validation offic
 3. Walter **Rudin**, *Principes d'analyse mathématique*.
 4. Tom M. **Apostol**, *Calculus*, volumes 1 et 2.
 5. Erwin **Kreyszig**, *Advanced Engineering Mathematics*.
-6. James R. **Holton** et Gregory J. **Hakim**, *An Introduction to Dynamic Meteorology* (applications météorologiques).
+6. Ven Te Chow, David R. Maidment et Larry W. Mays, *Applied Hydrology* (applications hydrologiques).
 
 Cette liste constitue une bibliographie indicative ; il n'est pas nécessaire de posséder tous les ouvrages. Pour les ressources numériques, privilégier les éditions librement accessibles ou les liens légaux des éditeurs et bibliothèques.
 
@@ -220,7 +220,7 @@ Cette liste constitue une bibliographie indicative ; il n'est pas nécessaire de
 - [Présentations Beamer](../presentations/)
 - [Travaux dirigés](../td/)
 - [Corrigés](../corriges/)
-- [Applications météorologiques et données](../applications-meteo/)
+- [Applications hydrologiques et données](../applications-hydrologie/)
 - [Bibliographie du dépôt](../bibliographie/)
 - [Présentation du programme (fichier LaTeX source)](Pr%C3%A9sentation%20du%20programme.tex)
 
@@ -228,4 +228,4 @@ Les supports de cours, TD et TP seront mis en ligne progressivement. Pour consul
 
 ---
 
-*Plan actualisé à partir du fichier « Présentation du programme.tex » du dépôt. Les éventuelles modifications du document source n'actualiseront pas automatiquement cette page Markdown.*
+*Plan adapté à la Licence en Hydrologie à partir de « Présentation du programme.tex ». Le fichier source Beamer conserve sa version initiale pour la météorologie. Les évolutions du document LaTeX ne mettent pas automatiquement à jour cette page.*
