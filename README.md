@@ -15,7 +15,6 @@ Plateforme pédagogique du cours **Analyse (MTH 1101)**, destiné aux étudiants
 | Rubrique | Contenu |
 |---|---|
 | [Présentation du programme — PDF](programme/Presentation_Programme_Hydrologie.pdf) | Objectifs, progression et présentation du cours |
-| [Présentation du chapitre 1 — PDF](presentations/Chapitre1_Hydrologie.pdf) | Diaporama du premier chapitre |
 | [Programme détaillé](programme/PLAN-DU-COURS.md) | 7 chapitres ; 45 h proposées sur 15 semaines |
 | [Polycopiés](cours/) | Notes de cours, chapitres et PDF |
 | [Présentations](presentations/) | Diaporamas Beamer et sources |
