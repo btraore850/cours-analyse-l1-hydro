@@ -2,7 +2,7 @@
 
 **Université de N'Zérékoré — Année universitaire 2026–2027**
 
-Plateforme pédagogique du cours **Analyse 3 (MTH 1101)**, destiné aux étudiants de **Licence 1 en Hydrologie** (3 crédits).
+Plateforme pédagogique du cours **Analyse (MTH 1101)**, destiné aux étudiants de **Licence 1 en Hydrologie** (3 crédits).
 
 ## 🌊 Accès à la plateforme
 
