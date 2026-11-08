@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Programme détaillé du cours Analyse 3 — Licence 1 Hydrologie, Université de N’Zérékoré.">
+<meta name="theme-color" content="#0b3954">
+<title>Programme détaillé — Analyse 3 | Licence 1 Hydrologie</title>
+<style>
+:root{--marine:#0b3954;--bleu:#086e83;--turquoise:#119eaa;--fonce:#142f41;--gris:#587080;--clair:#edf6f8;--page:#f5f9fb;--bord:#d9e7ee}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.73 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--fonce);background:var(--page)}
+a{color:#095e79;text-underline-offset:3px;overflow-wrap:anywhere}a:focus-visible{outline:3px solid #eeb84d;outline-offset:3px}
+.container{max-width:1160px;width:calc(100% - 36px);margin:0 auto}
+header{background:linear-gradient(117deg,#07344e 0%,#07617c 68%,#04939a 100%);color:white}
+.hero{padding:35px 0 40px}.identity{display:flex;align-items:center;gap:17px}.identity img{width:76px;height:76px;object-fit:contain;border:2px solid #fff;border-radius:50%;background:#fff;padding:2px}.identity p{margin:0;color:#d1f3f5;font-size:.82rem;letter-spacing:.12em;font-weight:750;text-transform:uppercase}
+h1{font-size:clamp(1.9rem,4.6vw,3.3rem);letter-spacing:-.03em;line-height:1.17;margin:27px 0 10px}.hero .subtitle{margin:0;color:#e3f3f8;font-size:1.03rem}
+.topnav{background:#042940;padding:12px 0}.topnav a{color:white;font-weight:700;text-decoration:none;margin-right:26px}.topnav a:hover{text-decoration:underline}
+.layout{display:grid;grid-template-columns:252px minmax(0,1fr);gap:25px;align-items:start;padding:30px 0 70px}
+aside.toc{position:sticky;top:15px;background:white;border:1px solid var(--bord);border-radius:14px;padding:17px 18px}
+.toc strong{display:block;color:var(--marine);margin-bottom:10px}.toc a{display:block;font-size:.85rem;line-height:1.35;text-decoration:none;padding:8px 4px;border-bottom:1px solid #e9f0f3}.toc a:hover{color:var(--turquoise)}
+article{background:#fff;border:1px solid var(--bord);border-radius:15px;padding:28px clamp(20px,3vw,43px);box-shadow:0 4px 24px #062c3e09;min-width:0}
+article h2{margin:31px 0 12px;font-size:1.45rem;line-height:1.35;color:var(--marine);padding-bottom:9px;border-bottom:2px solid #d9eff1;scroll-margin-top:16px}
+article h2:first-child{margin-top:5px}article h3{font-size:1.1rem;color:#0c697e;margin:24px 0 9px;scroll-margin-top:16px}
+article p{margin:10px 0 14px}article ul,article ol{padding-left:24px;margin:10px 0 16px}article li{padding:3px 0}
+article .note{border-left:4px solid var(--turquoise);background:#ecf7f8;padding:14px 17px;margin:17px 0;border-radius:0 10px 10px 0}
+.table-scroll{overflow-x:auto;margin:18px 0 23px;border:1px solid var(--bord);border-radius:10px}table{border-collapse:collapse;width:100%;font-size:.91rem;min-width:450px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--bord);vertical-align:top}th{background:var(--clair);color:#174457}tbody tr:nth-child(even){background:#f9fcfd}
+article code{background:#edf3f5;padding:2px 4px;border-radius:3px}article hr{border:0;border-top:1px solid var(--bord);margin:25px 0}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 6px}.button{display:inline-block;text-decoration:none;background:var(--marine);color:white;padding:10px 15px;border-radius:9px;font-size:.9rem;font-weight:700}.button.alt{background:#e5f3f6;color:var(--marine)}
+.math{overflow-wrap:anywhere}footer{border-top:1px solid var(--bord);padding:24px 0;color:var(--gris)}
+@media(max-width:870px){.layout{grid-template-columns:1fr}.toc{position:static!important;display:none}article{padding:22px}}
+@media print{header{background:#fff;color:#000}.hero .subtitle{color:#333}.topnav,.toc,.actions{display:none!important}.layout{display:block;padding:0}article{border:0;padding:0}body{background:white}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]]},svg:{fontCache:"global"}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<header><div class="container hero">
+  <div class="identity"><img src="assets/logo-unz.webp" width="76" height="76" alt="Logo officiel de l’Université de N’Zérékoré"><p>Université de N’Zérékoré<br>Ressources pédagogiques</p></div>
+  <h1>Programme détaillé d’Analyse 3</h1>
+  <p class="subtitle">MTH 1101 · Licence 1 en Hydrologie · 3 crédits · Année universitaire 2026–2027</p>
+</div></header>
+<nav class="topnav" aria-label="Navigation"><div class="container"><a href="index.html">← Accueil du cours</a><a href="programme/Presentation_Programme_Hydrologie.pdf">Présentation du programme (PDF)</a></div></nav>
+<div class="container layout">
+<aside class="toc"><strong>Sommaire</strong><a href="#section-1">Présentation et intérêt du cours</a>
+<a href="#section-2">Fiche d'organisation du module</a>
+<a href="#section-3">Objectif général</a>
+<a href="#section-4">Compétences attendues</a>
+<a href="#section-5">Programme détaillé : sept chapitres</a>
+<a href="#section-13">Calendrier pédagogique indicatif</a>
+<a href="#section-14">Méthodes pédagogiques et travaux pratiques</a>
+<a href="#section-18">Modalités d'évaluation proposées</a>
+<a href="#section-19">Prérequis et conseils de travail</a>
+<a href="#section-22">Bibliographie de référence</a>
+<a href="#section-23">Accès aux ressources pédagogiques</a></aside>
+<article>
+<div class="actions"><a class="button" href="programme/Presentation_Programme_Hydrologie.pdf">Voir le programme (PDF)</a><a class="button alt" href="index.html">Retour à la plateforme</a></div>
+<p><strong>Université :</strong> Université de N'Zérékoré (UNZ) <strong>Formation :</strong> Licence en Hydrologie — Niveau L1 <strong>Module :</strong> Analyse 3 (MTH 1101) <strong>Crédits :</strong> 3 <strong>Année universitaire :</strong> 2026–2027 <strong>Enseignant :</strong> M. Bakary TRAORE, MSc. <strong>Ressources :</strong> <a href="https://btraore850.github.io/cours-analyse-l1-hydro/">Site pédagogique du cours</a></p>
+<aside class="note"><strong>Statut :</strong> ce plan accompagne la <a href="programme/Presentation_Programme_Hydrologie.pdf">présentation du programme (PDF)</a> pour la Licence en Hydrologie. Les volumes horaires, le calendrier et les pondérations restent indicatifs ou proposés et sont soumis à la validation pédagogique.</aside>
+<h2 id="section-1">1. Présentation et intérêt du cours</h2>
+<p>L'analyse mathématique fournit des outils pour <strong>observer, analyser et modéliser</strong> des phénomènes hydrologiques : intensités de précipitation, débits des cours d'eau, volumes écoulés, infiltration, stockage et bilans hydriques.</p>
+<p>Les concepts de dérivée, d'intégrale, de convergence, de séries de fonctions et d'équations différentielles permettent de passer des observations à des modèles quantitatifs.</p>
+<p>Quelques exemples :</p>
+<ul>
+<li><strong>Variation instantanée du débit :</strong> <span class="math">\(\dfrac{dQ}{dt}\)</span>, où <span class="math">\(Q(t)\)</span> désigne un débit.</li>
+<li><strong>Cumul des précipitations :</strong> <span class="math">\(P = \int_{t_0}^{t_1} I(t)\,dt\)</span>, si <span class="math">\(I(t)\)</span> représente l'intensité de pluie.</li>
+<li><strong>Bilan du volume d'eau stocké :</strong> <span class="math">\(\dfrac{dV}{dt} = Q_{\mathrm{in}} - Q_{\mathrm{out}} + R\)</span>, avec <span class="math">\(R\)</span> représentant les apports et pertes nets supplémentaires (en volume par unité de temps).</li>
+</ul>
+<h2 id="section-2">2. Fiche d'organisation du module</h2>
+<div class="table-scroll"><table><thead><tr><th>Élément</th><th>Organisation prévue</th></tr></thead><tbody><tr><td>Code</td><td>MTH 1101</td></tr><tr><td>Intitulé</td><td>Analyse 3</td></tr><tr><td>Niveau</td><td>Licence en Hydrologie (L1)</td></tr><tr><td>Crédits</td><td>3</td></tr><tr><td>Volume horaire global proposé</td><td><strong>45 heures</strong></td></tr><tr><td>Cours magistraux (CM)</td><td>25 heures</td></tr><tr><td>Travaux dirigés (TD)</td><td>15 heures</td></tr><tr><td>Travaux pratiques (TP)</td><td>5 heures</td></tr><tr><td>Durée indicative</td><td><strong>15 semaines</strong></td></tr><tr><td>Outils</td><td>Calculatrice scientifique, tableur, ordinateur</td></tr></tbody></table></div>
+<h2 id="section-3">3. Objectif général</h2>
+<p>Acquérir les connaissances fondamentales d’<strong>analyse mathématique</strong> nécessaires à la compréhension et à la modélisation de phénomènes hydrologiques, notamment par l’étude des <strong>suites, séries, modes de convergence, approximations et équations différentielles</strong>.</p>
+<h2 id="section-4">4. Compétences attendues</h2>
+<p>À l'issue du module, l'étudiant devrait pouvoir :</p>
+<ol>
+<li>Réaliser des calculs de limites, dérivées et intégrales, et en interpréter le sens.</li>
+<li>Étudier la convergence des suites et des séries numériques.</li>
+<li>Distinguer la convergence absolue et conditionnelle des séries.</li>
+<li>Comparer la <strong>convergence simple, uniforme et normale</strong> de suites ou séries de fonctions.</li>
+<li>Utiliser des séries entières et des développements de Taylor pour approcher des fonctions et contrôler les erreurs.</li>
+<li>Comprendre les principes d'une décomposition en <strong>série de Fourier</strong> pour des phénomènes périodiques.</li>
+<li>Résoudre des équations différentielles élémentaires avec conditions initiales.</li>
+<li>Formuler et interpréter des bilans simples de masse ou d'énergie en hydrologie.</li>
+</ol>
+<h2 id="section-5">5. Programme détaillé : sept chapitres</h2>
+<h3 id="section-6">Chapitre 1 — Rappels fondamentaux d'analyse (6 h ; semaines 1–2)</h3>
+<ul>
+<li>Fonctions usuelles : domaine, propriétés et représentations.</li>
+<li>Limites, continuité et principaux théorèmes.</li>
+<li>Dérivées, variations, extrema et rappels de Taylor.</li>
+<li>Primitives, intégrales et méthodes élémentaires de calcul.</li>
+<li><strong>Application :</strong> variation d'un débit dans le temps ; cumul des précipitations à partir d'une intensité de pluie.</li>
+</ul>
+<p><strong>Acquis visé :</strong> réactiver les outils de calcul nécessaires aux autres chapitres.</p>
+<h3 id="section-7">Chapitre 2 — Suites et séries numériques à termes positifs (6 h ; semaines 3–4)</h3>
+<ul>
+<li>Suites : limites, monotonie, bornes et critère de Cauchy.</li>
+<li>Sommes partielles et définition de la convergence d'une série.</li>
+<li>Séries à termes positifs : comparaison et équivalences.</li>
+<li>Critères de d'Alembert, de Cauchy et critère intégral.</li>
+<li>Séries de référence, notamment la série de Riemann <span class="math">\(\sum_{n=1}^{\infty} 1/n^p\)</span>.</li>
+</ul>
+<p><strong>Acquis visé :</strong> choisir et justifier un critère de convergence pour une série positive.</p>
+<h3 id="section-8">Chapitre 3 — Séries numériques à termes quelconques (3 h ; semaine 5)</h3>
+<ul>
+<li>Séries à signes variables.</li>
+<li>Convergence absolue et convergence conditionnelle.</li>
+<li>Séries alternées et critère de Leibniz.</li>
+<li>Estimation du reste d'une série alternée.</li>
+<li>Effets des réarrangements (complément).</li>
+</ul>
+<p><strong>Exemple :</strong> la série <span class="math">\(1 - \frac12 + \frac13 - \frac14 + \cdots\)</span> converge conditionnellement.</p>
+<h3 id="section-9">Chapitre 4 — Suites et séries de fonctions (6 h ; semaines 6–7)</h3>
+<ul>
+<li>Convergence simple et convergence uniforme.</li>
+<li>Norme uniforme et critère de Cauchy uniforme.</li>
+<li>Convergence normale des séries de fonctions.</li>
+<li>Critère de Weierstrass.</li>
+<li>Continuité, intégration, dérivation et passage à la limite, sous les hypothèses requises.</li>
+</ul>
+<p><strong>Exemple :</strong> étudier <span class="math">\(f_n(x)=x^n\)</span> sur <span class="math">\([0,1]\)</span> pour distinguer convergence simple et uniforme.</p>
+<h3 id="section-10">Chapitre 5 — Séries entières et développements de Taylor (6 h ; semaines 8–9)</h3>
+<ul>
+<li>Définition d'une série entière et rayon de convergence.</li>
+<li>Lemme d'Abel et formule de Cauchy–Hadamard.</li>
+<li>Dérivation et intégration terme à terme dans le disque ou l'intervalle de convergence approprié.</li>
+<li>Formules de Taylor et de Maclaurin.</li>
+<li>Estimation de l'erreur de troncature et approximations locales.</li>
+</ul>
+<p><strong>Application :</strong> linéarisation de relations physiques utilisées dans des modèles hydrologiques.</p>
+<h3 id="section-11">Chapitre 6 — Séries de Fourier (6 h ; semaines 10–11)</h3>
+<ul>
+<li>Fonctions périodiques et harmoniques.</li>
+<li>Coefficients et séries de Fourier.</li>
+<li>Conditions de convergence.</li>
+<li>Introduction à l'identité de Parseval.</li>
+<li><strong>Application :</strong> représentation de cycles saisonniers de débits ou de précipitations.</li>
+</ul>
+<h3 id="section-12">Chapitre 7 — Équations différentielles et lois de conservation (9 h ; semaines 12–14)</h3>
+<ul>
+<li>Problèmes de Cauchy et conditions initiales.</li>
+<li>Équations différentielles du premier ordre.</li>
+<li>Équations linéaires du second ordre.</li>
+<li>Modèles élémentaires de variation du stockage et de vidange d'un réservoir.</li>
+<li>Lois de conservation de la masse et bilans hydriques (avec rappels éventuels sur l'énergie).</li>
+<li><strong>Application :</strong> bilan de stockage <span class="math">\(\frac{dV}{dt} = Q_{\mathrm{in}} - Q_{\mathrm{out}} + R\)</span>.</li>
+</ul>
+<p><strong>Acquis visé :</strong> traduire une évolution ou un bilan physique en équation différentielle et interpréter sa solution.</p>
+<p><strong>Bilan horaire :</strong> les sept chapitres totalisent <strong>42 h</strong> ; <strong>3 h</strong> supplémentaires sont prévues pour la révision et l'évaluation, soit <strong>45 h</strong> au total.</p>
+<h2 id="section-13">6. Calendrier pédagogique indicatif</h2>
+<div class="table-scroll"><table><thead><tr><th>Semaines</th><th>Contenu</th><th>Durée</th></tr></thead><tbody><tr><td>1–2</td><td>Chapitre 1 : rappels d'analyse</td><td>6 h</td></tr><tr><td>3–4</td><td>Chapitre 2 : suites et séries positives</td><td>6 h</td></tr><tr><td>5</td><td>Chapitre 3 : séries à termes quelconques</td><td>3 h</td></tr><tr><td>6–7</td><td>Chapitre 4 : suites et séries de fonctions</td><td>6 h</td></tr><tr><td>8–9</td><td>Chapitre 5 : séries entières et Taylor</td><td>6 h</td></tr><tr><td>10–11</td><td>Chapitre 6 : séries de Fourier</td><td>6 h</td></tr><tr><td>12–14</td><td>Chapitre 7 : équations différentielles et bilans</td><td>9 h</td></tr><tr><td>15</td><td>Révision et évaluation</td><td>3 h</td></tr><tr><td><strong>Total</strong></td><td><strong>15 semaines</strong></td><td><strong>45 h</strong></td></tr></tbody></table></div>
+<p>Les semaines correspondent à une <strong>progression indicative</strong>, et non à des dates fixées.</p>
+<h2 id="section-14">7. Méthodes pédagogiques et travaux pratiques</h2>
+<h3 id="section-15">Cours magistraux — 25 h</h3>
+<p>Définitions, théorèmes, démonstrations essentielles, méthodes de résolution et exemples commentés.</p>
+<h3 id="section-16">Travaux dirigés — 15 h</h3>
+<p>Exercices individuels ou en binôme portant notamment sur :</p>
+<ul>
+<li>les limites, dérivées et intégrales ;</li>
+<li>les critères de convergence des séries numériques ;</li>
+<li>les modes de convergence des suites et séries de fonctions ;</li>
+<li>les séries entières et développements de Taylor ;</li>
+<li>les équations différentielles avec conditions initiales.</li>
+</ul>
+<h3 id="section-17">Travaux pratiques — 5 h</h3>
+<ul>
+<li><strong>Fourier :</strong> représenter et analyser un cycle saisonnier de débit ou de pluie avec un tableur.</li>
+<li><strong>Modèle de stockage :</strong> comparer une simulation numérique d'un réservoir simple et sa solution analytique.</li>
+<li>Une partie des TP peut être mobilisée dans la séance de révision ou d'évaluation, conformément à l'organisation présentée.</li>
+</ul>
+<p><strong>Matériel conseillé :</strong> calculatrice scientifique, tableur et, lorsque possible, ordinateur.</p>
+<h2 id="section-18">8. Modalités d'évaluation proposées</h2>
+<p>La présentation du programme prévoit les pondérations suivantes :</p>
+<div class="table-scroll"><table><thead><tr><th>Évaluation</th><th>Contenu principal</th><th>Pondération</th></tr></thead><tbody><tr><td>Devoir surveillé 1 (DS1)</td><td>Séries numériques</td><td>10 %</td></tr><tr><td>Devoir surveillé 2 (DS2)</td><td>Convergence des fonctions</td><td>15 %</td></tr><tr><td>Travaux dirigés et pratiques</td><td>Exercices, travaux et applications</td><td>35 %</td></tr><tr><td>Examen final</td><td>Ensemble des acquis</td><td>40 %</td></tr><tr><td><strong>Total</strong></td><td></td><td><strong>100 %</strong></td></tr></tbody></table></div>
+<p><strong>Regroupement annoncé dans la présentation :</strong></p>
+<ul>
+<li><strong>N1 :</strong> devoirs surveillés 1 et 2 ;</li>
+<li><strong>N2 :</strong> travaux dirigés et pratiques ;</li>
+<li><strong>N3 :</strong> examen final.</li>
+</ul>
+<p>Les modalités de calcul des notes N1, N2 et N3, ainsi que leur validation officielle, doivent être confirmées par l'établissement.</p>
+<h2 id="section-19">9. Prérequis et conseils de travail</h2>
+<h3 id="section-20">Prérequis</h3>
+<ul>
+<li>Baccalauréat scientifique ou technique.</li>
+<li>Calcul algébrique et fonctions usuelles.</li>
+<li>Notions élémentaires de limites, dérivées et intégrales.</li>
+</ul>
+<h3 id="section-21">Conseils aux étudiants</h3>
+<ul>
+<li>Relire les définitions et théorèmes après chaque CM.</li>
+<li>Préparer les exercices avant les TD.</li>
+<li>Vérifier les calculs et représentations à l'aide des outils disponibles.</li>
+<li>Relier les résultats mathématiques à des grandeurs observables en hydrologie.</li>
+<li>Consulter régulièrement les ressources publiées sur ce dépôt.</li>
+</ul>
+<h2 id="section-22">10. Bibliographie de référence</h2>
+<ol>
+<li>Jean-Marie <strong>Monier</strong>, <em>Analyse MPSI</em>, Dunod.</li>
+<li>Jean-Marie <strong>Monier</strong>, <em>Analyse MP/MP*</em>, Dunod.</li>
+<li>Walter <strong>Rudin</strong>, <em>Principes d'analyse mathématique</em>.</li>
+<li>Tom M. <strong>Apostol</strong>, <em>Calculus</em>, volumes 1 et 2.</li>
+<li>Erwin <strong>Kreyszig</strong>, <em>Advanced Engineering Mathematics</em>.</li>
+<li>Ven Te Chow, David R. Maidment et Larry W. Mays, <em>Applied Hydrology</em> (applications hydrologiques).</li>
+</ol>
+<p>Cette liste constitue une bibliographie indicative ; il n'est pas nécessaire de posséder tous les ouvrages. Pour les ressources numériques, privilégier les éditions librement accessibles ou les liens légaux des éditeurs et bibliothèques.</p>
+<h2 id="section-23">11. Accès aux ressources pédagogiques</h2>
+<ul>
+<li><a href="index.html">Page d'accueil du cours</a></li>
+<li><a href="https://github.com/btraore850/cours-analyse-l1-hydro/tree/main/cours">Polycopiés et notes de cours</a></li>
+<li><a href="https://github.com/btraore850/cours-analyse-l1-hydro/tree/main/presentations">Présentations Beamer</a></li>
+<li><a href="https://github.com/btraore850/cours-analyse-l1-hydro/tree/main/td">Travaux dirigés</a></li>
+<li><a href="https://github.com/btraore850/cours-analyse-l1-hydro/tree/main/corriges">Corrigés</a></li>
+<li><a href="https://github.com/btraore850/cours-analyse-l1-hydro/tree/main/applications-hydrologie">Applications hydrologiques et données</a></li>
+<li><a href="https://github.com/btraore850/cours-analyse-l1-hydro/tree/main/bibliographie">Bibliographie du dépôt</a></li>
+<li><a href="programme/Presentation_Programme_Hydrologie.pdf">Présentation du programme — PDF</a></li>
+<li><a href="presentations/Chapitre1_Hydrologie.pdf">Présentation du chapitre 1 — PDF</a></li>
+</ul>
+<p>Les supports seront mis en ligne progressivement. L'<a href="https://btraore850.github.io/cours-analyse-l1-hydro/">adresse prévue du site pédagogique</a> sera accessible après le renommage du dépôt et la publication par GitHub Pages.</p>
+<hr>
+<p><em>Le programme Markdown et les deux présentations PDF sont publiés séparément. Ils doivent être actualisés ensemble à chaque modification pédagogique.</em></p>
+</article></div>
+<footer><div class="container">Université de N’Zérékoré · Licence 1 Hydrologie · Analyse MTH 1101</div></footer>
+</body></html>
