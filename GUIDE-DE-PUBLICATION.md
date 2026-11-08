@@ -1,9 +1,20 @@
-# Guide de publication — Analyse L1 Météorologie
+# Guide de publication — Analyse L1 Hydrologie
 
 ## Accès
 
-- Dépôt : https://github.com/btraore850/cours-analyse-l1-meteo
-- Site GitHub Pages (après activation) : https://btraore850.github.io/cours-analyse-l1-meteo/
+- **Dépôt après renommage :** https://github.com/btraore850/cours-analyse-l1-hydro
+- **Site après renommage :** https://btraore850.github.io/cours-analyse-l1-hydro/
+- Ces nouvelles adresses ne fonctionneront qu'après le renommage et la publication du site.
+
+## Renommer le dépôt (meteo → hydro)
+
+1. Ouvrir **Settings → General** dans votre dépôt GitHub actuel.
+2. Sous **Repository name**, remplacer le nom par `cours-analyse-l1-hydro`.
+3. Cliquer sur **Rename**.
+4. Ouvrir **Settings → Pages** pour confirmer la nouvelle adresse.
+5. Ouvrir les deux documents PDF depuis la page d'accueil pour vérifier leur disponibilité.
+
+**Important :** GitHub redirige les anciennes URL du dépôt GitHub, mais les URL des sites de projet GitHub Pages ne bénéficient pas d'une redirection automatique. Diffuser la nouvelle adresse aux étudiants.
 
 ## Activer GitHub Pages
 
