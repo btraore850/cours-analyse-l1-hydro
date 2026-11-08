@@ -6,9 +6,9 @@
 **Crédits :** 3  
 **Année universitaire :** 2026–2027  
 **Enseignant :** M. Bakary TRAORE, MSc.  
-**Ressources :** [Site pédagogique du cours](https://btraore850.github.io/cours-analyse-l1-meteo/)
+**Ressources :** [Site pédagogique du cours](https://btraore850.github.io/cours-analyse-l1-hydro/)
 
-> **Statut :** ce plan est une adaptation à la **Licence en Hydrologie** de la présentation Beamer « Présentation du programme.tex » (initialement rédigée pour la météorologie). La structure mathématique, le volume, le calendrier et les pondérations proposés sont conservés, sous réserve de validation par les instances pédagogiques compétentes. Le fichier LaTeX original n'a pas été modifié.
+> **Statut :** ce plan accompagne la [présentation du programme (PDF)](Presentation_Programme_Hydrologie.pdf) pour la Licence en Hydrologie. Les volumes horaires, le calendrier et les pondérations restent indicatifs ou proposés et sont soumis à la validation pédagogique.
 
 ## 1. Présentation et intérêt du cours
 
@@ -222,10 +222,11 @@ Cette liste constitue une bibliographie indicative ; il n'est pas nécessaire de
 - [Corrigés](../corriges/)
 - [Applications hydrologiques et données](../applications-hydrologie/)
 - [Bibliographie du dépôt](../bibliographie/)
-- [Présentation du programme (fichier LaTeX source)](Pr%C3%A9sentation%20du%20programme.tex)
+- [Présentation du programme — PDF](Presentation_Programme_Hydrologie.pdf)
+- [Présentation du chapitre 1 — PDF](../presentations/Chapitre1_Hydrologie.pdf)
 
-Les supports de cours, TD et TP seront mis en ligne progressivement. Pour consulter une version accessible depuis un navigateur sans télécharger de code source, utiliser le [site pédagogique](https://btraore850.github.io/cours-analyse-l1-meteo/) une fois GitHub Pages activé.
+Les supports seront mis en ligne progressivement. L'[adresse prévue du site pédagogique](https://btraore850.github.io/cours-analyse-l1-hydro/) sera accessible après le renommage du dépôt et la publication par GitHub Pages.
 
 ---
 
-*Plan adapté à la Licence en Hydrologie à partir de « Présentation du programme.tex ». Le fichier source Beamer conserve sa version initiale pour la météorologie. Les évolutions du document LaTeX ne mettent pas automatiquement à jour cette page.*
+*Le programme Markdown et les deux présentations PDF sont publiés séparément. Ils doivent être actualisés ensemble à chaque modification pédagogique.*
