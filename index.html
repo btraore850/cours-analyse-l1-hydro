@@ -2,88 +2,119 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Espace pédagogique du cours d’Analyse (MTH 1101) — Licence 1, Département de Météorologie : cours, TD, Beamer et applications.">
-<title>Analyse L1 — Météorologie | Ressources pédagogiques</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b3954">
+<meta name="description" content="Plateforme pédagogique d'Analyse 3 (MTH 1101) pour la Licence 1 en Hydrologie : programme, polycopiés, cours Beamer, TD, corrigés et applications hydrologiques.">
+<title>Analyse 3 — Licence 1 Hydrologie | Université de N'Zérékoré</title>
 <style>
-:root{--navy:#123454;--blue:#14678c;--pale:#eaf5fa;--ink:#21384c;--muted:#53677a;--line:#dce7ed;--bg:#f5f8fb;--white:#fff}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{color:#075e85;text-underline-offset:3px}a:focus-visible{outline:3px solid #f2ad39;outline-offset:3px}
-.wrap{width:min(1100px,calc(100% - 38px));margin:0 auto}
-header{background:linear-gradient(116deg,#103654,#1c6684);color:#fff;padding:65px 0 55px}
-.kicker{font-size:.82rem;letter-spacing:.12em;font-weight:700;text-transform:uppercase;color:#ccecf5}
-h1{font-size:clamp(2.3rem,6vw,4.2rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 10px}
-header p{font-size:1.13rem;max-width:690px;margin:0;color:#e3f2f7}
-.tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-.tags span{border:1px solid #9dc8d9;padding:5px 13px;border-radius:25px;font-size:.86rem}
-nav{background:#0d2f4b;position:sticky;top:0;z-index:5}
-nav .wrap{display:flex;align-items:center;flex-wrap:wrap;gap:23px;padding:12px 0}
-nav a{color:#fff;text-decoration:none;font-size:.94rem;font-weight:650}
-main{padding:38px 0 65px}section{margin:0 0 37px}
-h2{font-size:1.56rem;margin:0 0 15px;letter-spacing:-.02em}
-.lead,.panel,.card{background:#fff;border:1px solid var(--line);border-radius:15px}
-.lead,.panel{padding:24px 27px}.lead p{margin:0}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
-.card{padding:23px;box-shadow:0 3px 16px #0d385608}
-.card h3{font-size:1.15rem;margin:0 0 8px}
-.card p{margin:0 0 14px;color:var(--muted)}
-.card .symbol{font-size:1.8rem}
-.card a{font-weight:650}
-.status{display:inline-block;border-radius:6px;background:#f0f3f6;color:#536270;padding:3px 9px;font-size:.84rem;font-weight:600}
-ol{padding-left:23px;margin:0}ol li{padding:5px 0}
-.note{border-left:4px solid #2585aa;background:var(--pale);padding:17px 21px;border-radius:0 9px 9px 0}
-.action{display:inline-block;background:#fdfefe;color:#075e85;border:1px solid #91c1d1;padding:8px 14px;border-radius:9px;text-decoration:none;font-weight:700}
-footer{background:#e4eef3;color:#435b6c;padding:24px 0;font-size:.93rem}
-@media(max-width:700px){header{padding:46px 0}.grid{grid-template-columns:1fr}.card,.lead,.panel{padding:20px}nav .wrap{gap:13px}}
+:root{--marine:#0b3954;--bleu:#086e83;--eau:#119eaa;--fonce:#142f41;--gris:#5a7080;--clair:#edf6f8;--page:#f5f9fb;--bord:#d9e7ee;--blanc:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--fonce);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:#0a617a;text-underline-offset:3px}
+a:focus-visible{outline:3px solid #eeb84d;outline-offset:3px}
+.container{width:min(1120px,calc(100% - 36px));margin:0 auto}
+.masthead{background:linear-gradient(126deg,#0a304c 0%,#0b617e 59%,#0c8990 100%);color:#fff;position:relative;overflow:hidden}
+.masthead:before{content:"";position:absolute;width:610px;height:610px;border:2px solid #ffffff22;border-radius:50%;right:-160px;top:-340px;box-shadow:0 0 0 75px #ffffff09,0 0 0 150px #ffffff06}
+.hero{position:relative;padding:66px 0 64px}
+.eyebrow{text-transform:uppercase;font-size:.81rem;letter-spacing:.14em;color:#c1e8ec;font-weight:750}
+h1{font-size:clamp(2.5rem,6vw,4.6rem);line-height:1.08;letter-spacing:-.04em;margin:13px 0}
+.hero p{font-size:1.1rem;max-width:650px;color:#e1f3f6;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.tags span{border:1px solid #b0dae1a6;background:#ffffff12;padding:5px 12px;border-radius:999px;font-size:.84rem}
+.nav{background:#092f49;position:sticky;top:0;z-index:10}
+.nav .container{display:flex;gap:22px;flex-wrap:wrap;align-items:center;padding:11px 0}
+.nav a{color:#fff;text-decoration:none;font-size:.91rem;font-weight:700}
+.nav a:hover{text-decoration:underline}
+main{padding:37px 0 55px}
+section{margin-bottom:38px;scroll-margin-top:70px}
+h2{font-size:1.52rem;letter-spacing:-.025em;margin:0 0 17px}
+.card,.intro,.outline{background:var(--blanc);border:1px solid var(--bord);border-radius:15px;box-shadow:0 3px 16px #10354e07}
+.intro,.outline{padding:25px 28px}
+.intro p{margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{padding:23px;display:flex;flex-direction:column;align-items:flex-start}
+.card .symbol{font-size:1.7rem;line-height:1.4}
+.card h3{font-size:1.07rem;line-height:1.35;margin:12px 0 8px}
+.card p{color:var(--gris);margin:0 0 15px;flex:1}
+.card a{font-weight:720}
+.outline ol{margin:0;padding-left:22px;columns:2;column-gap:34px}
+.outline li{margin-bottom:9px;break-inside:avoid;padding-left:3px}
+.details{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 0}
+.metric{background:var(--clair);border-radius:10px;padding:12px 15px}
+.metric strong{display:block;color:var(--marine);font-size:1.28rem}
+.metric span{font-size:.82rem;color:var(--gris)}
+.notice{border-left:4px solid var(--eau);background:#eaf6f7;padding:19px 22px;border-radius:0 10px 10px 0}
+.button{display:inline-block;border-radius:9px;background:var(--marine);color:#fff;text-decoration:none;font-weight:700;padding:10px 16px;margin-top:17px}
+.button:hover{background:#08617c}
+.subtle{color:var(--gris);font-size:.92rem}
+footer{background:#e4f0f4;border-top:1px solid #cedfe7;color:#425b6b;padding:26px 0}
+footer a{font-weight:650}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.hero{padding:48px 0}.grid,.details{grid-template-columns:1fr}.outline ol{columns:1}.intro,.outline,.card{padding:20px}.nav .container{gap:11px 17px}}
 </style>
 </head>
 <body>
-<header><div class="wrap">
-  <div class="kicker">Espace pédagogique universitaire</div>
+<header class="masthead"><div class="container hero">
+  <div class="eyebrow">Université de N'Zérékoré · Ressources pédagogiques</div>
   <h1>Analyse mathématique</h1>
-  <p>Licence 1 · Département de Météorologie<br>Supports de cours, présentations, exercices et applications aux sciences atmosphériques.</p>
-  <div class="tags"><span>MTH 1101</span><span>Licence 1</span><span>3 crédits</span><span>Accès libre aux ressources publiées</span></div>
+  <p>Licence 1 en <strong>Hydrologie</strong> — des outils d'analyse pour comprendre les précipitations, les débits, les écoulements et les bilans hydriques.</p>
+  <div class="tags"><span>MTH 1101 · Analyse 3</span><span>Licence 1 — Hydrologie</span><span>3 crédits</span><span>2026–2027</span></div>
 </div></header>
-<nav aria-label="Menu"><div class="wrap">
-  <a href="#bienvenue">Accueil</a><a href="#programme">Programme</a><a href="#ressources">Ressources</a><a href="#informations">Informations</a>
+<nav class="nav" aria-label="Navigation principale"><div class="container">
+<a href="#accueil">Accueil</a><a href="#programme">Programme</a><a href="#documents">Bibliothèque</a><a href="#applications">Hydrologie</a><a href="#informations">Informations</a>
 </div></nav>
-<main class="wrap">
-<section id="bienvenue" class="lead">
-  <h2>Bienvenue</h2>
-  <p>Ce site rassemble les documents mis à disposition des étudiants en Analyse (L1 Météorologie). Les contenus sont classés par type et seront publiés progressivement pendant le semestre. Conservez ce lien et consultez-le avant chaque séance.</p>
-</section>
-<section id="programme">
-  <h2>Programme indicatif</h2>
-  <div class="panel">
-    <ol>
-      <li>Fonctions usuelles, limites et continuité</li>
-      <li>Dérivation et applications</li>
-      <li>Calcul intégral et applications</li>
-      <li>Suites et séries numériques : critères de convergence</li>
-      <li>Introduction aux équations différentielles</li>
-      <li>Applications en météorologie : bilans et lois de conservation</li>
-    </ol>
-    <p>Le calendrier et l'ordre détaillé des séances restent soumis au programme officiel et aux annonces de l'enseignant.</p>
-    <a class="action" href="https://github.com/btraore850/cours-analyse-l1-meteo/blob/main/programme/PLAN-DU-COURS.md">Consulter le plan du cours</a>
-  </div>
-</section>
-<section id="ressources">
-  <h2>Bibliothèque du cours</h2>
-  <div class="grid">
-    <article class="card"><div class="symbol" aria-hidden="true">📘</div><h3>Cours et polycopiés</h3><p>Chapitres et notes de cours en PDF.</p><p><span class="status">PDF à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/cours">Accéder au dossier des cours</a></article>
-    <article class="card"><div class="symbol" aria-hidden="true">🖥️</div><h3>Présentations Beamer</h3><p>Diaporamas utilisés en cours magistral.</p><p><span class="status">PDF à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/presentations">Accéder aux présentations</a></article>
-    <article class="card"><div class="symbol" aria-hidden="true">✍️</div><h3>Travaux dirigés</h3><p>Exercices à préparer avant les séances.</p><p><span class="status">TD à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/td">Accéder aux TD</a></article>
-    <article class="card"><div class="symbol" aria-hidden="true">✅</div><h3>Corrigés</h3><p>Solutions communiquées après les TD.</p><p><span class="status">Corrigés à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/corriges">Accéder aux corrigés</a></article>
-    <article class="card"><div class="symbol" aria-hidden="true">🌦️</div><h3>Applications météorologiques</h3><p>Exemples, données, tableurs et scripts R/Python.</p><p><span class="status">Ressources à publier</span></p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/applications-meteo">Consulter les applications</a></article>
-    <article class="card"><div class="symbol" aria-hidden="true">📚</div><h3>Bibliographie</h3><p>Références et liens vers des ressources légalement accessibles.</p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/blob/main/bibliographie/README.md">Consulter la bibliographie</a></article>
-  </div>
-</section>
-<section id="informations">
-  <h2>Informations aux étudiants</h2>
-  <div class="note">Téléchargez les supports avant les séances et préparez les travaux dirigés. Les documents sont ajoutés à mesure de l'avancement du cours. Les corrigés seront mis à disposition selon les indications de l'enseignant.</div>
-  <p>Vous pouvez aussi explorer le <a href="https://github.com/btraore850/cours-analyse-l1-meteo">dépôt GitHub du cours</a>, où se trouvent les fichiers originaux et leur historique de mise à jour.</p>
-</section>
+<main class="container">
+  <section id="accueil" class="intro">
+    <h2>Bienvenue dans votre espace de cours</h2>
+    <p>Cette plateforme réunit les ressources du module <strong>Analyse 3 — MTH 1101</strong> pour les étudiants de <strong>Licence 1 en Hydrologie</strong>. Vous y trouverez le programme, les polycopiés, les présentations Beamer, les travaux dirigés, les corrigés et des exemples appliqués aux sciences de l'eau. Les documents sont actualisés au fil de l'enseignement.</p>
+    <div class="details" aria-label="Informations du module">
+      <div class="metric"><strong>3</strong><span>Crédits</span></div>
+      <div class="metric"><strong>45 h</strong><span>Volume proposé : CM + TD + TP</span></div>
+      <div class="metric"><strong>15</strong><span>Semaines indicatives</span></div>
+    </div>
+  </section>
+  <section id="programme">
+    <h2>Le programme en sept chapitres</h2>
+    <div class="outline">
+      <ol>
+        <li>Rappels fondamentaux d'analyse</li>
+        <li>Suites et séries numériques à termes positifs</li>
+        <li>Séries numériques à termes quelconques</li>
+        <li>Suites et séries de fonctions</li>
+        <li>Séries entières et développements de Taylor</li>
+        <li>Séries de Fourier</li>
+        <li>Équations différentielles et lois de conservation</li>
+      </ol>
+      <p class="subtle">Les durées, la progression et les modalités d'évaluation restent soumises à la validation pédagogique.</p>
+      <a class="button" href="programme/PLAN-DU-COURS.md">Lire le programme détaillé</a>
+    </div>
+  </section>
+  <section id="documents">
+    <h2>Bibliothèque pédagogique</h2>
+    <div class="grid">
+      <article class="card"><div class="symbol" aria-hidden="true">📗</div><h3>Polycopiés de cours</h3><p>Chapitres d'analyse, démonstrations et exemples commentés.</p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/cours">Consulter les cours</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">🖥️</div><h3>Présentations Beamer</h3><p>Diaporamas des séances et sources LaTeX disponibles.</p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/presentations">Voir les présentations</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">✍️</div><h3>Travaux dirigés</h3><p>Feuilles d'exercices pour préparer et approfondir chaque chapitre.</p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/td">Accéder aux TD</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">✅</div><h3>Corrigés</h3><p>Solutions et indications mises en ligne selon l'avancement.</p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/corriges">Consulter les corrigés</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">💧</div><h3>Applications hydrologiques</h3><p>Pluie, débit, infiltration, courbes de crue et bilan hydrique.</p><a href="https://github.com/btraore850/cours-analyse-l1-meteo/tree/main/applications-hydrologie">Explorer les applications</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">📚</div><h3>Bibliographie</h3><p>Ouvrages, ressources complémentaires et liens légaux de consultation.</p><a href="bibliographie/README.md">Voir les références</a></article>
+    </div>
+  </section>
+  <section id="applications">
+    <h2>L'analyse au service de l'hydrologie</h2>
+    <div class="grid">
+      <article class="card"><div class="symbol" aria-hidden="true">🌧️</div><h3>Précipitations cumulées</h3><p>Intégrer une intensité de pluie pour obtenir une hauteur cumulée.</p></article>
+      <article class="card"><div class="symbol" aria-hidden="true">🌊</div><h3>Débits des cours d'eau</h3><p>Étudier le débit Q(t), sa variation et le volume écoulé dans le temps.</p></article>
+      <article class="card"><div class="symbol" aria-hidden="true">💧</div><h3>Bilan d'un réservoir</h3><p>Exprimer une variation de stockage à partir des apports, sorties et pertes.</p></article>
+    </div>
+  </section>
+  <section id="informations">
+    <h2>Informations aux étudiants</h2>
+    <div class="notice">Consultez régulièrement cette plateforme, téléchargez les documents disponibles avant chaque séance et préparez les TD. Les supports et corrigés sont ajoutés progressivement par l'enseignant.</div>
+    <p class="subtle">Enseignant : <strong>M. Bakary TRAORE</strong>. Vous pouvez retrouver les versions et mises à jour des fichiers dans le <a href="https://github.com/btraore850/cours-analyse-l1-meteo">dépôt GitHub du cours</a>.</p>
+  </section>
 </main>
-<footer><div class="wrap">Analyse mathématique · Licence 1 · Département de Météorologie<br>Plateforme pédagogique en cours d'enrichissement.</div></footer>
+<footer><div class="container"><strong>Analyse 3 — Licence 1 Hydrologie</strong><br>Université de N'Zérékoré · Année universitaire 2026–2027 · MTH 1101</div></footer>
 </body>
 </html>
