@@ -6,14 +6,16 @@ Plateforme pédagogique du cours **Analyse (MTH 1101)**, destiné aux étudiants
 
 ## 🌊 Accès à la plateforme
 
-**Site du cours :** https://btraore850.github.io/cours-analyse-l1-meteo/
+**Nouvelle adresse prévue après renommage :** https://btraore850.github.io/cours-analyse-l1-hydro/
 
-> L'URL conserve le nom technique historique du dépôt pour éviter de rompre les liens déjà diffusés ; le contenu pédagogique de la plateforme est désormais présenté pour la Licence en Hydrologie.
+> La nouvelle adresse GitHub Pages ne sera opérationnelle qu'après le renommage du dépôt et la publication du site. Les URL actuelles restent à utiliser tant que le changement n'a pas été effectué.
 
 ## 📚 Ressources
 
 | Rubrique | Contenu |
 |---|---|
+| [Présentation du programme — PDF](programme/Presentation_Programme_Hydrologie.pdf) | Objectifs, progression et présentation du cours |
+| [Présentation du chapitre 1 — PDF](presentations/Chapitre1_Hydrologie.pdf) | Diaporama du premier chapitre |
 | [Programme détaillé](programme/PLAN-DU-COURS.md) | 7 chapitres ; 45 h proposées sur 15 semaines |
 | [Polycopiés](cours/) | Notes de cours, chapitres et PDF |
 | [Présentations](presentations/) | Diaporamas Beamer et sources |
@@ -43,4 +45,4 @@ Consultez les nouvelles ressources, préparez les exercices de TD et télécharg
 
 [Guide de publication](GUIDE-DE-PUBLICATION.md) · [Page d'accueil HTML](index.html)
 
-> Le dépôt a conservé son nom historique `cours-analyse-l1-meteo` et certains documents sources antérieurs font encore référence à la météorologie. Les pages de présentation et le programme Markdown ont été adaptés à l'hydrologie sans modifier le contenu des fichiers LaTeX d'origine.
+> Le site utilise désormais des intitulés d'Hydrologie. Le nom du dépôt doit encore être changé en `cours-analyse-l1-hydro` dans GitHub Settings pour modifier l'URL publique.
