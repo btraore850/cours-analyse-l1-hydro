@@ -1,47 +1,26 @@
-# Analyse 3 — MTH 1101 | Licence 1 en Hydrologie
+# Analyse mathématique — Licence 1 Hydrologie
 
-**Université de N'Zérékoré — Année universitaire 2026–2027**
+Plateforme de ressources pédagogiques du module **MTH 1101 — Analyse**, à l’Université de N’Zérékoré, année universitaire 2026–2027.
 
-Plateforme pédagogique du cours **Analyse (MTH 1101)**, destiné aux étudiants de **Licence 1 en Hydrologie** (3 crédits).
+**Site du cours : https://btraore850.github.io/cours-analyse-l1-hydro/**
 
-## 🌊 Accès à la plateforme
+## Ressources
 
-**Nouvelle adresse prévue après renommage :** https://btraore850.github.io/cours-analyse-l1-hydro/
+| Rubrique | Page étudiante HTML | Documents disponibles |
+|---|---|---|
+| Programme du cours | [Programme](programme/) · [Détail](programme.html) | [Présentation du programme (PDF)](programme/Presentation_Programme_Hydrologie.pdf) |
+| Cours et polycopiés | [Cours](cours/) | [Polycopié chapitre 1 (PDF)](cours/Cours_Analyse_Chapitre1_Hydrologie_UNZ.pdf) |
+| Présentations | [Diaporamas](presentations/) | [Présentation chapitre 1 (PDF)](presentations/Chapitre1_Hydrologie.pdf) |
+| Travaux dirigés | [TD](td/) | [Feuille TD 1 (PDF)](td/TD1_Analyse_Hydrologie_UZ.pdf) |
+| Travaux pratiques | [TP](tp/) | Plan de cinq séances proposé ; supports à venir |
+| Corrigés | [Corrigés](corriges/) | À publier |
+| Applications hydrologiques | [Applications](applications-hydrologie/) | Exemples pédagogiques |
+| Bibliographie | [Références](bibliographie/) | Livres et dossier OneDrive |
 
-> La nouvelle adresse GitHub Pages ne sera opérationnelle qu'après le renommage du dépôt et la publication du site. Les URL actuelles restent à utiliser tant que le changement n'a pas été effectué.
+Le volume proposé est de **45 heures** (25 h CM, 15 h TD, 5 h TP), pour **3 crédits**, avec une progression indicative de 15 semaines.
 
-## 📚 Ressources
+**Enseignant :** M. Bakary TRAORE.
 
-| Rubrique | Contenu |
-|---|---|
-| [Présentation du programme — PDF](programme/Presentation_Programme_Hydrologie.pdf) | Objectifs, progression et présentation du cours |
-| [Programme détaillé (site HTML)](programme.html) | 7 chapitres ; 45 h proposées sur 15 semaines |
-| [Polycopiés](cours/) | Notes de cours, chapitres et PDF |
-| [Présentations](presentations/) | Diaporamas Beamer et sources |
-| [Travaux dirigés](td/) | Exercices et activités |
-| [Corrigés](corriges/) | Solutions mises à disposition après les séances |
-| [Applications hydrologiques](applications-hydrologie/) | Précipitations, écoulements, débits et bilans hydriques |
-| [Bibliographie](bibliographie/) | Références et ressources disponibles légalement |
+Les PDF présents ont été conservés à leurs emplacements. Les étudiants sont dirigés vers les pages HTML plutôt que vers les fichiers Markdown sources.
 
-## 🎯 Finalité du cours
-
-Mobiliser les limites, dérivées, intégrales, suites et séries, séries de Fourier et équations différentielles pour résoudre des problèmes mathématiques et comprendre des phénomènes hydrologiques : intensité des précipitations, variation du débit, volumes écoulés, stockage et conservation de l'eau.
-
-## 📝 Organisation pédagogique
-
-- **Cours magistraux :** 25 h
-- **Travaux dirigés :** 15 h
-- **Travaux pratiques :** 5 h
-- **Total proposé :** 45 h sur 15 semaines
-
-Les pondérations d'évaluation, la progression et les horaires sont indicatifs, sous réserve de validation par l'établissement.
-
-## Aux étudiants
-
-Consultez les nouvelles ressources, préparez les exercices de TD et téléchargez les supports utiles avant les séances.
-
-## Administration du site
-
-[Guide de publication](GUIDE-DE-PUBLICATION.md) · [Page d'accueil HTML](index.html)
-
-> Le site utilise désormais des intitulés d'Hydrologie. Le nom du dépôt doit encore être changé en `cours-analyse-l1-hydro` dans GitHub Settings pour modifier l'URL publique.
+[Guide de publication](GUIDE-DE-PUBLICATION.md).

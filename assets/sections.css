@@ -15,3 +15,10 @@ a.action:hover{background:#0c6580}.link-list{padding-left:21px}.link-list li{mar
 code{background:#edf4f6;border-radius:4px;padding:2px 5px}.meta{font-size:.85rem;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding:23px 0;background:#e7f1f5;color:#425d6e;font-size:.9rem}
 @media(max-width:700px){.grid{grid-template-columns:1fr}.brand img{width:64px;height:64px}.panel,.card{padding:18px}nav a{padding:6px 9px}}
+
+/* Travaux pratiques : déroulé accessible et adaptable */
+.tp-session{display:grid;grid-template-columns:70px minmax(0,1fr);gap:15px;border:1px solid var(--line);border-radius:11px;padding:15px;margin-bottom:13px;background:#fbfdfe}
+.tp-session h3{margin:0 0 5px}.tp-session p{margin:0 0 6px}
+.tp-num{font-size:.86rem;font-weight:800;color:#075e77;background:#e7f6f7;text-align:center;align-self:start;border-radius:8px;padding:8px}
+nav .wrap{align-items:center}
+@media(max-width:560px){.tp-session{grid-template-columns:1fr;gap:7px}.tp-num{justify-self:start}}

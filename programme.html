@@ -30,6 +30,8 @@ article code{background:#edf3f5;padding:2px 4px;border-radius:3px}article hr{bor
 .math{overflow-wrap:anywhere}footer{border-top:1px solid var(--bord);padding:24px 0;color:var(--gris)}
 @media(max-width:870px){.layout{grid-template-columns:1fr}.toc{position:static!important;display:none}article{padding:22px}}
 @media print{header{background:#fff;color:#000}.hero .subtitle{color:#333}.topnav,.toc,.actions{display:none!important}.layout{display:block;padding:0}article{border:0;padding:0}body{background:white}}
+.topnav .container{display:flex;flex-wrap:wrap;gap:8px 18px}.topnav .container a{margin-right:0;font-size:.9rem}
+@media(max-width:650px){.topnav .container{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.topnav .container a{white-space:nowrap}}
 </style>
 <script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]]},svg:{fontCache:"global"}};</script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -40,7 +42,9 @@ article code{background:#edf3f5;padding:2px 4px;border-radius:3px}article hr{bor
   <h1>Programme détaillé d’Analyse 3</h1>
   <p class="subtitle">MTH 1101 · Licence 1 en Hydrologie · 3 crédits · Année universitaire 2026–2027</p>
 </div></header>
-<nav class="topnav" aria-label="Navigation"><div class="container"><a href="index.html">← Accueil du cours</a><a href="programme/Presentation_Programme_Hydrologie.pdf">Présentation du programme (PDF)</a></div></nav>
+<nav class="topnav" aria-label="Navigation du cours"><div class="container">
+<a href="index.html">← Accueil</a><a href="programme/">Programme</a><a href="cours/">Cours</a><a href="presentations/">Présentations</a><a href="td/">TD</a><a href="tp/">Travaux pratiques</a><a href="corriges/">Corrigés</a><a href="bibliographie/">Références</a>
+</div></nav>
 <div class="container layout">
 <aside class="toc"><strong>Sommaire</strong><a href="#section-1">Présentation et intérêt du cours</a>
 <a href="#section-2">Fiche d'organisation du module</a>

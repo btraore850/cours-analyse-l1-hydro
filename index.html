@@ -80,6 +80,14 @@ footer a{font-weight:650}
 @media(max-width:780px){.hero{min-height:0;padding:36px 0 40px}.campus-frame{position:relative;top:auto;right:auto;width:min(100%,430px);height:250px;margin:27px auto 0;border-radius:25px;border-width:4px;box-shadow:0 8px 28px #002a3b47}.hero-copy,.brand-row{max-width:100%}.masthead::after{display:none}.brand-logo{width:95px;height:95px}.brand-title{padding-left:15px}.hero-copy{margin-top:28px}.hero-copy h1{font-size:clamp(2.2rem,7vw,3.5rem)}.nav .container{gap:4px}.nav a{padding:6px 9px;font-size:.86rem}}
 @media(max-width:420px){.brand-row{gap:13px}.brand-logo{width:75px;height:75px}.brand-title strong{font-size:1rem}.brand-title span{font-size:.74rem;letter-spacing:.02em}.hero-copy p{font-size:.98rem}.tags{gap:8px}.tags span{font-size:.76rem;padding:5px 9px}}
 @media(prefers-reduced-motion:reduce){.nav a{transition:none}}
+
+/* Cartes : deux nouvelles rubriques et statuts de publication */
+.resource-status{font-size:.78rem;color:#617b89;margin-top:12px;display:block}
+.card{min-height:240px}
+.card h3{color:#0b3954}
+.card a:hover{text-decoration:underline}
+@media(min-width:970px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:580px){.grid{grid-template-columns:1fr}.card{min-height:0}.nav .container{display:flex;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap}}
 </style>
 </head>
 <body>
@@ -108,12 +116,12 @@ footer a{font-weight:650}
   </div>
 </header>
 <nav class="nav" aria-label="Navigation principale"><div class="container">
-<a href="#accueil">Accueil</a><a href="#programme">Programme</a><a href="#documents">Bibliothèque</a><a href="#applications">Hydrologie</a><a href="#informations">Informations</a>
+<a href="#accueil">Accueil</a><a href="#programme">Programme</a><a href="#documents">Bibliothèque</a><a href="tp/">Travaux pratiques</a><a href="#applications">Hydrologie</a><a href="#informations">Informations</a>
 </div></nav>
 <main class="container">
   <section id="accueil" class="intro">
     <h2>Bienvenue dans votre espace de cours</h2>
-    <p>Cette plateforme réunit les ressources du module <strong>Analyse — MTH 1101</strong> pour les étudiants de <strong>Licence 1 en Hydrologie</strong>. Vous y trouverez le programme, les polycopiés, les présentations, les travaux dirigés, les corrigés et des exemples appliqués aux sciences de l'eau. Les documents sont actualisés au fil de l'enseignement.</p>
+    <p>Cette plateforme réunit les ressources du module <strong>Analyse — MTH 1101</strong> pour les étudiants de <strong>Licence 1 en Hydrologie</strong>. Vous y trouverez le programme, les polycopiés, les présentations, les travaux dirigés, les cinq travaux pratiques proposés, les corrigés et des exemples appliqués aux sciences de l'eau. Les documents sont actualisés au fil de l'enseignement.</p>
     <div class="details" aria-label="Informations du module">
       <div class="metric"><strong>3</strong><span>Crédits</span></div>
       <div class="metric"><strong>45 h</strong><span>Volume proposé : CM + TD + TP</span></div>
@@ -139,12 +147,14 @@ footer a{font-weight:650}
   <section id="documents">
     <h2>Bibliothèque pédagogique</h2>
     <div class="grid">
-      <article class="card"><div class="symbol" aria-hidden="true">📗</div><h3>Polycopiés de cours</h3><p>Chapitres d'analyse, démonstrations et exemples commentés.</p><a href="cours/">Consulter les cours</a></article>
-      <article class="card"><div class="symbol" aria-hidden="true">🖥️</div><h3>Présentations </h3><p>Diapositives des chapitres du cours au format PDF.</p><a href="presentations/">Voir les présentations</a></article>
-      <article class="card"><div class="symbol" aria-hidden="true">✍️</div><h3>Travaux dirigés</h3><p>Feuilles d'exercices pour préparer et approfondir chaque chapitre.</p><a href="td/">Accéder aux TD</a></article>
-      <article class="card"><div class="symbol" aria-hidden="true">✅</div><h3>Corrigés</h3><p>Solutions et indications complémentaires des feuilles de TD.</p><a href="corriges/">Consulter le corrigé des TD</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">📗</div><h3>Polycopiés de cours</h3><p>Chapitres d’analyse et démonstrations. Le polycopié du chapitre 1 est disponible.</p><a href="cours/">Consulter les cours</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">🖥️</div><h3>Présentations</h3><p>Diapositives des chapitres du cours au format PDF.</p><a href="presentations/">Voir les présentations</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">✍️</div><h3>Travaux dirigés</h3><p>Feuilles d’exercices pour approfondir les chapitres. Le TD 1 est disponible en PDF.</p><a href="td/">Accéder aux TD</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">✅</div><h3>Corrigés</h3><p>Solutions et indications complémentaires des feuilles de TD.</p><a href="corriges/">Consulter les corrigés</a></article>
       <article class="card"><div class="symbol" aria-hidden="true">💧</div><h3>Applications hydrologiques</h3><p>Pluie, débit, infiltration, courbes de crue et bilan hydrique.</p><a href="applications-hydrologie/">Explorer les applications</a></article>
       <article class="card"><div class="symbol" aria-hidden="true">📚</div><h3>Bibliographie</h3><p>Manuels de référence et ressources de consultation légales.</p><a href="bibliographie/">Voir les références</a></article>
+      <article class="card"><div class="symbol" aria-hidden="true">💻</div><h3>Travaux pratiques</h3><p>Cinq séances proposées sur tableur, R ou Python et ressources numériques.</p><a href="tp/">Ouvrir les TP</a><span class="resource-status">Plan des 5 heures de TP</span></article>
+      <article class="card"><div class="symbol" aria-hidden="true">📄</div><h3>Programme du cours</h3><p>Organisation des 45 heures, objectifs, progression et modalités.</p><a href="programme/">Lire le programme</a><span class="resource-status">Version HTML et présentation PDF</span></article>
     </div>
   </section>
   <section id="applications">

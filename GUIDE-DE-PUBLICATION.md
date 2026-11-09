@@ -1,41 +1,26 @@
-# Guide de publication — Analyse L1 Hydrologie
+# Guide de publication — Licence 1 Hydrologie
 
-## Accès
+## Adresse du site
+https://btraore850.github.io/cours-analyse-l1-hydro/
 
-- **Dépôt après renommage :** https://github.com/btraore850/cours-analyse-l1-hydro
-- **Site après renommage :** https://btraore850.github.io/cours-analyse-l1-hydro/
-- Ces nouvelles adresses ne fonctionneront qu'après le renommage et la publication du site.
+Le dépôt GitHub est https://github.com/btraore850/cours-analyse-l1-hydro. Dans **Settings → Pages**, choisir la branche `main` et le dossier `/(root)`.
 
-## Renommer le dépôt (meteo → hydro)
+## Ajouter un support
 
-1. Ouvrir **Settings → General** dans votre dépôt GitHub actuel.
-2. Sous **Repository name**, remplacer le nom par `cours-analyse-l1-hydro`.
-3. Cliquer sur **Rename**.
-4. Ouvrir **Settings → Pages** pour confirmer la nouvelle adresse.
-5. Ouvrir les deux documents PDF depuis la page d'accueil pour vérifier leur disponibilité.
+1. Importer le fichier PDF dans `cours/`, `presentations/`, `td/`, `tp/` ou `corriges/`.
+2. Mettre à jour le fichier `index.html` du dossier concerné et y ajouter un lien vers le document.
+3. Vérifier que le lien pointe vers un fichier réel et que le déploiement GitHub Pages est terminé.
 
-**Important :** GitHub redirige les anciennes URL du dépôt GitHub, mais les URL des sites de projet GitHub Pages ne bénéficient pas d'une redirection automatique. Diffuser la nouvelle adresse aux étudiants.
+**Éviter de créer des liens étudiants directement vers `README.md` :** GitHub Pages peut l'afficher sous forme de texte Markdown brut.
 
-## Activer GitHub Pages
+## Architecture
 
-Dans le dépôt GitHub, ouvrir **Settings → Pages**, choisir **Deploy from a branch**, sélectionner la branche **main** et le dossier **/(root)**, puis enregistrer avec **Save**. Vérifier ensuite l'adresse affichée par GitHub dans les paramètres Pages.
+- Accueil : `index.html`.
+- Programme détaillé : `programme.html`, présentation pédagogique : `programme/index.html`.
+- Cours : `cours/index.html` ; présentations : `presentations/index.html`.
+- TD : `td/index.html` ; TP : `tp/index.html` ; corrigés : `corriges/index.html`.
+- Bibliographie : `bibliographie/index.html`.
+- Applications hydrologiques : `applications-hydrologie/index.html`.
+- Style des pages secondaires : `assets/sections.css`.
 
-## Ajouter un document
-
-1. Ouvrir le dossier pertinent (par exemple `cours/` ou `td/`).
-2. Cliquer sur **Add file → Upload files**.
-3. Sélectionner le PDF, puis cliquer sur **Commit changes**.
-4. Les liens vers les dossiers présents sur le site permettent déjà de retrouver le nouveau document.
-5. Pour ajouter un lien direct au document depuis la page d'accueil, éditer `index.html` et ajouter un lien HTML de type `<a href="cours/chapitre-01.pdf">Chapitre 1 (PDF)</a>`.
-
-## Conseils
-
-- N'utiliser que des noms de fichiers simples (minuscules, tirets, sans espaces).
-- Garder un fichier par chapitre, TD ou corrigé.
-- Ne pas publier d'informations personnelles concernant les étudiants.
-- Respecter les droits d'auteur des manuels et articles.
-- Privilégier les PDF pour la lecture sur téléphone.
-
-## Modifier le site
-
-Éditer le fichier `index.html` pour mettre à jour la page d'accueil : titres, liens et consignes. Publier en effectuant un commit sur `main`.
+Ne pas modifier les PDF déjà publiés sans raison ; ne diffuser que des ressources avec une autorisation de partage appropriée.
