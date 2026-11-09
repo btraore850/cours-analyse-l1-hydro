@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b3954">
+<meta name="description" content="Analyse 2MTH1 0101 — plateforme pédagogique du tronc commun L1 : Météorologie, Hydrologie, Génie de l'environnement et Gestion des Ressources Naturelles.">
+<title>Analyse — Tronc commun Licence 1 | Université de N'Zérékoré</title><style>
+:root{--marine:#0b3954;--bleu:#086e83;--eau:#119eaa;--fonce:#142f41;--gris:#5a7080;--clair:#edf6f8;--page:#f5f9fb;--bord:#d9e7ee;--blanc:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--fonce);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:#0a617a;text-underline-offset:3px}
+a:focus-visible{outline:3px solid #eeb84d;outline-offset:3px}
+.container{width:min(1120px,calc(100% - 36px));margin:0 auto}
+.masthead{background:linear-gradient(126deg,#0a304c 0%,#0b617e 59%,#0c8990 100%);color:#fff;position:relative;overflow:hidden}
+.masthead:before{content:"";position:absolute;width:610px;height:610px;border:2px solid #ffffff22;border-radius:50%;right:-160px;top:-340px;box-shadow:0 0 0 75px #ffffff09,0 0 0 150px #ffffff06}
+.hero{position:relative;padding:66px 0 64px}
+.eyebrow{text-transform:uppercase;font-size:.81rem;letter-spacing:.14em;color:#c1e8ec;font-weight:750}
+h1{font-size:clamp(2.5rem,6vw,4.6rem);line-height:1.08;letter-spacing:-.04em;margin:13px 0}
+.hero p{font-size:1.1rem;max-width:650px;color:#e1f3f6;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.tags span{border:1px solid #b0dae1a6;background:#ffffff12;padding:5px 12px;border-radius:999px;font-size:.84rem}
+.nav{background:#092f49;position:sticky;top:0;z-index:10}
+.nav .container{display:flex;gap:22px;flex-wrap:wrap;align-items:center;padding:11px 0}
+.nav a{color:#fff;text-decoration:none;font-size:.91rem;font-weight:700}
+.nav a:hover{text-decoration:underline}
+main{padding:37px 0 55px}
+section{margin-bottom:38px;scroll-margin-top:70px}
+h2{font-size:1.52rem;letter-spacing:-.025em;margin:0 0 17px}
+.card,.intro,.outline{background:var(--blanc);border:1px solid var(--bord);border-radius:15px;box-shadow:0 3px 16px #10354e07}
+.intro,.outline{padding:25px 28px}
+.intro p{margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{padding:23px;display:flex;flex-direction:column;align-items:flex-start}
+.card .symbol{font-size:1.7rem;line-height:1.4}
+.card h3{font-size:1.07rem;line-height:1.35;margin:12px 0 8px}
+.card p{color:var(--gris);margin:0 0 15px;flex:1}
+.card a{font-weight:720}
+.outline ol{margin:0;padding-left:22px;columns:2;column-gap:34px}
+.outline li{margin-bottom:9px;break-inside:avoid;padding-left:3px}
+.details{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 0}
+.metric{background:var(--clair);border-radius:10px;padding:12px 15px}
+.metric strong{display:block;color:var(--marine);font-size:1.28rem}
+.metric span{font-size:.82rem;color:var(--gris)}
+.notice{border-left:4px solid var(--eau);background:#eaf6f7;padding:19px 22px;border-radius:0 10px 10px 0}
+.button{display:inline-block;border-radius:9px;background:var(--marine);color:#fff;text-decoration:none;font-weight:700;padding:10px 16px;margin-top:17px}
+.button:hover{background:#08617c}
+.subtle{color:var(--gris);font-size:.92rem}
+footer{background:#e4f0f4;border-top:1px solid #cedfe7;color:#425b6b;padding:26px 0}
+footer a{font-weight:650}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.hero{padding:48px 0}.grid,.details{grid-template-columns:1fr}.outline ol{columns:1}.intro,.outline,.card{padding:20px}.nav .container{gap:11px 17px}}
+
+/* Identité visuelle UNZ — campus et hydrologie */
+.masthead{background:linear-gradient(117deg,#07344e 0%,#07617c 61%,#04939a 100%);position:relative;isolation:isolate}
+.masthead::before{width:790px;height:790px;top:-425px;right:-285px;border-color:#ffffff19;box-shadow:0 0 0 77px #ffffff09,0 0 0 145px #ffffff08;pointer-events:none}
+.masthead::after{content:"";position:absolute;bottom:-170px;right:-80px;width:620px;height:230px;border:14px solid #27cad7;border-radius:50%;opacity:.72;transform:rotate(-10deg);pointer-events:none;z-index:-1}
+.hero{min-height:490px;padding:42px 0 58px;display:flex;flex-direction:column;justify-content:center}
+.brand-row{display:flex;align-items:center;gap:24px;z-index:2;position:relative;max-width:780px}
+.brand-logo{width:122px;height:122px;object-fit:contain;background:white;border-radius:50%;border:3px solid #e9ffff;padding:3px;flex:none;box-shadow:0 9px 28px #001e3333}
+.brand-title{border-left:3px solid #e9ffffc7;padding-left:22px;text-transform:uppercase}
+.brand-title strong{display:block;font-size:clamp(1.16rem,2.4vw,2.0rem);line-height:1.18;letter-spacing:.015em;color:#fff}
+.brand-title span{display:block;margin-top:8px;color:#e5f7f8;font-size:clamp(.85rem,1.6vw,1.15rem);letter-spacing:.06em}
+.hero-copy{position:relative;z-index:2;max-width:780px;margin-top:26px}
+.hero-copy h1{font-size:clamp(2.35rem,5vw,4.25rem);line-height:1.1;letter-spacing:-.035em;margin:0 0 14px;text-shadow:0 2px 5px #002d3c16}
+.hero-copy p{max-width:745px;font-size:1.05rem;line-height:1.65;color:#edfaff}
+.hero-copy p strong{color:#ffd269}
+.tags{margin-top:26px}
+.tags span{display:inline-flex;align-items:center;border-color:#b4edf3b0;background:#ffffff0c;padding:6px 13px;color:#fff}
+.campus-frame{position:absolute;z-index:1;top:-70px;right:-165px;width:475px;height:475px;border-radius:50%;overflow:hidden;border:7px solid #6ae8ee;box-shadow:0 0 0 22px #44e0e216,0 0 0 58px #5ee9eb0b}
+.campus-frame img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%;filter:saturate(1.13)}
+.nav{background:#042940;box-shadow:0 3px 12px #062b3b20}
+.nav .container{gap:9px;padding:10px 0}
+.nav a{padding:8px 14px;border-radius:24px;font-weight:700;transition:background .15s ease}
+.nav a:first-child{background:#0765a2}
+.nav a:hover{background:#156282;text-decoration:none}
+@media(max-width:1050px){.campus-frame{right:-200px;width:420px;height:420px;top:-60px}.hero-copy{max-width:710px}.brand-row{max-width:670px}.hero-copy h1{font-size:clamp(2.2rem,4.8vw,3.8rem)}}
+@media(max-width:780px){.hero{min-height:0;padding:36px 0 40px}.campus-frame{position:relative;top:auto;right:auto;width:min(100%,430px);height:250px;margin:27px auto 0;border-radius:25px;border-width:4px;box-shadow:0 8px 28px #002a3b47}.hero-copy,.brand-row{max-width:100%}.masthead::after{display:none}.brand-logo{width:95px;height:95px}.brand-title{padding-left:15px}.hero-copy{margin-top:28px}.hero-copy h1{font-size:clamp(2.2rem,7vw,3.5rem)}.nav .container{gap:4px}.nav a{padding:6px 9px;font-size:.86rem}}
+@media(max-width:420px){.brand-row{gap:13px}.brand-logo{width:75px;height:75px}.brand-title strong{font-size:1rem}.brand-title span{font-size:.74rem;letter-spacing:.02em}.hero-copy p{font-size:.98rem}.tags{gap:8px}.tags span{font-size:.76rem;padding:5px 9px}}
+@media(prefers-reduced-motion:reduce){.nav a{transition:none}}
+</style></head>
+<body>
+<header class="masthead"><div class="container hero">
+<div class="brand-row"><img class="brand-logo" src="../assets/logo-unz.webp" width="122" height="122" alt="Logo de l’Université de N’Zérékoré"><div class="brand-title"><strong>Université de N’Zérékoré</strong><span>Ressources pédagogiques · Tronc commun</span></div></div>
+<div class="hero-copy"><h1>Analyse mathématique</h1><p>Un cours commun de première année de Licence pour les filières <strong>Météorologie, Hydrologie, Génie de l’environnement et Gestion des Ressources Naturelles</strong>. Fonctions, dérivées, intégrales, suites et séries, Fourier et équations différentielles.</p>
+<div class="tags"><span>▤ &nbsp; 2MTH1 0101 · Analyse</span><span>🎓 &nbsp; L1 · Tronc commun</span><span>◈ &nbsp; 3 crédits</span><span>⏱ &nbsp; 45 h</span><span>▦ &nbsp; 2026–2027</span></div></div>
+<div class="campus-frame"><img src="../assets/campus.webp" alt="Campus de l’Université de N’Zérékoré" width="320" height="260" fetchpriority="high"></div>
+</div></header>
+<nav class="nav" aria-label="Navigation principale"><div class="container"><a href="#accueil">Accueil</a><a href="#programme">Programme</a><a href="#documents">Bibliothèque</a><a href="#applications">Applications</a><a href="#informations">Informations</a></div></nav>
+<main class="container">
+<section id="accueil" class="intro"><h2>Bienvenue dans l'espace pédagogique du tronc commun</h2><p>Ce site regroupe les ressources du module <strong>Analyse (2MTH1 0101)</strong>, enseigné par <strong>M. Bakary TRAORE</strong> aux étudiants de première année des quatre filières. Les fichiers de cours, présentations, TD, corrigés et TP seront publiés dans des rubriques distinctes, sans modifier la plateforme spécifique à l’Hydrologie.</p>
+<div class="details"><div class="metric"><strong>30 h</strong><span>Cours magistraux</span></div><div class="metric"><strong>10 h</strong><span>Travaux dirigés</span></div><div class="metric"><strong>5 h</strong><span>Travaux pratiques</span></div></div></section>
+<section id="programme"><h2>Programme en huit chapitres</h2><div class="outline"><ol><li>Fonctions usuelles</li>
+<li>Calcul différentiel</li>
+<li>Calcul intégral</li>
+<li>Suites numériques</li>
+<li>Séries numériques</li>
+<li>Séries de fonctions et séries entières</li>
+<li>Séries de Fourier</li>
+<li>Équations différentielles par séries entières</li></ol>
+<p class="subtle">45 heures · 15 semaines · 3 crédits · Contrôles continus et examen terminal.</p><a class="button" href="programme.html">Lire le programme détaillé</a></div></section>
+<section id="documents"><h2>Bibliothèque pédagogique</h2><div class="grid"><article class="card"><div class="symbol" aria-hidden="true">📗</div><h3>Polycopiés de cours</h3><p>Cours structurés par chapitre, définitions, propriétés, démonstrations et exemples.</p><a href="cours/">Consulter les cours</a></article>
+<article class="card"><div class="symbol" aria-hidden="true">🖥️</div><h3>Présentations Beamer</h3><p>Diapositives du programme et des huit chapitres au format PDF.</p><a href="presentations/">Voir les présentations</a></article>
+<article class="card"><div class="symbol" aria-hidden="true">✍️</div><h3>Travaux dirigés</h3><p>Feuilles d’exercices pour s'entraîner progressivement.</p><a href="td/">Accéder aux TD</a></article>
+<article class="card"><div class="symbol" aria-hidden="true">✅</div><h3>Corrigés détaillés</h3><p>Solutions et indications complémentaires des feuilles de TD.</p><a href="corriges/">Consulter les corrigés</a></article>
+<article class="card"><div class="symbol" aria-hidden="true">💻</div><h3>Travaux pratiques</h3><p>Cinq séances sur tableur, R ou Python et ressources numériques.</p><a href="tp/">Ouvrir les TP</a></article>
+<article class="card"><div class="symbol" aria-hidden="true">🌍</div><h3>Applications par filière</h3><p>Études illustratives en météo, hydrologie, environnement et GRN.</p><a href="applications/">Explorer les applications</a></article>
+<article class="card"><div class="symbol" aria-hidden="true">📚</div><h3>Bibliographie</h3><p>Manuels de référence et ressources de consultation légales.</p><a href="bibliographie/">Voir les références</a></article>
+<article class="card"><div class="symbol" aria-hidden="true">📄</div><h3>Programme du cours</h3><p>Organisation des 45 heures, objectifs, progression et modalités.</p><a href="programme.html">Lire le programme</a></article></div></section>
+<section id="applications"><h2>Des applications adaptées aux quatre filières</h2><div class="grid">
+<article class="card"><div class="symbol" aria-hidden="true">🌤️</div><h3>Météorologie</h3><p>Cycles thermiques, variations de pression et signaux périodiques.</p></article>
+<article class="card"><div class="symbol" aria-hidden="true">🌊</div><h3>Hydrologie</h3><p>Débits, précipitations cumulées, réservoirs et bilans hydriques.</p></article>
+<article class="card"><div class="symbol" aria-hidden="true">♻️</div><h3>Génie de l’environnement</h3><p>Polluants, processus de traitement et phénomènes de transport.</p></article>
+<article class="card"><div class="symbol" aria-hidden="true">🌱</div><h3>Gestion des Ressources Naturelles</h3><p>Évolution et renouvellement de stocks, croissance biologique et prélèvements.</p></article>
+</div></section>
+<section id="informations"><h2>Informations aux étudiants</h2><div class="notice">Consultez régulièrement les rubriques. Les documents apparaissent automatiquement dans leur espace après dépôt sur GitHub. Préparez les TD avant les séances et conservez les scripts et résultats des TP.</div><p class="subtle"><strong>Enseignant chargé du cours :</strong> M. Bakary TRAORE · <strong>Code :</strong> 2MTH1 0101 · <a href="https://github.com/btraore850/cours-analyse-l1-hydro/tree/main/tronc-commun/">Dossier GitHub du tronc commun</a>. <a href="../">Accéder à l’ancienne plateforme Hydrologie</a>.</p></section>
+</main>
+<footer><div class="container"><strong>Analyse — Licence 1, tronc commun</strong><br>Université de N’Zérékoré · Année universitaire 2026–2027 · 2MTH1 0101</div></footer>
+</body></html>
