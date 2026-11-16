@@ -14,6 +14,24 @@ for(const chapter of [1,3,4,5,6,7]){
 }
 const questionBank=bankContext.window.HYDRO_DEMO_QUESTIONS;
 assert.equal(questionBank.length,210,'210 QCM couvrant les sept chapitres');
+const paraphraseFilename=path.join(root,'evaluation/paraphrases.js');
+const paraphraseSource=fs.readFileSync(paraphraseFilename,'utf8');
+assert(!/(?<!\\)\\[A-Za-z]/.test(paraphraseSource),'Échappement LaTeX incorrect dans les reformulations');
+vm.runInNewContext(paraphraseSource,bankContext,{filename:paraphraseFilename});
+const paraphrases=bankContext.window.HYDRO_QUESTION_PARAPHRASES;
+assert.equal(Object.keys(paraphrases).length,84,'84 questions ont une formulation alternative vérifiée');
+const byId=Object.fromEntries(questionBank.map(q=>[q.id,q]));
+const formulas=text=>[...text.matchAll(/\\\((.*?)\\\)/g)].map(m=>m[1]).sort();
+for(const [id,variants] of Object.entries(paraphrases)){
+  const q=byId[id];
+  assert(q,'Reformulation sans QCM original : '+id);
+  assert(variants.length>=1&&variants.length<=3);
+  for(const phrase of variants){
+    assert(phrase!==q.q&&phrase.length>25,'Reformulation vide ou identique : '+id);
+    assert.deepEqual(formulas(phrase),formulas(q.q),'Expression mathématique changée dans : '+id);
+    assert.equal((phrase.match(/\\\(/g)||[]).length,(phrase.match(/\\\)/g)||[]).length);
+  }
+}
 for(let chapter=1;chapter<=7;chapter++){
   const questions=questionBank.filter(q=>Number(q.chapter||2)===chapter);
   assert.equal(questions.length,30,`Chapitre ${chapter} : 30 QCM`);
@@ -36,6 +54,7 @@ for(const relative of htmlPaths){const html=fs.readFileSync(path.join(root,relat
 const quizHtml=fs.readFileSync(path.join(root,'evaluation/index.html'),'utf8');
 assert(quizHtml.includes('mathjax@4/tex-chtml.js'),'La bibliothèque de rendu des formules doit être chargée.');
 assert(quizHtml.includes("typesetMath($('questions'))")&&quizHtml.includes('typesetMath(list)'),'Les questions et les corrigés doivent être composés en mathématiques.');
+assert(quizHtml.includes('paraphrases.js')&&quizHtml.includes('withParaphrases(')&&quizHtml.includes('item.displayQuestion'),'Les reformulations doivent être appliquées au tirage de chaque tentative.');
 for(const chapter of [1,3,4,5,6,7])assert(quizHtml.includes(`questions/chapter-${chapter}.js`),`Chargement du chapitre ${chapter}`);
 assert(quizHtml.includes('Number(q.chapter||2)===chapter'),'Le chapitre choisi doit filtrer les QCM.');
 
@@ -94,4 +113,4 @@ assert.equal(sandbox.submitAttempt(student.session,examTry.id,{}).note,0);
 assert.equal(tables.EMAILS.length,3,'un seul e-mail pour l’examen officiel');
 assert.equal(sandbox.processMailQueue().sent,1);assert.equal(sent.length,1);
 assert.equal(sandbox.getDashboard(teacher.session).attempts.length,2);
-console.log('✓ 210 QCM sur sept chapitres validés, interfaces analysées, sessions, tirages, barème, confidentialité, e-mails et examen testés.');
+console.log('✓ 210 QCM et 84 reformulations sur sept chapitres validés, interfaces analysées, sessions, tirages, barème, confidentialité, e-mails et examen testés.');
