@@ -10,7 +10,7 @@ Ce dossier comprend deux éléments distincts :
 Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
 
 - `ETUDIANTS` : renseigner le matricule, l'adresse Gmail officielle, le nom, le prénom et le groupe ; mettre `actif` à `TRUE`. Laisser `google_sub` vide (il sera renseigné lors de la première connexion).
-- `QUESTIONS` : les 30 exemples du chapitre 2 sont marqués `usage=ENTRAINEMENT`. **Attention : les 180 QCM supplémentaires sont intégrés à la démonstration GitHub, pas automatiquement au Google Sheet privé.** Il faudra importer les questions d'entraînement souhaitées dans le classeur avant d'activer les entraînements via Apps Script. Les examens notés doivent utiliser des **questions privées différentes**, marquées `usage=EXAMEN` et `actif=TRUE`. `bonne` contient une lettre A, B, C ou D.
+- `QUESTIONS` : le classeur privé contient désormais **210 QCM d'entraînement**, soit 30 par chapitre pour les sept chapitres, avec `usage=ENTRAINEMENT` et `actif=TRUE`. Les examens notés doivent utiliser des **questions privées différentes**, marquées `usage=EXAMEN` et `actif=TRUE`. `bonne` contient une lettre A, B, C ou D.
 - `EVALUATIONS`, `TENTATIVES`, `EMAILS` : ne pas supprimer ou déplacer les colonnes ; le programme écrit automatiquement les lignes.
 
 **Ne pas partager le classeur avec les étudiants.** Il contient les corrigés et les notes individuelles.
