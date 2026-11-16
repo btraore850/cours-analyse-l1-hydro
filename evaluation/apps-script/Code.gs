@@ -97,7 +97,11 @@ function submitAttempt(session,id,answers) {
     let correct=0;selected.forEach(item=>{const q=bank.get(item.id);if(!q)throw new Error('Question introuvable : '+item.id);if(String(provided[item.id]||'')===String(q.bonne).toUpperCase())correct++;});
     const count=selected.length;const note=Math.round(100*(20*correct/count))/100;const now=iso_();
     patch_('TENTATIVES',attempt._row,{reponses_json:JSON.stringify(provided),statut:expired?'TERMINE_TEMPS':'TERMINE',fin_iso:now,note_sur_20:note,nb_bonnes:correct,dernier_enregistrement_iso:now});
-    const email=user.email;append_('EMAILS',{tentative_id:id,email,objet:'Résultat Analyse L1 Hydrologie — '+attempt.evaluation_id,corps:'Bonjour,\n\nVotre tentative '+id+' est terminée.\nNote : '+note+'/20 ('+correct+'/'+count+' réponses correctes).\nDate : '+now+'\n\nM. Bakary TRAORE',statut:'EN_ATTENTE'});
+    // Aucune notification par e-mail pour l'auto-évaluation : score visible à l'écran.
+    // Les examens officiels conservent, pour l'instant, leur notification prévue.
+    if(attempt.mode==='exam'){
+      const email=user.email;append_('EMAILS',{tentative_id:id,email,objet:'Résultat Analyse L1 Hydrologie — '+attempt.evaluation_id,corps:'Bonjour,\n\nVotre tentative '+id+' est terminée.\nNote : '+note+'/20 ('+correct+'/'+count+' réponses correctes).\nDate : '+now+'\n\nM. Bakary TRAORE',statut:'EN_ATTENTE'});
+    }
     const output={note,correct,count,expired,attemptId:id};
     if(attempt.mode==='practice'){output.explanations=selected.map(item=>{const q=bank.get(item.id);return {id:item.id,answer:String(q.bonne),explanation:String(q.explication),good:provided[item.id]===String(q.bonne).toUpperCase()};});}
     return output;
