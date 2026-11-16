@@ -131,3 +131,16 @@ test('les 210 QCM actifs peuvent alimenter les examens sans rompre l’entraîne
   assert.equal(chosen.filter(q=>q.niveau==='difficile').length,3);
   assert.ok(read('apps-script/Index.html').includes('examControls.set(ex.id,{exam:ex,badge,button,limitReached})'));
 });
+
+test('l’espace officiel ne présente plus le formulaire d’auto-évaluation libre',()=>{
+  const html=read('apps-script/Index.html');
+  assert.ok(!html.includes('id="practiceSetup"'));
+  assert.ok(!html.includes('id="startPractice"'));
+  assert.ok(!html.includes("show('practiceSetup'"));
+  assert.ok(!html.includes("request('startPractice'"));
+  assert.ok(html.includes('Évaluations officielles programmées'));
+  assert.ok(html.includes("request('startExam',session,id)"));
+  // Le site conserve son espace public distinct pour les entraînements.
+  const home=read('../index.html');
+  assert.ok(home.includes('href="evaluation/">Faire un QCM'));
+});
