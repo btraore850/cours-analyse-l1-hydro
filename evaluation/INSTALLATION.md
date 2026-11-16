@@ -2,7 +2,7 @@
 
 Ce dossier comprend deux éléments distincts :
 
-1. `index.html` + `quiz-data.js` : **démonstration publique** sur GitHub Pages. Les réponses et la correction sont visibles dans le code ; cette page n'est **pas** destinée aux examens notés. Aucun score n'est transmis au serveur.
+1. `index.html` + `quiz-data.js` + `questions/chapter-{1,3,4,5,6,7}.js` : **démonstration publique** de **210 QCM**, soit 30 questions par chapitre (10 faciles, 10 moyennes et 10 difficiles). Les réponses et les corrigés sont visibles dans le code ; cette page n'est **pas** destinée aux examens notés. Aucun score n'est transmis au serveur et aucun courriel n'est envoyé.
 2. `apps-script/Code.gs` + `apps-script/Index.html` : application de production à installer dans le **compte Google de l'enseignant**. Elle conserve les notes dans un Google Sheet privé, vérifie les droits et corrige les réponses côté serveur.
 
 ## 1. Préparer Google Sheets
@@ -10,7 +10,7 @@ Ce dossier comprend deux éléments distincts :
 Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
 
 - `ETUDIANTS` : renseigner le matricule, l'adresse Gmail officielle, le nom, le prénom et le groupe ; mettre `actif` à `TRUE`. Laisser `google_sub` vide (il sera renseigné lors de la première connexion).
-- `QUESTIONS` : les 30 exemples du chapitre 2 sont marqués `usage=ENTRAINEMENT`. Les examens notés doivent utiliser des **questions privées différentes**, marquées `usage=EXAMEN` et `actif=TRUE`. `bonne` contient une lettre A, B, C ou D.
+- `QUESTIONS` : les 30 exemples du chapitre 2 sont marqués `usage=ENTRAINEMENT`. **Attention : les 180 QCM supplémentaires sont intégrés à la démonstration GitHub, pas automatiquement au Google Sheet privé.** Il faudra importer les questions d'entraînement souhaitées dans le classeur avant d'activer les entraînements via Apps Script. Les examens notés doivent utiliser des **questions privées différentes**, marquées `usage=EXAMEN` et `actif=TRUE`. `bonne` contient une lettre A, B, C ou D.
 - `EVALUATIONS`, `TENTATIVES`, `EMAILS` : ne pas supprimer ou déplacer les colonnes ; le programme écrit automatiquement les lignes.
 
 **Ne pas partager le classeur avec les étudiants.** Il contient les corrigés et les notes individuelles.
@@ -67,6 +67,6 @@ Pour exporter les résultats, ouvrir le lien privé « Ouvrir les notes » puis 
 
 ## 7. Intégration dans GitHub Pages
 
-La page publique est accessible à `/evaluation/` après fusion de la branche contenant ce dossier. Le lien vers l'application Google privée pourra être ajouté **après** validation du déploiement et de l'authentification.
+La page publique est accessible à `/evaluation/` avec les **sept chapitres du programme** et le choix entre 5 ou 10 questions, renouvelées à chaque tentative. Le lien vers l'application Google privée pourra être ajouté **après** validation du déploiement et de l'authentification.
 
 Ne pas publier de listes d'étudiants, d'identifiants Google privés, de mots de passe ou de banques d'examen noté dans le dépôt GitHub public.

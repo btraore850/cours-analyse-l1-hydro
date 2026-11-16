@@ -13,10 +13,10 @@ Plateforme de ressources pédagogiques du module **MTH 1101 — Analyse**, à l�
 | Présentations | [Diaporamas](presentations/) | [Présentation chapitre 1 (PDF)](presentations/Chapitre1_Hydrologie.pdf) |
 | Travaux dirigés | [TD](td/) | [Feuille TD 1 (PDF)](td/TD1_Analyse_Hydrologie_UZ.pdf) |
 | Travaux pratiques | [TP](tp/) | Plan de cinq séances proposé ; supports à venir |
-| Auto-évaluation (prototype) | [QCM d’entraînement](evaluation/) | Chapitre 2, trois difficultés, correction détaillée ; [installation du service privé](evaluation/INSTALLATION.md) |
 | Corrigés | [Corrigés](corriges/) | À publier |
 | Applications hydrologiques | [Applications](applications-hydrologie/) | Exemples pédagogiques |
 | Bibliographie | [Références](bibliographie/) | Livres et dossier OneDrive |
+| Auto-évaluation | [QCM des chapitres 1 à 7](evaluation/) | 210 QCM : niveaux facile, moyen et difficile, chronométrés, corrigés affichés à l'écran |
 
 Le volume proposé est de **45 heures** (25 h CM, 15 h TD, 5 h TP), pour **3 crédits**, avec une progression indicative de 15 semaines.
 
