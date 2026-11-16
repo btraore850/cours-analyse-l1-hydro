@@ -42,7 +42,7 @@
     <section class="panel" id="setup" aria-labelledby="setupTitle">
       <h2 id="setupTitle">Préparer une auto-évaluation</h2>
       <div class="grid">
-        <div class="field"><label for="chapter">Chapitre</label><select id="chapter"><option value="2">2 — Suites et séries positives</option></select></div>
+        <div class="field"><label for="chapter">Chapitre</label><select id="chapter"><option value="1">1 — Rappels fondamentaux d'analyse</option><option value="2">2 — Suites et séries positives</option><option value="3">3 — Séries à termes quelconques</option><option value="4">4 — Suites et séries de fonctions</option><option value="5">5 — Séries entières et Taylor</option><option value="6">6 — Séries de Fourier</option><option value="7">7 — Équations différentielles et bilans</option></select></div>
         <div class="field"><label for="level">Difficulté</label><select id="level"><option value="facile">Facile</option><option value="moyen" selected>Moyen</option><option value="difficile">Difficile</option></select></div>
         <div class="field"><label for="count">Nombre de QCM</label><select id="count"><option value="5">5 questions</option><option value="10" selected>10 questions</option></select></div>
       </div>
@@ -64,6 +64,12 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
   <script src="quiz-data.js?v=notation-20261116"></script>
+  <script src="questions/chapter-1.js?v=20261116"></script>
+  <script src="questions/chapter-3.js?v=20261116"></script>
+  <script src="questions/chapter-4.js?v=20261116"></script>
+  <script src="questions/chapter-5.js?v=20261116"></script>
+  <script src="questions/chapter-6.js?v=20261116"></script>
+  <script src="questions/chapter-7.js?v=20261116"></script>
   <script>
   (()=>{
     'use strict';
@@ -80,10 +86,10 @@
     function fmt(seconds){const s=Math.max(0,Math.ceil(seconds));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
     function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
     function tick(){const left=(deadline-Date.now())/1000;$('timer').textContent=fmt(left);$('timer').classList.toggle('urgent',left<=60);if(left<=0)finish(true);}
-    function start(){clearTimer();locked=false;const level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce niveau.');return;}
-      current={level,items:shuffled(pool).slice(0,count).map(q=>({...q,order:shuffled([0,1,2,3])})),answers:{}};
+    function start(){clearTimer();locked=false;const chapter=Number($('chapter').value),level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>Number(q.chapter||2)===chapter&&q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce chapitre et ce niveau.');return;}
+      current={chapter,level,items:shuffled(pool).slice(0,count).map(q=>({...q,order:shuffled([0,1,2,3])})),answers:{}};
       clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${item.q}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${item.a[option]}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
-      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre 2 · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
+      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
     }
     function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=20*correct/current.items.length;
       $('score').textContent=`${score.toFixed(1).replace('.',',')}/20`;$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
