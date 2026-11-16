@@ -47,11 +47,11 @@ L'activation n'est possible qu'une fois la banque privée `EXAMEN` suffisamment 
 
 Pour tester : créer une épreuve de 5 QCM sur le chapitre 2 et la laisser désactivée, puis inscrire **au moins cinq questions privées** de même niveau avant son activation.
 
-## 5. Courriels et export Excel
+## 5. Scores à l'écran, courriels d'examen et export Excel
 
-Après chaque soumission, le résultat est enregistré sans attendre l'e-mail. Le programme place ensuite un message dans la feuille `EMAILS` ; `processMailQueue` envoie jusqu'à 20 messages par passage si le quota restant le permet.
+**Auto-évaluations (`practice`) :** le score et le corrigé sont affichés immédiatement à l'étudiant. AUCUN e-mail n'est créé ou envoyé, même après plusieurs tentatives. Lorsque le service privé est activé, les notes peuvent néanmoins être conservées dans `TENTATIVES` pour le suivi pédagogique.
 
-Un compte Gmail personnel est actuellement limité à **100 destinataires par jour pour Apps Script**. Pour 200–500 étudiants, les courriels peuvent être différés : les étudiants doivent pouvoir consulter leur note directement sur le site sans dépendre du message.
+**Examens officiels (`exam`) uniquement :** le résultat est enregistré, puis un message est placé dans la feuille `EMAILS`. `processMailQueue` peut envoyer jusqu'à 20 messages par passage si le quota restant le permet. Pour 200–500 étudiants, les courriels peuvent être différés par les quotas Gmail ; la note reste consultable dans l'application.
 
 Pour exporter les résultats, ouvrir le lien privé « Ouvrir les notes » puis sélectionner **Fichier → Télécharger → Microsoft Excel (.xlsx)** dans Google Sheets. La feuille `TENTATIVES` conserve une ligne par essai.
 
@@ -60,7 +60,7 @@ Pour exporter les résultats, ouvrir le lien privé « Ouvrir les notes » puis 
 - Connexion autorisée/refusée et vérification du rôle enseignant.
 - Conservation des réponses après une interruption réseau ; note juste, unique et non modifiable par l'étudiant.
 - Expiration côté serveur et traitement des brouillons.
-- Deux soumissions simultanées du même essai : une seule note et un seul e-mail.
+- Deux soumissions simultanées du même essai : une seule note, aucun e-mail pour l'entraînement, au plus un e-mail pour l'examen officiel.
 - Créneau de fermeture et nombre maximal de tentatives.
 - Essais progressifs à 5, 20 puis 50 étudiants ; surveiller erreurs Apps Script, verrous Google Sheets et quotas.
 - Pour les examens à fort enjeu avec 200–500 étudiants en même temps : réaliser des essais de charge réalistes et prévoir plusieurs groupes. La capacité de 500 simultanés **n'est pas garantie** par l'offre gratuite.
