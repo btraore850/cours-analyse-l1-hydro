@@ -10,11 +10,22 @@ const questionBank=bankContext.window.HYDRO_DEMO_QUESTIONS;
 assert.equal(questionBank.length,30,'30 questions de démonstration');
 for(const level of ['facile','moyen','difficile'])assert.equal(questionBank.filter(x=>x.level===level).length,10);
 assert.equal(new Set(questionBank.map(x=>x.id)).size,questionBank.length);
-for(const q of questionBank){assert.equal(q.a.length,4);assert(Number.isInteger(q.correct)&&q.correct>=0&&q.correct<4);assert(q.why.length>15);}
+for(const q of questionBank){
+  assert.equal(q.a.length,4);
+  assert(Number.isInteger(q.correct)&&q.correct>=0&&q.correct<4);
+  assert(q.why.length>15);
+  for(const phrase of [q.q,...q.a,q.why]){
+    assert.equal((phrase.match(/\\\(/g)||[]).length,(phrase.match(/\\\)/g)||[]).length,'Délimiteurs LaTeX : '+q.id);
+    assert(!/[₀-₉⁰-⁹]/u.test(phrase),'Notation mathématique Unicode à corriger : '+q.id);
+  }
+}
 
 // Vérifier la validité du JavaScript des deux interfaces sans navigateur.
 const htmlPaths=['evaluation/index.html','evaluation/apps-script/Index.html'];
 for(const relative of htmlPaths){const html=fs.readFileSync(path.join(root,relative),'utf8');const blocks=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];for(const match of blocks){if(match[1].trim())new vm.Script(match[1],{filename:relative});}}
+const quizHtml=fs.readFileSync(path.join(root,'evaluation/index.html'),'utf8');
+assert(quizHtml.includes('mathjax@4/tex-chtml.js'),'La bibliothèque de rendu des formules doit être chargée.');
+assert(quizHtml.includes("typesetMath($('questions'))")&&quizHtml.includes('typesetMath(list)'),'Les questions et les corrigés doivent être composés en mathématiques.');
 
 const headers={
  ETUDIANTS:['matricule','email','nom','prenom','groupe','actif','google_sub'],
