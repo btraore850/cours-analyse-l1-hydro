@@ -2,9 +2,9 @@
 
 Ce dossier comprend deux éléments distincts :
 
-1. `index.html` + `quiz-data.js` + `questions/chapter-{1,3,4,5,6,7}.js` + `paraphrases.js` : **démonstration publique** de **210 QCM**, soit 30 questions par chapitre (10 faciles, 10 moyennes et 10 difficiles). **Les 210 QCM possèdent chacun une reformulation pédagogique validée** : certains énoncés changent aléatoirement à chaque tentative sans modifier les données mathématiques, la notation ou la bonne réponse. Le score d'auto-évaluation est affiché **sur 10**, avec les appréciations indicatives : moins de 5 « Insuffisant », de 5 à moins de 6 « Passable », de 6 à moins de 7 « Assez bien », de 7 à moins de 8 « Bien », de 8 à moins de 9 « Très bien », de 9 à 10 « Excellent ». Les réponses et les corrigés sont visibles dans le code ; cette page n'est **pas** destinée aux examens notés. Aucun score n'est transmis au serveur et aucun courriel n'est envoyé.
+1. `index.html` + `quiz-data.js` + `questions/chapter-{1,3,4,5,6,7}.js` + `paraphrases.js` : **auto-évaluation libre** de **210 QCM**, soit 30 questions par chapitre (10 faciles, 10 moyennes et 10 difficiles). Les 210 QCM possèdent chacun une reformulation pédagogique. Le score reste **sur 10**. Les réponses et corrigés sont publics ; cette page n'est **pas** destinée aux examens notés. Une connexion Google permet le suivi des tentatives dans un onglet privé, sans inscription préalable et sans courriel envoyé à l'étudiant.
 2. `officielle/index.html` + `officielle/portal.js` + `officielle/config.js` : **interface de connexion Google sur GitHub Pages**, à l'origine OAuth `https://btraore850.github.io`.
-3. `apps-script/Code.gs` + `apps-script/Index.html` : **service privé Apps Script**. Il vérifie les jetons Google, applique les droits d'accès, conserve les notes dans un Google Sheet privé et corrige les réponses côté serveur. Sa page HTML reçoit le jeton depuis GitHub Pages dans un cadre sécurisé, puis utilise `google.script.run` : aucune connexion OAuth n'est lancée dans le cadre Apps Script.
+3. `apps-script/Code.gs` + `apps-script/Index.html` + `apps-script/PracticeBridge.html` : **service privé Apps Script**. Il vérifie les jetons Google, conserve les notes et corrige les réponses côté serveur. Les examens officiels exigent toujours un compte figurant dans `ETUDIANTS` ; les auto-évaluations acceptent tout compte Google vérifié. `practice-tracker.js` dialogue avec le pont de suivi sans exposer les données privées dans GitHub Pages.
 
 ## 1. Préparer Google Sheets
 
@@ -13,6 +13,7 @@ Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
 - `ETUDIANTS` : renseigner le matricule, l'adresse Gmail officielle, le nom, le prénom et le groupe ; mettre `actif` à `TRUE`. Laisser `google_sub` vide (il sera renseigné lors de la première connexion).
 - `QUESTIONS` : le classeur privé contient désormais **210 QCM d'entraînement**, soit 30 par chapitre pour les sept chapitres, avec `usage=ENTRAINEMENT` et `actif=TRUE`. Les examens notés doivent utiliser des **questions privées différentes**, marquées `usage=EXAMEN` et `actif=TRUE`. `bonne` contient une lettre A, B, C ou D.
 - `EVALUATIONS`, `TENTATIVES`, `EMAILS` : ne pas supprimer ou déplacer les colonnes ; le programme écrit automatiquement les lignes.
+- `AUTO_TENTATIVES` : un enregistrement par auto-évaluation commencée, avec l'e-mail Google vérifié, la date, le chapitre, le niveau, le statut et la note sur 10 lorsque la tentative est terminée. Les étudiants ne doivent pas accéder directement à cet onglet.
 
 **Ne pas partager le classeur avec les étudiants.** Il contient les corrigés et les notes individuelles.
 
@@ -20,7 +21,7 @@ Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
 
 1. Ouvrir https://script.google.com/ avec le compte Gmail de l'enseignant et créer un projet autonome intitulé `Evaluations Analyse L1 Hydrologie`.
 2. Coller le contenu de `apps-script/Code.gs` dans le fichier `Code.gs`.
-3. Ajouter un fichier HTML appelé **Index** et y coller `apps-script/Index.html`. Si un projet Apps Script est déjà déployé, **remplacer le contenu des deux fichiers par les versions corrigées**, puis créer une nouvelle version du déploiement.
+3. Ajouter deux fichiers HTML appelés **Index** et **PracticeBridge**, avec respectivement `apps-script/Index.html` et `apps-script/PracticeBridge.html`. Dans un projet existant, enregistrer les trois fichiers et créer une nouvelle version du déploiement, sans modifier son identifiant ni ses autorisations.
 4. Ouvrir **Paramètres du projet → Propriétés du script** et ajouter :
    - `SPREADSHEET_ID` : l'identifiant du Google Sheet privé (entre `/d/` et `/edit` dans son URL) ;
    - `TEACHER_EMAIL` : votre adresse Gmail ;
@@ -69,7 +70,7 @@ Pour tester : créer une épreuve de 5 QCM sur le chapitre 2 et la laisser désa
 
 ## 5. Scores à l'écran, courriels d'examen et export Excel
 
-**Auto-évaluations (`practice`) :** le score et le corrigé sont affichés immédiatement à l'étudiant. AUCUN e-mail n'est créé ou envoyé, même après plusieurs tentatives. Lorsque le service privé est activé, les notes peuvent néanmoins être conservées dans `TENTATIVES` pour le suivi pédagogique.
+**Auto-évaluations libres :** le score et le corrigé restent affichés immédiatement à l'étudiant. Chaque participant se connecte avec Google, mais n'a pas besoin de figurer dans `ETUDIANTS`. Une ligne est créée dans `AUTO_TENTATIVES` au début ; la note est enregistrée à la fin. Aucun courriel n'est envoyé. L'enseignant peut voir les fréquences de tentatives, les étudiants actifs et les inscrits n'ayant aucune tentative enregistrée. Sans liste complète d'étudiants, il est impossible d'identifier tous ceux qui ne révisent pas.
 
 **Examens officiels (`exam`) uniquement :** le résultat est enregistré, puis un message est placé dans la feuille `EMAILS`. `processMailQueue` peut envoyer jusqu'à 20 messages par passage si le quota restant le permet. Pour 200–500 étudiants, les courriels peuvent être différés par les quotas Gmail ; la note reste consultable dans l'application.
 
