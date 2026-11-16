@@ -24,6 +24,7 @@
     .question h3{font-weight:700;font-size:1.03rem}.choices{display:grid;gap:9px}.choice{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--bord);border-radius:10px;padding:10px 13px;cursor:pointer}
     .choice:hover{background:#f0f9fb}.choice:has(input:checked){background:#e4f6f7;border-color:#0794a6}.choice input{margin-top:6px;accent-color:var(--eau)}
     .feedback{border-left:4px solid var(--eau);background:#eef7f8;padding:10px 14px;margin-top:10px}.feedback.bad{border-color:var(--rouge);background:#fff1ef}
+    .question h3,.choice span,.feedback p{overflow-wrap:anywhere}.question mjx-container,.choice mjx-container,.feedback mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
     .score{font-weight:850;font-size:3rem;letter-spacing:-.05em;color:var(--marine);margin:5px 0}.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.result-stats>div{border-radius:12px;background:#eff7f9;padding:13px}
     footer{padding:30px 0;color:#496777;text-align:center}.hidden{display:none!important}
     @media(max-width:640px){.grid{grid-template-columns:1fr}.panel{padding:18px}.result-stats{grid-template-columns:1fr}header{padding:26px 0}}
@@ -57,6 +58,11 @@
     <section class="panel"><h2>Comment fonctionne l’évaluation officielle ?</h2><p>Après déploiement du service Google privé, l’enseignant pourra ouvrir un examen sur un ou plusieurs chapitres, limiter les tentatives et consulter les notes dans un tableau protégé. Les réponses officielles ne seront pas placées dans le code public de ce site.</p><p class="muted">Enseignant : M. Bakary TRAORE · Module Analyse L1 Hydrologie</p></section>
   </main>
   <footer><div class="wrap">Analyse — Licence 1 Hydrologie · Année universitaire 2026–2027</div></footer>
+  <script>
+    // Les formules du QCM utilisent la syntaxe LaTeX \(...\).
+    window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
   <script src="quiz-data.js"></script>
   <script>
   (()=>{
@@ -68,19 +74,22 @@
     function shuffled(items){const a=items.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
     function show(name){['setup','quiz','results'].forEach(id=>$(id).classList.toggle('hidden',id!==name));}
     function clearTimer(){if(interval!==null){clearInterval(interval);interval=null;}}
+    function typesetMath(element){if(window.MathJax&&typeof window.MathJax.typesetPromise==='function')window.MathJax.typesetPromise([element]).catch(error=>console.warn('Affichage mathématique :',error));}
+    function clearMath(element){if(window.MathJax&&typeof window.MathJax.typesetClear==='function')window.MathJax.typesetClear([element]);}
     function updateTiming(){const sec=Number($('count').value)*secondsPerItem[$('level').value];$('timing').textContent=`Durée maximale conseillée : ${Math.ceil(sec/60)} minutes.`;}
     function fmt(seconds){const s=Math.max(0,Math.ceil(seconds));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
     function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
     function tick(){const left=(deadline-Date.now())/1000;$('timer').textContent=fmt(left);$('timer').classList.toggle('urgent',left<=60);if(left<=0)finish(true);}
     function start(){clearTimer();locked=false;const level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce niveau.');return;}
       current={level,items:shuffled(pool).slice(0,count).map(q=>({...q,order:shuffled([0,1,2,3])})),answers:{}};
-      $('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${item.q}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${item.a[option]}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
-      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre 2 · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
+      clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${item.q}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${item.a[option]}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
+      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre 2 · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
     }
     function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=20*correct/current.items.length;
       $('score').textContent=`${score.toFixed(1).replace('.',',')}/20`;$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
-      $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=`Réponse attendue : ${item.a[item.correct]}. ${item.why}`;box.append(name,p);list.appendChild(box);});show('results');window.scrollTo(0,0);
+      $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');clearMath(list);list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=`Réponse attendue : ${item.a[item.correct]}. ${item.why}`;box.append(name,p);list.appendChild(box);});show('results');typesetMath(list);window.scrollTo(0,0);
     }
+    window.addEventListener('load',()=>{if(!current)return;typesetMath($('results').classList.contains('hidden')?$('questions'):$('corrections'));});
     $('start').addEventListener('click',start);$('submit').addEventListener('click',()=>finish(false));$('retry').addEventListener('click',start);$('back').addEventListener('click',()=>{clearTimer();show('setup');});$('level').addEventListener('change',updateTiming);$('count').addEventListener('change',updateTiming);updateTiming();
   })();
   </script>
