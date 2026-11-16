@@ -10,7 +10,7 @@ const TABLES = Object.freeze({
   ETUDIANTS: ['matricule','email','nom','prenom','groupe','actif','google_sub'],
   QUESTIONS: ['id','chapitre','niveau','usage','enonce','a','b','c','d','bonne','explication','actif'],
   EVALUATIONS: ['id','titre','chapitres','niveau','nb_questions','duree_minutes','ouverture_iso','fermeture_iso','actif','tentatives_max','correction_immediate','groupe'],
-  TENTATIVES: ['id','email','evaluation_id','mode','debut_iso','expiration_iso','fin_iso','statut','note_sur_20','nb_bonnes','nb_questions','questions_json','reponses_json','dernier_enregistrement_iso'],
+  TENTATIVES: ['id','email','evaluation_id','mode','debut_iso','expiration_iso','fin_iso','statut','note_sur_10','nb_bonnes','nb_questions','questions_json','reponses_json','dernier_enregistrement_iso'],
   EMAILS: ['tentative_id','email','objet','corps','statut','date_envoi']
 });
 const TIME_PER_QUESTION = {facile:90,moyen:150,difficile:210};
@@ -152,16 +152,16 @@ function saveDraft(session,id,answers) {
 function submitAttempt(session,id,answers) {
   const user=user_(session);return lock_(()=>{
     const attempt=find_('TENTATIVES',text_(id,80),'id');if(!attempt||String(attempt.email)!==user.email)throw new Error('Tentative inaccessible.');
-    if(attempt.statut!=='EN_COURS')return {note:Number(attempt.note_sur_20),correct:Number(attempt.nb_bonnes),count:Number(attempt.nb_questions),alreadySubmitted:true};
+    if(attempt.statut!=='EN_COURS')return {note:Number(attempt.note_sur_10),correct:Number(attempt.nb_bonnes),count:Number(attempt.nb_questions),alreadySubmitted:true};
     const expired=Date.now()>Date.parse(attempt.expiration_iso);const saved=JSON.parse(attempt.reponses_json||'{}');const selected=JSON.parse(attempt.questions_json);
     const provided=expired?saved:cleanAnswers_(attempt,answers);const bank=new Map(records_('QUESTIONS').map(q=>[String(q.id),q]));
     let correct=0;selected.forEach(item=>{const q=bank.get(item.id);if(!q)throw new Error('Question introuvable : '+item.id);if(String(provided[item.id]||'')===String(q.bonne).toUpperCase())correct++;});
-    const count=selected.length;const note=Math.round(100*(20*correct/count))/100;const now=iso_();
-    patch_('TENTATIVES',attempt._row,{reponses_json:JSON.stringify(provided),statut:expired?'TERMINE_TEMPS':'TERMINE',fin_iso:now,note_sur_20:note,nb_bonnes:correct,dernier_enregistrement_iso:now});
+    const count=selected.length;const note=Math.round(100*(10*correct/count))/100;const now=iso_();
+    patch_('TENTATIVES',attempt._row,{reponses_json:JSON.stringify(provided),statut:expired?'TERMINE_TEMPS':'TERMINE',fin_iso:now,note_sur_10:note,nb_bonnes:correct,dernier_enregistrement_iso:now});
     // Aucune notification par e-mail pour l'auto-évaluation : score visible à l'écran.
     // Les examens officiels conservent, pour l'instant, leur notification prévue.
     if(attempt.mode==='exam'){
-      const email=user.email;append_('EMAILS',{tentative_id:id,email,objet:'Résultat Analyse L1 Hydrologie — '+attempt.evaluation_id,corps:'Bonjour,\n\nVotre tentative '+id+' est terminée.\nNote : '+note+'/20 ('+correct+'/'+count+' réponses correctes).\nDate : '+now+'\n\nM. Bakary TRAORE',statut:'EN_ATTENTE'});
+      const email=user.email;append_('EMAILS',{tentative_id:id,email,objet:'Résultat Analyse L1 Hydrologie — '+attempt.evaluation_id,corps:'Bonjour,\n\nVotre tentative '+id+' est terminée.\nNote : '+note+'/10 ('+correct+'/'+count+' réponses correctes).\nDate : '+now+'\n\nM. Bakary TRAORE',statut:'EN_ATTENTE'});
     }
     const output={note,correct,count,expired,attemptId:id};
     if(attempt.mode==='practice'){output.explanations=selected.map(item=>{const q=bank.get(item.id);return {id:item.id,answer:String(q.bonne),explanation:String(q.explication),good:provided[item.id]===String(q.bonne).toUpperCase()};});}
