@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head><base target="_top"><meta charset="utf-8"><title>Suivi privé des révisions</title></head>
+<body>
+<script>
+(()=>{
+  'use strict';
+  const NONCE=<?!= JSON.stringify(bridgeNonce) ?>;
+  const HOST='https://btraore850.github.io';
+  function reply(requestId,ok,result){
+    window.top.postMessage({kind:'hydro-practice-result',nonce:NONCE,requestId,ok,...(ok?{result}:{message:String(result&&result.message||result).slice(0,200)})},HOST);
+  }
+  window.addEventListener('message',event=>{
+    if(event.origin!==HOST||event.source!==window.top)return;
+    const data=event.data;
+    if(!data||data.kind!=='hydro-practice-request'||data.nonce!==NONCE)return;
+    if(!/^practice-[a-z0-9-]{1,60}$/.test(String(data.requestId||'')))return;
+    if(typeof data.token!=='string'||data.token.length<100||data.token.length>6000)return;
+    const onSuccess=result=>reply(data.requestId,true,result);
+    const onError=error=>reply(data.requestId,false,error);
+    const run=google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onError);
+    if(data.action==='verify')run.verifyPublicPracticeIdentity(data.token);
+    else if(data.action==='start')run.startPublicPractice(data.token,data.payload);
+    else if(data.action==='finish')run.finishPublicPractice(data.token,String(data.payload&&data.payload.id||''),data.payload&&data.payload.answers);
+  });
+  window.addEventListener('load',()=>{
+    window.top.postMessage({kind:'hydro-practice-ready',nonce:NONCE},HOST);
+  });
+})();
+</script>
+</body></html>
