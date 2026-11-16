@@ -63,8 +63,8 @@ assert.equal(sandbox.saveDraft(student.session,practice.id,correctAnswers).saved
 const grade=sandbox.submitAttempt(student.session,practice.id,correctAnswers);
 assert.equal(grade.note,20);assert.equal(grade.correct,5);
 assert.equal(sandbox.submitAttempt(student.session,practice.id,{}).note,20,'soumission répétée idempotente');
-assert.equal(tables.EMAILS.length,2,'un seul message par tentative');
-assert.equal(sandbox.processMailQueue().sent,1);assert.equal(sent.length,1);
+assert.equal(tables.EMAILS.length,1,'aucun e-mail pour une auto-évaluation');
+assert.equal(sandbox.processMailQueue().sent,0);assert.equal(sent.length,0);
 
 const exam=sandbox.adminCreateExam(teacher.session,{title:'Examen test',chapters:['2'],level:'moyen',count:5,minutes:25,maxAttempts:1});
 assert.equal(exam.enabled,false);
@@ -75,5 +75,7 @@ assert.equal(sandbox.adminToggleExam(teacher.session,exam.id,true).enabled,true)
 const examTry=sandbox.startExam(student.session,exam.id);assert.equal(examTry.questions.length,5);
 assert.throws(()=>sandbox.startExam(student.session,exam.id),/Nombre de tentatives/);
 assert.equal(sandbox.submitAttempt(student.session,examTry.id,{}).note,0);
+assert.equal(tables.EMAILS.length,2,'un seul e-mail pour l’examen officiel');
+assert.equal(sandbox.processMailQueue().sent,1);assert.equal(sent.length,1);
 assert.equal(sandbox.getDashboard(teacher.session).attempts.length,2);
 console.log('✓ 30 questions validées, interfaces analysées, sessions, tirages, barème, confidentialité, e-mails et examen testés.');
