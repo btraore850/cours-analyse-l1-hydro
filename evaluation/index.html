@@ -25,9 +25,10 @@
     .choice:hover{background:#f0f9fb}.choice:has(input:checked){background:#e4f6f7;border-color:#0794a6}.choice input{margin-top:6px;accent-color:var(--eau)}
     .feedback{border-left:4px solid var(--eau);background:#eef7f8;padding:10px 14px;margin-top:10px}.feedback.bad{border-color:var(--rouge);background:#fff1ef}
     .question h3,.choice span,.feedback p{overflow-wrap:anywhere}.question mjx-container,.choice mjx-container,.feedback mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
-    .score{font-weight:850;font-size:3rem;letter-spacing:-.05em;color:var(--marine);margin:5px 0}.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.result-stats>div{border-radius:12px;background:#eff7f9;padding:13px}
+    .score{font-weight:850;font-size:3rem;letter-spacing:-.05em;color:var(--marine);margin:5px 0}.appreciation{display:inline-block;border-radius:9px;background:#dff0f3;color:#14586e;padding:7px 14px;font-weight:800;margin:0 0 12px}.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.result-stats>div{border-radius:12px;background:#eff7f9;padding:13px}
+    .scale{margin-top:17px;padding:12px 16px;border-radius:12px;background:#f4f9fa;border:1px solid var(--bord)}.scale p{margin:0 0 5px}.scale ul{margin:6px 0 0;padding-left:20px;columns:2;column-gap:28px}.scale li{break-inside:avoid}
     footer{padding:30px 0;color:#496777;text-align:center}.hidden{display:none!important}
-    @media(max-width:640px){.grid{grid-template-columns:1fr}.panel{padding:18px}.result-stats{grid-template-columns:1fr}header{padding:26px 0}}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}.panel{padding:18px}.result-stats{grid-template-columns:1fr}.scale ul{columns:1}header{padding:26px 0}}
   </style>
 </head>
 <body>
@@ -48,14 +49,14 @@
       </div>
       <p class="muted" id="timing">Durée maximale conseillée : 25 minutes.</p>
       <div class="actions"><button class="button" id="start">Commencer la tentative</button><span class="pill">Questions, formulations et réponses renouvelées</span></div>
-      <p class="muted">Certains énoncés sont reformulés à chaque essai. Leur contenu mathématique et leur barème restent inchangés.</p>
+      <p class="muted">Les 210 QCM possèdent chacun une variante d'énoncé. Certains sont reformulés aléatoirement à chaque essai, sans changer les notions ni les réponses attendues. La note est calculée sur 10.</p>
     </section>
     <section class="panel hidden" id="quiz" aria-live="polite">
       <div class="status"><div><span class="pill" id="progress">0/10 réponses</span><p class="muted" id="quizLabel"></p></div><div class="timer" id="timer" role="timer" aria-live="off">25:00</div></div>
       <div id="questions"></div>
       <div class="actions"><button class="button" id="submit">Terminer et corriger</button><span class="muted">Les réponses non choisies comptent comme incorrectes.</span></div>
     </section>
-    <section class="panel hidden" id="results" aria-live="polite"><h2>Votre résultat</h2><div class="score" id="score">—</div><p id="resultSummary"></p><div class="result-stats"><div><strong>Durée utilisée</strong><p id="elapsed"></p></div><div><strong>Niveau</strong><p id="resultLevel"></p></div></div><h3 style="margin-top:25px">Correction pédagogique</h3><div id="corrections"></div><div class="actions"><button class="button" id="retry">Nouvelle tentative aléatoire</button><button class="button secondary" id="back">Changer les paramètres</button></div></section>
+    <section class="panel hidden" id="results" aria-live="polite"><h2>Votre résultat</h2><div class="score" id="score">—</div><p class="appreciation" id="appreciation"></p><p id="resultSummary"></p><div class="result-stats"><div><strong>Durée utilisée</strong><p id="elapsed"></p></div><div><strong>Niveau</strong><p id="resultLevel"></p></div></div><div class="scale"><p><strong>Échelle indicative des appréciations (sur 10)</strong></p><ul><li>0 à moins de 5 : Insuffisant</li><li>5 à moins de 6 : Passable</li><li>6 à moins de 7 : Assez bien</li><li>7 à moins de 8 : Bien</li><li>8 à moins de 9 : Très bien</li><li>9 à 10 : Excellent</li></ul></div><h3 style="margin-top:25px">Correction pédagogique</h3><div id="corrections"></div><div class="actions"><button class="button" id="retry">Nouvelle tentative aléatoire</button><button class="button secondary" id="back">Changer les paramètres</button></div></section>
     <section class="panel"><h2>Comment fonctionne l’évaluation officielle ?</h2><p>Après déploiement du service Google privé, l’enseignant pourra ouvrir un examen sur un ou plusieurs chapitres, limiter les tentatives et consulter les notes dans un tableau protégé. Les réponses officielles ne seront pas placées dans le code public de ce site.</p><p class="muted">Enseignant : M. Bakary TRAORE · Module Analyse L1 Hydrologie</p></section>
   </main>
   <footer><div class="wrap">Analyse — Licence 1 Hydrologie · Année universitaire 2026–2027</div></footer>
@@ -71,7 +72,7 @@
   <script src="questions/chapter-5.js?v=20261116"></script>
   <script src="questions/chapter-6.js?v=20261116"></script>
   <script src="questions/chapter-7.js?v=20261116-corrected"></script>
-  <script src="paraphrases.js?v=20261116"></script>
+  <script src="paraphrases.js?v=20261116-complete"></script>
   <script>
   (()=>{
     'use strict';
@@ -93,6 +94,7 @@
     function clearMath(element){if(window.MathJax&&typeof window.MathJax.typesetClear==='function')window.MathJax.typesetClear([element]);}
     function updateTiming(){const sec=Number($('count').value)*secondsPerItem[$('level').value];$('timing').textContent=`Durée maximale conseillée : ${Math.ceil(sec/60)} minutes.`;}
     function fmt(seconds){const s=Math.max(0,Math.ceil(seconds));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
+    function appreciationFor(score){if(score<5)return 'Insuffisant';if(score<6)return 'Passable';if(score<7)return 'Assez bien';if(score<8)return 'Bien';if(score<9)return 'Très bien';return 'Excellent';}
     function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
     function tick(){const left=(deadline-Date.now())/1000;$('timer').textContent=fmt(left);$('timer').classList.toggle('urgent',left<=60);if(left<=0)finish(true);}
     function start(){clearTimer();locked=false;const chapter=Number($('chapter').value),level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>Number(q.chapter||2)===chapter&&q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce chapitre et ce niveau.');return;}
@@ -100,8 +102,8 @@
       clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${item.displayQuestion}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${item.a[option]}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
       started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
     }
-    function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=20*correct/current.items.length;
-      $('score').textContent=`${score.toFixed(1).replace('.',',')}/20`;$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
+    function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=10*correct/current.items.length;
+      $('score').textContent=`${score.toFixed(1).replace('.',',')}/10`;$('appreciation').textContent=appreciationFor(score);$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
       $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');clearMath(list);list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=`Réponse attendue : ${item.a[item.correct]}. ${item.why}`;box.append(name,p);list.appendChild(box);});show('results');typesetMath(list);window.scrollTo(0,0);
     }
     window.addEventListener('load',()=>{if(!current)return;typesetMath($('results').classList.contains('hidden')?$('questions'):$('corrections'));});

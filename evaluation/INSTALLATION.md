@@ -2,7 +2,7 @@
 
 Ce dossier comprend deux éléments distincts :
 
-1. `index.html` + `quiz-data.js` + `questions/chapter-{1,3,4,5,6,7}.js` + `paraphrases.js` : **démonstration publique** de **210 QCM**, soit 30 questions par chapitre (10 faciles, 10 moyennes et 10 difficiles). Parmi eux, **84 disposent d'une reformulation pédagogique validée** : certains énoncés changent aléatoirement à chaque tentative sans modifier la notation ou la bonne réponse. Les réponses et les corrigés sont visibles dans le code ; cette page n'est **pas** destinée aux examens notés. Aucun score n'est transmis au serveur et aucun courriel n'est envoyé.
+1. `index.html` + `quiz-data.js` + `questions/chapter-{1,3,4,5,6,7}.js` + `paraphrases.js` : **démonstration publique** de **210 QCM**, soit 30 questions par chapitre (10 faciles, 10 moyennes et 10 difficiles). **Les 210 QCM possèdent chacun une reformulation pédagogique validée** : certains énoncés changent aléatoirement à chaque tentative sans modifier les données mathématiques, la notation ou la bonne réponse. Le score d'auto-évaluation est affiché **sur 10**, avec les appréciations indicatives : moins de 5 « Insuffisant », de 5 à moins de 6 « Passable », de 6 à moins de 7 « Assez bien », de 7 à moins de 8 « Bien », de 8 à moins de 9 « Très bien », de 9 à 10 « Excellent ». Les réponses et les corrigés sont visibles dans le code ; cette page n'est **pas** destinée aux examens notés. Aucun score n'est transmis au serveur et aucun courriel n'est envoyé.
 2. `apps-script/Code.gs` + `apps-script/Index.html` : application de production à installer dans le **compte Google de l'enseignant**. Elle conserve les notes dans un Google Sheet privé, vérifie les droits et corrige les réponses côté serveur.
 
 ## 1. Préparer Google Sheets
