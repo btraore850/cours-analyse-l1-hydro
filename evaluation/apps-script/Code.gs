@@ -44,7 +44,7 @@ function signIn(idToken) {
   const student=records_('ETUDIANTS').find(s=>String(s.email).toLowerCase()===email&&yes_(s.actif));
   if(!admin&&!student)throw new Error('Votre adresse Gmail ne figure pas dans la liste des étudiants inscrits.');
   if(student&&student.google_sub&&String(student.google_sub)!==String(payload.sub))throw new Error('Ce compte Gmail ne correspond pas au compte initialement inscrit.');
-  if(student&&!student.google_sub)lock_(()=>{const row=find_('ETUDIANTS',email,'email');if(row&&!row.google_sub)patch_('ETUDIANTS',row._row,{google_sub:payload.sub});});
+  if(student&&!student.google_sub)lock_(()=>{const row=records_('ETUDIANTS').find(x=>String(x.email).toLowerCase()===email);if(row&&!row.google_sub){tab_('ETUDIANTS').getRange(row._row,7).setNumberFormat('@');patch_('ETUDIANTS',row._row,{google_sub:String(payload.sub)});}});
   const session=Utilities.getUuid();const profile={email,role:admin?'teacher':'student',name:admin?'M. Bakary TRAORE':(student.prenom+' '+student.nom).trim(),groupe:admin?'':String(student.groupe||'')};
   CacheService.getScriptCache().put('session:'+session,JSON.stringify(profile),21600);
   return {session,profile};
