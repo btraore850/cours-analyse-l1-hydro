@@ -36,7 +36,7 @@ function doGet(e) {
     .addMetaTag('viewport','width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
-function include(name) {return HtmlService.createHtmlOutputFromFile(name).getContent();}
+function include_(name) {return HtmlService.createHtmlOutputFromFile(name).getContent();}
 function prop_(name) {const value=PropertiesService.getScriptProperties().getProperty(name);if(!value)throw new Error('Configuration manquante : '+name);return value;}
 function db_() {return SpreadsheetApp.openById(prop_('SPREADSHEET_ID'));}
 function tab_(name) {const tab=db_().getSheetByName(name);if(!tab)throw new Error('Feuille manquante : '+name);return tab;}
@@ -91,9 +91,32 @@ function getDashboard(session) {
     .sort((a,b)=>(a.etat==='ouverte'?0:a.etat==='a_venir'?1:2)-(b.etat==='ouverte'?0:b.etat==='a_venir'?1:2)||(Date.parse(a.ouverture_iso)||0)-(Date.parse(b.ouverture_iso)||0));
   return {role:'student',name:user.name,exams:planned,attempts:attempts.filter(x=>String(x.email).toLowerCase()===user.email).map(({questions_json,reponses_json,_row,...r})=>r).reverse().slice(0,40)};
 }
+function chapters_(value) {
+  // Le séparateur « , » est parfois transformé en séparateur décimal par
+  // Google Sheets (fr_FR) : une ancienne valeur « 2,3 » devient 2.3.
+  return String(value).split(/[,.;|]/).map(x=>x.trim()).filter(x=>/^[1-7]$/.test(x));
+}
 function bank_(chapters,level,mode) {
-  const choices=String(chapters).split(',').map(x=>x.trim());
-  return records_('QUESTIONS').filter(q=>yes_(q.actif)&&choices.includes(String(q.chapitre).trim())&&(level==='tous'||String(q.niveau).toLowerCase()===level)&&String(q.usage).toUpperCase()===(mode==='exam'?'EXAMEN':'ENTRAINEMENT')&&['A','B','C','D'].includes(String(q.bonne).toUpperCase()));
+  const choices=chapters_(chapters);
+  // L'enseignant a choisi de réutiliser la banque publique d'entraînement
+  // pour les examens officiels ; les questions ne sont pas confidentielles.
+  const usages=mode==='exam'?['EXAMEN','ENTRAINEMENT']:['ENTRAINEMENT'];
+  return records_('QUESTIONS').filter(q=>yes_(q.actif)&&choices.includes(String(q.chapitre).trim())&&(level==='tous'||String(q.niveau).toLowerCase()===level)&&usages.includes(String(q.usage).toUpperCase())&&['A','B','C','D'].includes(String(q.bonne).toUpperCase()));
+}
+function selectQuestions_(pool,level,count,mode) {
+  if(mode!=='exam'||level!=='tous')return shuffle_(pool).slice(0,count);
+  // Pour 10 QCM : 3 faciles, 4 moyens et 3 difficiles, mélangés.
+  const third=Math.floor(count/3);
+  const target={facile:third+(count%3===2?1:0),moyen:third+(count%3>=1?1:0),difficile:third};
+  const chosen=[];
+  for(const difficulty of ['facile','moyen','difficile']) {
+    const candidates=shuffle_(pool.filter(q=>String(q.niveau).toLowerCase()===difficulty));
+    chosen.push(...candidates.slice(0,target[difficulty]));
+  }
+  // En présence de catégories moins fournies, compléter sans doublon.
+  const used=new Set(chosen.map(q=>String(q.id)));
+  chosen.push(...shuffle_(pool.filter(q=>!used.has(String(q.id)))).slice(0,count-chosen.length));
+  return shuffle_(chosen);
 }
 function publicQuestion_(q,order) {return {id:String(q.id),text:String(q.enonce),choices:order.map(k=>({id:k,text:String(q[k.toLowerCase()])}))};}
 function buildAttempt_(user,mode,evalId,chapters,level,count,minutes,maxAttempts,closeAt) {
@@ -101,7 +124,7 @@ function buildAttempt_(user,mode,evalId,chapters,level,count,minutes,maxAttempts
   return lock_(()=>{
     if(mode==='exam'&&records_('TENTATIVES').filter(t=>t.email===user.email&&t.evaluation_id===evalId).length>=maxAttempts)throw new Error('Nombre de tentatives autorisées atteint.');
     const pool=bank_(chapters,level,mode);if(pool.length<count)throw new Error('Banque insuffisante : '+pool.length+' question(s) disponibles pour '+count+' demandées.');
-    const selected=shuffle_(pool).slice(0,count).map(q=>({id:String(q.id),order:shuffle_(['A','B','C','D'])}));
+    const selected=selectQuestions_(pool,level,count,mode).map(q=>({id:String(q.id),order:shuffle_(['A','B','C','D'])}));
     const now=new Date();const close=closeAt?Date.parse(closeAt):Infinity;
     if(!Number.isFinite(close)&&closeAt)throw new Error('Date de fermeture invalide.');
     const end=new Date(Math.min(now.getTime()+minutes*60000,close));const id=Utilities.getUuid();
@@ -150,15 +173,16 @@ function adminCreateExam(session,data) {
   const level=text_(d.level,20);if(!['facile','moyen','difficile','tous'].includes(level))throw new Error('Difficulté invalide.');
   const count=Number(d.count),minutes=Number(d.minutes),limit=Number(d.maxAttempts);if(!Number.isInteger(count)||count<1||count>40||!Number.isInteger(minutes)||minutes<1||minutes>180||!Number.isInteger(limit)||limit<1||limit>10)throw new Error('Nombre, durée ou tentatives invalides.');
   const start=text_(d.openAt,60),end=text_(d.closeAt,60);if(start&&!Number.isFinite(Date.parse(start)))throw new Error('Date d’ouverture invalide.');if(end&&!Number.isFinite(Date.parse(end)))throw new Error('Date de fermeture invalide.');if(start&&end&&Date.parse(end)<=Date.parse(start))throw new Error('Fermeture antérieure à l’ouverture.');
-  const id='EXAM_'+Utilities.getUuid().slice(0,8).toUpperCase();return lock_(()=>{append_('EVALUATIONS',{id,titre:text_(d.title,100)||'Évaluation Analyse',chapitres:chapters.join(','),niveau:level,nb_questions:count,duree_minutes:minutes,ouverture_iso:start?new Date(start).toISOString():'',fermeture_iso:end?new Date(end).toISOString():'',actif:false,tentatives_max:limit,correction_immediate:false,groupe:text_(d.group,50)});return {id,enabled:false,availableQuestions:bank_(chapters.join(','),level,'exam').length};});
+  const chapterValue=[...new Set(chapters)].join(';');
+  const id='EXAM_'+Utilities.getUuid().slice(0,8).toUpperCase();return lock_(()=>{append_('EVALUATIONS',{id,titre:text_(d.title,100)||'Évaluation Analyse',chapitres:chapterValue,niveau:level,nb_questions:count,duree_minutes:minutes,ouverture_iso:start?new Date(start).toISOString():'',fermeture_iso:end?new Date(end).toISOString():'',actif:false,tentatives_max:limit,correction_immediate:false,groupe:text_(d.group,50)});return {id,enabled:false,availableQuestions:bank_(chapterValue,level,'exam').length};});
 }
-function adminToggleExam(session,id,enabled) {user_(session,true);return lock_(()=>{const ex=find_('EVALUATIONS',text_(id,80),'id');if(!ex)throw new Error('Évaluation introuvable.');if(enabled&&bank_(ex.chapitres,ex.niveau,'exam').length<Number(ex.nb_questions))throw new Error('Banque EXAMEN insuffisante : ajoutez des questions privées avant activation.');if(enabled&&examState_({...ex,actif:true})==='indisponible')throw new Error('Dates de programmation invalides : corrigez le calendrier avant publication.');patch_('EVALUATIONS',ex._row,{actif:Boolean(enabled)});return {id,enabled:Boolean(enabled)};});}
+function adminToggleExam(session,id,enabled) {user_(session,true);return lock_(()=>{const ex=find_('EVALUATIONS',text_(id,80),'id');if(!ex)throw new Error('Évaluation introuvable.');if(enabled&&bank_(ex.chapitres,ex.niveau,'exam').length<Number(ex.nb_questions))throw new Error('Banque de QCM insuffisante : vérifiez les chapitres, le niveau et le nombre de questions.');if(enabled&&examState_({...ex,actif:true})==='indisponible')throw new Error('Dates de programmation invalides : corrigez le calendrier avant publication.');patch_('EVALUATIONS',ex._row,{actif:Boolean(enabled)});return {id,enabled:Boolean(enabled)};});}
 /** À exécuter une fois manuellement dans l'éditeur Apps Script par le propriétaire. */
-function installMailTrigger() {ScriptApp.getProjectTriggers().filter(t=>t.getHandlerFunction()==='processMailQueue').forEach(ScriptApp.deleteTrigger);ScriptApp.newTrigger('processMailQueue').timeBased().everyHours(1).create();}
+function installMailTrigger_() {ScriptApp.getProjectTriggers().filter(t=>t.getHandlerFunction()==='processMailQueue_').forEach(ScriptApp.deleteTrigger);ScriptApp.newTrigger('processMailQueue_').timeBased().everyHours(1).create();}
 /** Un envoi par étudiant et par tentative, dans la limite du quota Gmail réel.
  * Le verrou n'est pas conservé pendant le transfert réseau des e-mails.
  */
-function processMailQueue() {
+function processMailQueue_() {
   let sent=0,quota=MailApp.getRemainingDailyQuota();
   for(let i=0;i<20&&quota>0;i++){
     const next=lock_(()=>{const row=records_('EMAILS').find(x=>x.statut==='EN_ATTENTE');if(!row)return null;patch_('EMAILS',row._row,{statut:'EN_COURS',date_envoi:iso_()});return row;});
@@ -175,4 +199,4 @@ function processMailQueue() {
   return {sent,remainingQuota:quota};
 }
 /** À exécuter une fois seulement si le classeur a été créé sans onglets. */
-function initializeMissingSheets() {const db=db_();Object.keys(TABLES).forEach(name=>{let sheet=db.getSheetByName(name);if(!sheet){sheet=db.insertSheet(name);sheet.appendRow(TABLES[name]);sheet.setFrozenRows(1);}});}
+function initializeMissingSheets_() {const db=db_();Object.keys(TABLES).forEach(name=>{let sheet=db.getSheetByName(name);if(!sheet){sheet=db.insertSheet(name);sheet.appendRow(TABLES[name]);sheet.setFrozenRows(1);}});}
