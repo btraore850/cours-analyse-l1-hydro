@@ -125,6 +125,12 @@ function processMailQueue() {
   for(let i=0;i<20&&quota>0;i++){
     const next=lock_(()=>{const row=records_('EMAILS').find(x=>x.statut==='EN_ATTENTE');if(!row)return null;patch_('EMAILS',row._row,{statut:'EN_COURS',date_envoi:iso_()});return row;});
     if(!next)break;
+    // Même une ancienne notification d'entraînement en attente ne doit jamais partir.
+    const attempt=find_('TENTATIVES',String(next.tentative_id),'id');
+    if(!attempt||attempt.mode!=='exam'||String(attempt.email).toLowerCase()!==String(next.email).toLowerCase()){
+      lock_(()=>patch_('EMAILS',next._row,{statut:'IGNORE',date_envoi:iso_()}));
+      continue;
+    }
     try{MailApp.sendEmail(String(next.email),String(next.objet),String(next.corps));lock_(()=>patch_('EMAILS',next._row,{statut:'ENVOYE',date_envoi:iso_()}));sent++;quota--;}
     catch(error){lock_(()=>patch_('EMAILS',next._row,{statut:'ERREUR',date_envoi:text_(error.message,200)}));}
   }
