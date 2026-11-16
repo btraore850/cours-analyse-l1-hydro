@@ -11,6 +11,7 @@ const TABLES = Object.freeze({
   QUESTIONS: ['id','chapitre','niveau','usage','enonce','a','b','c','d','bonne','explication','actif'],
   EVALUATIONS: ['id','titre','chapitres','niveau','nb_questions','duree_minutes','ouverture_iso','fermeture_iso','actif','tentatives_max','correction_immediate','groupe'],
   TENTATIVES: ['id','email','evaluation_id','mode','debut_iso','expiration_iso','fin_iso','statut','note_sur_10','nb_bonnes','nb_questions','questions_json','reponses_json','dernier_enregistrement_iso'],
+  AUTO_TENTATIVES: ['id','email','debut_iso','fin_iso','chapitre','niveau','nb_questions','nb_bonnes','note_sur_10','statut','questions_json'],
   EMAILS: ['tentative_id','email','objet','corps','statut','date_envoi']
 });
 const TIME_PER_QUESTION = {facile:90,moyen:150,difficile:210};
@@ -26,6 +27,12 @@ function doGet(e) {
     return HtmlService.createHtmlOutput(
       '<p>Ouvrez les évaluations officielles depuis la plateforme pédagogique GitHub Pages.</p>'
     ).setTitle('Évaluations — accès via la plateforme');
+  }
+  if(String(e&&e.parameter&&e.parameter.mode||'')==='practice'){
+    const bridge=HtmlService.createTemplateFromFile('PracticeBridge');
+    bridge.bridgeNonce=nonce;
+    return bridge.evaluate().setTitle('Suivi privé des révisions')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
   const page=HtmlService.createTemplateFromFile('Index');
   page.bridgeNonce=nonce;
@@ -53,18 +60,23 @@ function shuffle_(data) {const items=data.slice();for(let i=items.length-1;i>0;i
 /** Valide un ID Token Google ; tokeninfo sert ici à l'amorçage gratuit.
  * Pour un déploiement à forte charge, utiliser un validateur JWT avec clés Google.
  */
-function signIn(idToken) {
+function googleIdentity_(idToken) {
   if(typeof idToken!=='string'||idToken.length<100||idToken.length>6000)throw new Error('Jeton de connexion invalide.');
   const url='https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(idToken);
   const response=UrlFetchApp.fetch(url,{muteHttpExceptions:true});
   if(response.getResponseCode()!==200)throw new Error('Connexion Google non vérifiée.');
   const payload=JSON.parse(response.getContentText());
   if(payload.aud!==prop_('GOOGLE_CLIENT_ID')||!['accounts.google.com','https://accounts.google.com'].includes(payload.iss)||Number(payload.exp)*1000<Date.now()||String(payload.email_verified)!=='true')throw new Error('Identité Google non valide.');
-  const email=String(payload.email||'').toLowerCase();const admin=email===prop_('TEACHER_EMAIL').toLowerCase();
+  const email=String(payload.email||'').trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error('Adresse e-mail Google invalide.');
+  return {email,sub:String(payload.sub||'')};
+}
+function signIn(idToken) {
+  const identity=googleIdentity_(idToken),email=identity.email,admin=email===prop_('TEACHER_EMAIL').toLowerCase();
   const student=records_('ETUDIANTS').find(s=>String(s.email).toLowerCase()===email&&yes_(s.actif));
   if(!admin&&!student)throw new Error('Votre adresse Gmail ne figure pas dans la liste des étudiants inscrits.');
-  if(student&&student.google_sub&&String(student.google_sub)!==String(payload.sub))throw new Error('Ce compte Gmail ne correspond pas au compte initialement inscrit.');
-  if(student&&!student.google_sub)lock_(()=>{const row=records_('ETUDIANTS').find(x=>String(x.email).toLowerCase()===email);if(row&&!row.google_sub){tab_('ETUDIANTS').getRange(row._row,7).setNumberFormat('@');patch_('ETUDIANTS',row._row,{google_sub:String(payload.sub)});}});
+  if(student&&student.google_sub&&String(student.google_sub)!==identity.sub)throw new Error('Ce compte Gmail ne correspond pas au compte initialement inscrit.');
+  if(student&&!student.google_sub)lock_(()=>{const row=records_('ETUDIANTS').find(x=>String(x.email).toLowerCase()===email);if(row&&!row.google_sub){tab_('ETUDIANTS').getRange(row._row,7).setNumberFormat('@');patch_('ETUDIANTS',row._row,{google_sub:identity.sub});}});
   const session=Utilities.getUuid();const profile={email,role:admin?'teacher':'student',name:admin?'M. Bakary TRAORE':(student.prenom+' '+student.nom).trim(),groupe:admin?'':String(student.groupe||'')};
   CacheService.getScriptCache().put('session:'+session,JSON.stringify(profile),21600);
   return {session,profile};
@@ -80,9 +92,30 @@ function examState_(exam,now) {
   return time<from?'a_venir':time>=to?'terminee':'ouverte';
 }
 function visible_(exam,user) {return examGroupAllowed_(exam,user)&&examState_(exam)==='ouverte';}
+function revisionDashboard_() {
+  const enrolled=records_('ETUDIANTS').filter(s=>yes_(s.actif)&&String(s.email||'').trim());
+  const attempts=records_('AUTO_TENTATIVES');
+  const people=new Map(),now=Date.now(),week=now-7*86400000,month=now-30*86400000;
+  enrolled.forEach(s=>{
+    const email=String(s.email).trim().toLowerCase();
+    people.set(email,{email,nom:[s.prenom,s.nom].filter(Boolean).join(' '),matricule:String(s.matricule||''),inscrit:true,commencees:0,terminees:0,septJours:0,trenteJours:0,derniere:'',totalNotes:0});
+  });
+  attempts.forEach(a=>{
+    const email=String(a.email||'').trim().toLowerCase();if(!email)return;
+    if(!people.has(email))people.set(email,{email,nom:'',matricule:'',inscrit:false,commencees:0,terminees:0,septJours:0,trenteJours:0,derniere:'',totalNotes:0});
+    const p=people.get(email),debut=String(a.debut_iso||'');p.commencees++;
+    if(debut>p.derniere)p.derniere=debut;
+    const time=Date.parse(debut);if(Number.isFinite(time)&&time>=week)p.septJours++;
+    if(Number.isFinite(time)&&time>=month)p.trenteJours++;
+    if(String(a.statut)==='TERMINE'){p.terminees++;p.totalNotes+=Number(a.note_sur_10)||0;}
+  });
+  const rows=[...people.values()].map(({totalNotes,...p})=>({...p,moyenne:p.terminees?Math.round(10*totalNotes/p.terminees)/10:null}))
+    .sort((a,b)=>Number(b.inscrit)-Number(a.inscrit)||a.commencees-b.commencees||a.email.localeCompare(b.email));
+  return {rows,summary:{inscrits:enrolled.length,sansTentative:rows.filter(p=>p.inscrit&&!p.commencees).length,actifs7j:rows.filter(p=>p.inscrit&&p.septJours>0).length,visiteurs:rows.filter(p=>!p.inscrit).length}};
+}
 function getDashboard(session) {
   const user=user_(session);const exams=records_('EVALUATIONS');const attempts=records_('TENTATIVES');
-  if(user.role==='teacher')return {role:'teacher',name:user.name,exams:exams.map(({_row,...r})=>r),attempts:attempts.map(({questions_json,reponses_json,_row,...r})=>r),sheetUrl:'https://docs.google.com/spreadsheets/d/'+prop_('SPREADSHEET_ID')+'/edit'};
+  if(user.role==='teacher')return {role:'teacher',name:user.name,exams:exams.map(({_row,...r})=>r),attempts:attempts.map(({questions_json,reponses_json,_row,...r})=>r),revisions:revisionDashboard_(),sheetUrl:'https://docs.google.com/spreadsheets/d/'+prop_('SPREADSHEET_ID')+'/edit'};
   // La programmation publiée est consultable avant l'ouverture, sans jamais
   // exposer les questions, réponses, étudiants, notes ou brouillons.
   const planned=exams.filter(ex=>yes_(ex.actif)&&examGroupAllowed_(ex,user))
@@ -102,6 +135,48 @@ function bank_(chapters,level,mode) {
   // pour les examens officiels ; les questions ne sont pas confidentielles.
   const usages=mode==='exam'?['EXAMEN','ENTRAINEMENT']:['ENTRAINEMENT'];
   return records_('QUESTIONS').filter(q=>yes_(q.actif)&&choices.includes(String(q.chapitre).trim())&&(level==='tous'||String(q.niveau).toLowerCase()===level)&&usages.includes(String(q.usage).toUpperCase())&&['A','B','C','D'].includes(String(q.bonne).toUpperCase()));
+}
+/** Révisions libres : aucun contrôle de présence dans ETUDIANTS.
+ * Le compte Google est toutefois vérifié par le serveur pour suivre chaque adresse.
+ */
+function verifyPublicPracticeIdentity(idToken) {return {email:googleIdentity_(idToken).email};}
+function startPublicPractice(idToken,data) {
+  const user=googleIdentity_(idToken),d=data||{},chapter=Number(d.chapter),level=String(d.level||'').toLowerCase(),count=Number(d.count);
+  const id=String(d.id||'');
+  if(!Number.isInteger(chapter)||chapter<1||chapter>7||!TIME_PER_QUESTION[level]||![5,10].includes(count)||!/^AUTO_[a-f0-9-]{36}$/.test(id))throw new Error('Paramètres de révision invalides.');
+  if(!Array.isArray(d.questionIds)||d.questionIds.length!==count)throw new Error('Liste de questions invalide.');
+  const pool=bank_(String(chapter),level,'practice'),available=new Set(pool.map(q=>String(q.id)));
+  const ids=d.questionIds.map(value=>{
+    const original=String(value||'');
+    const normalized=chapter===2&&available.has('C2'+original)?'C2'+original:original;
+    if(!available.has(normalized))throw new Error('Question absente de la banque du chapitre '+chapter+'.');
+    return normalized;
+  });
+  if(new Set(ids).size!==count)throw new Error('Questions répétées dans la tentative.');
+  return lock_(()=>{
+    const existing=find_('AUTO_TENTATIVES',id,'id');
+    if(existing){if(String(existing.email)!==user.email)throw new Error('Identifiant de tentative déjà utilisé.');return {id,email:user.email,alreadyStarted:true};}
+    append_('AUTO_TENTATIVES',{id,email:user.email,debut_iso:iso_(),chapitre:chapter,niveau:level,nb_questions:count,statut:'EN_COURS',questions_json:JSON.stringify(ids)});
+    return {id,email:user.email};
+  });
+}
+function finishPublicPractice(idToken,id,answers) {
+  const user=googleIdentity_(idToken),key=String(id||''),responses=answers&&typeof answers==='object'&&!Array.isArray(answers)?answers:{};
+  return lock_(()=>{
+    const attempt=find_('AUTO_TENTATIVES',key,'id');
+    if(!attempt||String(attempt.email)!==user.email)throw new Error('Tentative de révision non autorisée.');
+    if(String(attempt.statut)==='TERMINE')return {id:key,note:Number(attempt.note_sur_10),correct:Number(attempt.nb_bonnes),count:Number(attempt.nb_questions),alreadyFinished:true};
+    const ids=JSON.parse(String(attempt.questions_json||'[]')),bank=new Map(records_('QUESTIONS').map(q=>[String(q.id),q]));
+    let correct=0;
+    ids.forEach(qid=>{
+      const q=bank.get(qid);if(!q)throw new Error('Question introuvable : '+qid);
+      const choice=String(responses[qid]||(qid.startsWith('C2')?responses[qid.slice(2)]:'')||'').toUpperCase();
+      if(choice===String(q.bonne).toUpperCase())correct++;
+    });
+    const note=Math.round(1000*correct/ids.length)/100;
+    patch_('AUTO_TENTATIVES',attempt._row,{fin_iso:iso_(),nb_bonnes:correct,note_sur_10:note,statut:'TERMINE'});
+    return {id:key,note,correct,count:ids.length};
+  });
 }
 function selectQuestions_(pool,level,count,mode) {
   if(mode!=='exam'||level!=='tous')return shuffle_(pool).slice(0,count);
