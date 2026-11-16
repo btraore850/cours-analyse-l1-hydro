@@ -26,7 +26,7 @@ const headers={
 const tables=Object.fromEntries(Object.entries(headers).map(([k,h])=>[k,[h]]));
 tables.ETUDIANTS.push(['H001','etudiant@gmail.com','Diallo','Aïssatou','H1',true,'']);
 for(const q of questionBank)tables.QUESTIONS.push([q.id,2,q.level,'ENTRAINEMENT',q.q,...q.a,'ABCD'[q.correct],q.why,true]);
-class Sheet {constructor(name){this.name=name;}getDataRange(){return {getValues:()=>tables[this.name].map(row=>row.slice())};}appendRow(row){tables[this.name].push([...row]);}getRange(row,col){return {setValue:(value)=>{tables[this.name][row-1][col-1]=value;}};}}
+class Sheet {constructor(name){this.name=name;}getDataRange(){return {getValues:()=>tables[this.name].map(row=>row.slice())};}appendRow(row){tables[this.name].push([...row]);}getRange(row,col){return {setValue:(value)=>{tables[this.name][row-1][col-1]=value;},setNumberFormat:()=>{}};}}
 const sheets=Object.fromEntries(Object.keys(headers).map(name=>[name,new Sheet(name)]));
 const sessions=new Map(),sent=[];let uuid=0;
 const sandbox={
