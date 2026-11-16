@@ -8,7 +8,9 @@ const bankContext={window:{}};
 vm.runInNewContext(fs.readFileSync(path.join(root,'evaluation/quiz-data.js'),'utf8'),bankContext);
 for(const chapter of [1,3,4,5,6,7]){
   const filename=path.join(root,`evaluation/questions/chapter-${chapter}.js`);
-  vm.runInNewContext(fs.readFileSync(filename,'utf8'),bankContext,{filename});
+  const source=fs.readFileSync(filename,'utf8');
+  assert(!/(?<!\\)\\[A-Za-z]/.test(source),`Échappement JavaScript incorrect d'une commande LaTeX : chapitre ${chapter}`);
+  vm.runInNewContext(source,bankContext,{filename});
 }
 const questionBank=bankContext.window.HYDRO_DEMO_QUESTIONS;
 assert.equal(questionBank.length,210,'210 QCM couvrant les sept chapitres');
