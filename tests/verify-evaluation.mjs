@@ -6,9 +6,17 @@ import path from 'node:path';
 const root=path.resolve(import.meta.dirname,'..');
 const bankContext={window:{}};
 vm.runInNewContext(fs.readFileSync(path.join(root,'evaluation/quiz-data.js'),'utf8'),bankContext);
+for(const chapter of [1,3,4,5,6,7]){
+  const filename=path.join(root,`evaluation/questions/chapter-${chapter}.js`);
+  vm.runInNewContext(fs.readFileSync(filename,'utf8'),bankContext,{filename});
+}
 const questionBank=bankContext.window.HYDRO_DEMO_QUESTIONS;
-assert.equal(questionBank.length,30,'30 questions de démonstration');
-for(const level of ['facile','moyen','difficile'])assert.equal(questionBank.filter(x=>x.level===level).length,10);
+assert.equal(questionBank.length,210,'210 QCM couvrant les sept chapitres');
+for(let chapter=1;chapter<=7;chapter++){
+  const questions=questionBank.filter(q=>Number(q.chapter||2)===chapter);
+  assert.equal(questions.length,30,`Chapitre ${chapter} : 30 QCM`);
+  for(const level of ['facile','moyen','difficile'])assert.equal(questions.filter(x=>x.level===level).length,10,`Chapitre ${chapter} : dix questions de niveau ${level}`);
+}
 assert.equal(new Set(questionBank.map(x=>x.id)).size,questionBank.length);
 for(const q of questionBank){
   assert.equal(q.a.length,4);
@@ -26,6 +34,8 @@ for(const relative of htmlPaths){const html=fs.readFileSync(path.join(root,relat
 const quizHtml=fs.readFileSync(path.join(root,'evaluation/index.html'),'utf8');
 assert(quizHtml.includes('mathjax@4/tex-chtml.js'),'La bibliothèque de rendu des formules doit être chargée.');
 assert(quizHtml.includes("typesetMath($('questions'))")&&quizHtml.includes('typesetMath(list)'),'Les questions et les corrigés doivent être composés en mathématiques.');
+for(const chapter of [1,3,4,5,6,7])assert(quizHtml.includes(`questions/chapter-${chapter}.js`),`Chargement du chapitre ${chapter}`);
+assert(quizHtml.includes('Number(q.chapter||2)===chapter'),'Le chapitre choisi doit filtrer les QCM.');
 
 const headers={
  ETUDIANTS:['matricule','email','nom','prenom','groupe','actif','google_sub'],
@@ -36,7 +46,7 @@ const headers={
 };
 const tables=Object.fromEntries(Object.entries(headers).map(([k,h])=>[k,[h]]));
 tables.ETUDIANTS.push(['H001','etudiant@gmail.com','Diallo','Aïssatou','H1',true,'']);
-for(const q of questionBank)tables.QUESTIONS.push([q.id,2,q.level,'ENTRAINEMENT',q.q,...q.a,'ABCD'[q.correct],q.why,true]);
+for(const q of questionBank)tables.QUESTIONS.push([q.id,q.chapter||2,q.level,'ENTRAINEMENT',q.q,...q.a,'ABCD'[q.correct],q.why,true]);
 class Sheet {constructor(name){this.name=name;}getDataRange(){return {getValues:()=>tables[this.name].map(row=>row.slice())};}appendRow(row){tables[this.name].push([...row]);}getRange(row,col){return {setValue:(value)=>{tables[this.name][row-1][col-1]=value;},setNumberFormat:()=>{}};}}
 const sheets=Object.fromEntries(Object.keys(headers).map(name=>[name,new Sheet(name)]));
 const sessions=new Map(),sent=[];let uuid=0;
@@ -82,4 +92,4 @@ assert.equal(sandbox.submitAttempt(student.session,examTry.id,{}).note,0);
 assert.equal(tables.EMAILS.length,3,'un seul e-mail pour l’examen officiel');
 assert.equal(sandbox.processMailQueue().sent,1);assert.equal(sent.length,1);
 assert.equal(sandbox.getDashboard(teacher.session).attempts.length,2);
-console.log('✓ 30 questions validées, interfaces analysées, sessions, tirages, barème, confidentialité, e-mails et examen testés.');
+console.log('✓ 210 QCM sur sept chapitres validés, interfaces analysées, sessions, tirages, barème, confidentialité, e-mails et examen testés.');
