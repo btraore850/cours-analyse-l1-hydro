@@ -19,6 +19,7 @@
     .button{appearance:none;border:0;border-radius:10px;background:var(--marine);color:white;padding:13px 20px;font:700 1rem system-ui;cursor:pointer}
     .button:hover{background:#075b73}.button:disabled{background:#91a9b5;cursor:not-allowed}.button.secondary{background:#e3f1f4;color:var(--marine)}
     .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}.muted{color:#617b87;font-size:.93rem}.pill{display:inline-block;border-radius:30px;padding:5px 12px;background:#dff0f3;color:#14586e;font-size:.84rem;font-weight:750}
+    .identity{border-left:4px solid var(--eau);background:#eaf5f7}.identity-status{margin:10px 0 0;font-weight:650}.identity-email{font-weight:750;color:#14586e}
     .status{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}.timer{background:#e6f2f5;border-radius:10px;padding:9px 15px;font-weight:800;font-variant-numeric:tabular-nums;color:#0b3954}
     .timer.urgent{background:#ffebdf;color:#a34120}.question{border-top:1px solid var(--bord);padding:20px 0}.question:first-of-type{border:0}
     .question h3{font-weight:700;font-size:1.03rem}.choices{display:grid;gap:9px}.choice{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--bord);border-radius:10px;padding:10px 13px;cursor:pointer}
@@ -40,6 +41,13 @@
   </div></header>
   <main class="wrap">
     <div class="notice" role="status"><strong>Entraînement uniquement.</strong> Votre score et la correction sont affichés directement à l'écran, sans envoi d'e-mail. Les résultats de cette page ne constituent pas une note officielle. Pour les examens programmés par l'enseignant, utilisez la rubrique « Évaluations officielles » ci-dessous.</div>
+    <section class="panel identity" id="identityPanel" aria-labelledby="identityTitle">
+      <h2 id="identityTitle">Identifier mes révisions</h2>
+      <p>Connectez-vous avec votre compte Google. <strong>Tout étudiant peut participer, même s'il n'est pas inscrit dans la base des examens officiels.</strong></p>
+      <p class="muted">Votre adresse e-mail vérifiée, les dates, les chapitres, le nombre de tentatives et les notes sur 10 seront enregistrés dans un classeur privé, consultable par l'enseignant pour suivre les révisions. Aucun mot de passe Google n'est demandé ici.</p>
+      <div id="googleButton"></div>
+      <p id="identityEmail" class="identity-email"></p><p id="identityStatus" class="identity-status" role="status"></p>
+    </section>
     <section class="panel" id="setup" aria-labelledby="setupTitle">
       <h2 id="setupTitle">Préparer une auto-évaluation</h2>
       <div class="grid">
@@ -48,17 +56,18 @@
         <div class="field"><label for="count">Nombre de QCM</label><select id="count"><option value="5">5 questions</option><option value="10" selected>10 questions</option></select></div>
       </div>
       <p class="muted" id="timing">Durée maximale conseillée : 25 minutes.</p>
-      <div class="actions"><button class="button" id="start">Commencer la tentative</button></div>
+      <div class="actions"><button class="button" id="start" disabled>Commencer la tentative</button><span class="muted" id="startStatus" role="status"></span></div>
     </section>
     <section class="panel hidden" id="quiz" aria-live="polite">
       <div class="status"><div><span class="pill" id="progress">0/10 réponses</span><p class="muted" id="quizLabel"></p></div><div class="timer" id="timer" role="timer" aria-live="off">25:00</div></div>
       <div id="questions"></div>
       <div class="actions"><button class="button" id="submit">Terminer et corriger</button><span class="muted">Les réponses non choisies comptent comme incorrectes.</span></div>
     </section>
-    <section class="panel hidden" id="results" aria-live="polite"><h2>Votre résultat</h2><div class="score" id="score">—</div><p class="appreciation" id="appreciation"></p><p id="resultSummary"></p><div class="result-stats"><div><strong>Durée utilisée</strong><p id="elapsed"></p></div><div><strong>Niveau</strong><p id="resultLevel"></p></div></div><div class="scale"><p><strong>Échelle indicative des appréciations (sur 10)</strong></p><ul><li>0 à moins de 5 : Insuffisant</li><li>5 à moins de 6 : Passable</li><li>6 à moins de 7 : Assez bien</li><li>7 à moins de 8 : Bien</li><li>8 à moins de 9 : Très bien</li><li>9 à 10 : Excellent</li></ul></div><h3 style="margin-top:25px">Correction pédagogique</h3><div id="corrections"></div><div class="actions"><button class="button" id="retry">Nouvelle tentative aléatoire</button><button class="button secondary" id="back">Changer les paramètres</button></div></section>
+    <section class="panel hidden" id="results" aria-live="polite"><h2>Votre résultat</h2><div class="score" id="score">—</div><p class="appreciation" id="appreciation"></p><p id="resultSummary"></p><p id="trackingResult" role="status"></p><button class="button secondary" id="retryTracking" hidden>Réessayer l'enregistrement</button><div class="result-stats"><div><strong>Durée utilisée</strong><p id="elapsed"></p></div><div><strong>Niveau</strong><p id="resultLevel"></p></div></div><div class="scale"><p><strong>Échelle indicative des appréciations (sur 10)</strong></p><ul><li>0 à moins de 5 : Insuffisant</li><li>5 à moins de 6 : Passable</li><li>6 à moins de 7 : Assez bien</li><li>7 à moins de 8 : Bien</li><li>8 à moins de 9 : Très bien</li><li>9 à 10 : Excellent</li></ul></div><h3 style="margin-top:25px">Correction pédagogique</h3><div id="corrections"></div><div class="actions"><button class="button" id="retry">Nouvelle tentative aléatoire</button><button class="button secondary" id="back">Changer les paramètres</button></div></section>
     <section class="panel"><h2>Évaluations officielles programmées</h2><p>Les étudiants inscrits peuvent consulter le calendrier des évaluations publiées par l'enseignant : chapitres, nombre de questions, date d'ouverture et date de fermeture. Le questionnaire n'est accessible que pendant le créneau autorisé, après connexion avec le compte Google enregistré.</p><p><a class="button" href="officielle/">Consulter les évaluations officielles</a></p><p class="muted">Les questions et corrigés officiels restent dans le service privé. Enseignant : M. Bakary TRAORE · Analyse L1 Hydrologie.</p></section>
   </main>
   <footer><div class="wrap">Analyse — Licence 1 Hydrologie · Année universitaire 2026–2027</div></footer>
+  <iframe id="practiceBridge" title="Service privé de suivi des révisions" hidden></iframe>
   <script>
     // Les formules du QCM utilisent la syntaxe LaTeX \(...\).
     window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
@@ -72,6 +81,9 @@
   <script src="questions/chapter-6.js?v=20261116"></script>
   <script src="questions/chapter-7.js?v=20261116-corrected"></script>
   <script src="paraphrases.js?v=20261116-complete"></script>
+  <script src="officielle/config.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="practice-tracker.js?v=20261116-1"></script>
   <script>
   (()=>{
     'use strict';
@@ -96,17 +108,32 @@
     function appreciationFor(score){if(score<5)return 'Insuffisant';if(score<6)return 'Passable';if(score<7)return 'Assez bien';if(score<8)return 'Bien';if(score<9)return 'Très bien';return 'Excellent';}
     function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
     function tick(){const left=(deadline-Date.now())/1000;$('timer').textContent=fmt(left);$('timer').classList.toggle('urgent',left<=60);if(left<=0)finish(true);}
-    function start(){clearTimer();locked=false;const chapter=Number($('chapter').value),level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>Number(q.chapter||2)===chapter&&q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce chapitre et ce niveau.');return;}
-      current={chapter,level,items:withParaphrases(shuffled(pool).slice(0,count)),answers:{}};
+    async function start(){if(!window.HYDRO_PRACTICE_TRACKER?.ready()){alert('Connectez-vous avec Google pour enregistrer vos tentatives. Aucune inscription préalable n’est nécessaire.');return;}
+      clearTimer();locked=false;const chapter=Number($('chapter').value),level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>Number(q.chapter||2)===chapter&&q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce chapitre et ce niveau.');return;}
+      $('start').disabled=true;$('startStatus').textContent='Enregistrement du début de la tentative…';
+      const items=withParaphrases(shuffled(pool).slice(0,count));
+      let recorded;
+      try{recorded=await window.HYDRO_PRACTICE_TRACKER.start({id:'AUTO_'+window.crypto.randomUUID(),chapter,level,count,questionIds:items.map(item=>item.id)});}
+      catch(error){$('startStatus').textContent='Échec de l’enregistrement : '+String(error.message||error);$('start').disabled=false;return;}
+      $('start').disabled=false;$('startStatus').textContent='';
+      current={chapter,level,items,answers:{},trackingId:recorded.id};
       clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${item.displayQuestion}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${item.a[option]}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
       started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
     }
     function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=10*correct/current.items.length;
       $('score').textContent=`${score.toFixed(1).replace('.',',')}/10`;$('appreciation').textContent=appreciationFor(score);$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
       $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');clearMath(list);list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=`Réponse attendue : ${item.a[item.correct]}. ${item.why}`;box.append(name,p);list.appendChild(box);});show('results');typesetMath(list);window.scrollTo(0,0);
+      current.submitAnswers=Object.fromEntries(current.items.filter(item=>current.answers[item.id]!==undefined).map(item=>[item.id,'ABCD'[current.answers[item.id]]]));
+      recordFinish(current);
+    }
+    async function recordFinish(finished){if(!finished?.trackingId)return;$('retryTracking').hidden=true;$('trackingResult').textContent='Enregistrement de votre tentative en cours…';
+      try{const saved=await window.HYDRO_PRACTICE_TRACKER.finish(finished.trackingId,finished.submitAnswers);if(current!==finished)return;
+        const officialScore=Number(saved.note);if(Number.isFinite(officialScore))$('score').textContent=officialScore.toFixed(1).replace('.',',')+'/10';
+        $('trackingResult').textContent='Votre révision a été enregistrée dans votre historique privé.';}
+      catch(error){if(current!==finished)return;$('trackingResult').textContent='Votre note est affichée, mais l’enregistrement a échoué : '+String(error.message||error);$('retryTracking').hidden=false;}
     }
     window.addEventListener('load',()=>{if(!current)return;typesetMath($('results').classList.contains('hidden')?$('questions'):$('corrections'));});
-    $('start').addEventListener('click',start);$('submit').addEventListener('click',()=>finish(false));$('retry').addEventListener('click',start);$('back').addEventListener('click',()=>{clearTimer();show('setup');});$('level').addEventListener('change',updateTiming);$('count').addEventListener('change',updateTiming);updateTiming();
+    $('start').addEventListener('click',start);$('submit').addEventListener('click',()=>finish(false));$('retry').addEventListener('click',start);$('retryTracking').addEventListener('click',()=>recordFinish(current));$('back').addEventListener('click',()=>{clearTimer();show('setup');});$('level').addEventListener('change',updateTiming);$('count').addEventListener('change',updateTiming);updateTiming();
   })();
   </script>
 </body></html>
