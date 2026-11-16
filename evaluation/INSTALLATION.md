@@ -39,7 +39,7 @@ Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
    - `googleClientId` : l'**ID client OAuth Web**, se terminant par `.apps.googleusercontent.com` ;
    - `appsScriptUrl` : l'**URL du déploiement Web Apps Script**, se terminant par `/exec`.
 7. Héberger les trois fichiers de `officielle/` sous le site GitHub Pages existant, **après accord explicite de publication**, et ouvrir `https://btraore850.github.io/cours-analyse-l1-hydro/evaluation/officielle/`.
-8. Tester la connexion enseignant puis un compte étudiant autorisé, enfin un compte absent de `ETUDIANTS` qui doit être refusé. Vérifier le rôle, les notes et le filtrage des évaluations. Une fois le déploiement validé, vous pourrez ajouter un lien vers cette page depuis le site pédagogique.
+8. Tester la connexion enseignant puis un compte étudiant autorisé, enfin un compte absent de `ETUDIANTS` qui doit être refusé. Vérifier le rôle, les notes et le filtrage des évaluations. La page d'accueil propose désormais la rubrique « Évaluations », qui mène à la connexion officielle et à l'auto-évaluation libre.
 
 **Correction de l'erreur `400: origin_mismatch` :** l'ancienne version tentait d'ouvrir Google Identity Services depuis l'iframe Apps Script. Le domaine réellement utilisé par cet iframe ne correspondait pas à l'origine autorisée, et les domaines `googleusercontent.com` ne sont pas acceptés comme origines JavaScript OAuth. Dans la version corrigée, le bouton vit sur GitHub Pages et l'Apps Script reçoit le jeton par `postMessage` avec un nonce imprévisible et un contrôle strict de l'origine `https://btraore850.github.io`. Apps Script valide ensuite le jeton avant toute lecture des données privées.
 
@@ -52,6 +52,18 @@ Le moteur valide le jeton Google par l'endpoint `tokeninfo` pour une première i
 L'enseignant se connecte à l'application et crée une évaluation : chapitres, difficulté, nombre de questions, durée, dates et groupe. Toute nouvelle évaluation est désactivée par défaut.
 
 L'activation n'est possible qu'une fois la banque privée `EXAMEN` suffisamment fournie. Les questions sont tirées sans répétition dans chaque tentative, avec un ordre de réponses mélangé. Le serveur conserve un horaire d'expiration indépendant du chronomètre du navigateur.
+
+**Publication automatique du calendrier étudiant :**
+
+1. L'enseignant renseigne de préférence une date d'ouverture et une date de fermeture, puis crée le brouillon.
+2. Après vérification de la banque `EXAMEN`, il clique sur **« Publier »** dans les évaluations programmées. La publication n'ouvre **pas** immédiatement les questions si l'heure de début est future.
+3. Les étudiants autorisés se connectent à « Évaluations officielles » sur la plateforme pédagogique. Ils voient l'épreuve et le statut **À venir**, avec dates, chapitres, nombre de QCM et durée, mais **sans les questions ni corrigés**.
+4. À l'heure prévue, le statut devient **Ouverte** et le bouton **Commencer** est disponible. Après l'heure de fermeture, il devient **Terminée** et une nouvelle tentative est refusée par le serveur. La durée effective d'une tentative ne dépasse jamais l'heure de fermeture.
+5. Cliquer sur **« Retirer »** cache à nouveau l'épreuve aux étudiants. Une épreuve d'un autre groupe n'apparaît jamais dans leur calendrier.
+
+**Actualisation :** la liste des évaluations publiées est récupérée automatiquement chaque minute lorsque l'étudiant n'est pas en train de répondre ; les changements de statut des épreuves déjà affichées sont mis à jour toutes les cinq secondes. Aucun sujet d'examen n'est embarqué dans les fichiers publics de GitHub Pages.
+
+**Mise en service de cette amélioration :** mettre en ligne les pages du dépôt et mettre à jour **les deux fichiers** du projet Apps Script (`Code.gs` et `Index.html`), puis redéployer une nouvelle version de l'application Web. La modification de GitHub Pages seule ne suffit pas pour afficher les évaluations futures, car c'est Apps Script qui filtre le calendrier. Conserver les mêmes propriétés du script, le déploiement et le classeur privé. Tester les rôles enseignant/étudiant avant d'inviter une promotion complète.
 
 Pour tester : créer une épreuve de 5 QCM sur le chapitre 2 et la laisser désactivée, puis inscrire **au moins cinq questions privées** de même niveau avant son activation.
 

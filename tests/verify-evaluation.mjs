@@ -51,7 +51,7 @@ for(const q of questionBank){
 
 // Vérifier la validité du JavaScript des deux interfaces sans navigateur.
 const htmlPaths=['evaluation/index.html','evaluation/apps-script/Index.html'];
-for(const relative of htmlPaths){const html=fs.readFileSync(path.join(root,relative),'utf8');const blocks=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];for(const match of blocks){if(match[1].trim())new vm.Script(match[1],{filename:relative});}}
+for(const relative of htmlPaths){const html=fs.readFileSync(path.join(root,relative),'utf8');const blocks=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];for(const match of blocks){const script=match[1].replace('<?!= JSON.stringify(bridgeNonce) ?>','"test-nonce"');if(script.trim())new vm.Script(script,{filename:relative});}}
 const quizHtml=fs.readFileSync(path.join(root,'evaluation/index.html'),'utf8');
 assert(quizHtml.includes('mathjax@4/tex-chtml.js'),'La bibliothèque de rendu des formules doit être chargée.');
 assert(quizHtml.includes("typesetMath($('questions'))")&&quizHtml.includes('typesetMath(list)'),'Les questions et les corrigés doivent être composés en mathématiques.');

@@ -70,24 +70,42 @@ function signIn(idToken) {
   return {session,profile};
 }
 function user_(session,teacher) {const raw=CacheService.getScriptCache().get('session:'+text_(session,80));if(!raw)throw new Error('Session expirée. Connectez-vous à nouveau.');const user=JSON.parse(raw);if(teacher&&user.role!=='teacher')throw new Error('Accès réservé à l’enseignant.');return user;}
-function visible_(exam,user) {if(!yes_(exam.actif))return false;const now=Date.now();if(exam.ouverture_iso&&Date.parse(exam.ouverture_iso)>now)return false;if(exam.fermeture_iso&&Date.parse(exam.fermeture_iso)<now)return false;return !exam.groupe||String(exam.groupe).toLowerCase()===String(user.groupe).toLowerCase();}
+function examGroupAllowed_(exam,user) {return !String(exam.groupe||'').trim()||String(exam.groupe).trim().toLowerCase()===String(user.groupe||'').trim().toLowerCase();}
+function examState_(exam,now) {
+  if(!yes_(exam.actif))return 'brouillon';
+  const start=String(exam.ouverture_iso||'').trim(),end=String(exam.fermeture_iso||'').trim();
+  const from=start?Date.parse(start):-Infinity,to=end?Date.parse(end):Infinity;
+  if(Number.isNaN(from)||Number.isNaN(to)||to<=from)return 'indisponible';
+  const time=now===undefined?Date.now():now;
+  return time<from?'a_venir':time>=to?'terminee':'ouverte';
+}
+function visible_(exam,user) {return examGroupAllowed_(exam,user)&&examState_(exam)==='ouverte';}
 function getDashboard(session) {
   const user=user_(session);const exams=records_('EVALUATIONS');const attempts=records_('TENTATIVES');
   if(user.role==='teacher')return {role:'teacher',name:user.name,exams:exams.map(({_row,...r})=>r),attempts:attempts.map(({questions_json,reponses_json,_row,...r})=>r),sheetUrl:'https://docs.google.com/spreadsheets/d/'+prop_('SPREADSHEET_ID')+'/edit'};
-  return {role:'student',name:user.name,exams:exams.filter(ex=>visible_(ex,user)).map(({_row,...r})=>r),attempts:attempts.filter(x=>String(x.email).toLowerCase()===user.email).map(({questions_json,reponses_json,_row,...r})=>r).reverse().slice(0,40)};
+  // La programmation publiée est consultable avant l'ouverture, sans jamais
+  // exposer les questions, réponses, étudiants, notes ou brouillons.
+  const planned=exams.filter(ex=>yes_(ex.actif)&&examGroupAllowed_(ex,user))
+    .map(ex=>({id:String(ex.id),titre:String(ex.titre),chapitres:String(ex.chapitres),niveau:String(ex.niveau),nb_questions:Number(ex.nb_questions),duree_minutes:Number(ex.duree_minutes),tentatives_max:Number(ex.tentatives_max),ouverture_iso:String(ex.ouverture_iso||''),fermeture_iso:String(ex.fermeture_iso||''),etat:examState_(ex)}))
+    .filter(ex=>ex.etat!=='indisponible')
+    .sort((a,b)=>(a.etat==='ouverte'?0:a.etat==='a_venir'?1:2)-(b.etat==='ouverte'?0:b.etat==='a_venir'?1:2)||(Date.parse(a.ouverture_iso)||0)-(Date.parse(b.ouverture_iso)||0));
+  return {role:'student',name:user.name,exams:planned,attempts:attempts.filter(x=>String(x.email).toLowerCase()===user.email).map(({questions_json,reponses_json,_row,...r})=>r).reverse().slice(0,40)};
 }
 function bank_(chapters,level,mode) {
   const choices=String(chapters).split(',').map(x=>x.trim());
   return records_('QUESTIONS').filter(q=>yes_(q.actif)&&choices.includes(String(q.chapitre).trim())&&(level==='tous'||String(q.niveau).toLowerCase()===level)&&String(q.usage).toUpperCase()===(mode==='exam'?'EXAMEN':'ENTRAINEMENT')&&['A','B','C','D'].includes(String(q.bonne).toUpperCase()));
 }
 function publicQuestion_(q,order) {return {id:String(q.id),text:String(q.enonce),choices:order.map(k=>({id:k,text:String(q[k.toLowerCase()])}))};}
-function buildAttempt_(user,mode,evalId,chapters,level,count,minutes,maxAttempts) {
+function buildAttempt_(user,mode,evalId,chapters,level,count,minutes,maxAttempts,closeAt) {
   if(!Number.isInteger(count)||count<1||count>40||!Number.isFinite(minutes)||minutes<1||minutes>180)throw new Error('Paramètres d’évaluation invalides.');
   return lock_(()=>{
     if(mode==='exam'&&records_('TENTATIVES').filter(t=>t.email===user.email&&t.evaluation_id===evalId).length>=maxAttempts)throw new Error('Nombre de tentatives autorisées atteint.');
     const pool=bank_(chapters,level,mode);if(pool.length<count)throw new Error('Banque insuffisante : '+pool.length+' question(s) disponibles pour '+count+' demandées.');
     const selected=shuffle_(pool).slice(0,count).map(q=>({id:String(q.id),order:shuffle_(['A','B','C','D'])}));
-    const now=new Date();const end=new Date(now.getTime()+minutes*60000);const id=Utilities.getUuid();
+    const now=new Date();const close=closeAt?Date.parse(closeAt):Infinity;
+    if(!Number.isFinite(close)&&closeAt)throw new Error('Date de fermeture invalide.');
+    const end=new Date(Math.min(now.getTime()+minutes*60000,close));const id=Utilities.getUuid();
+    if(end.getTime()<=now.getTime())throw new Error('Cette évaluation est fermée.');
     append_('TENTATIVES',{id,email:user.email,evaluation_id:evalId,mode,debut_iso:now.toISOString(),expiration_iso:end.toISOString(),statut:'EN_COURS',nb_questions:count,questions_json:JSON.stringify(selected),reponses_json:'{}',dernier_enregistrement_iso:now.toISOString()});
     const byId=new Map(pool.map(q=>[String(q.id),q]));
     return {id,deadline:end.toISOString(),questions:selected.map(entry=>publicQuestion_(byId.get(entry.id),entry.order)),mode};
@@ -102,7 +120,7 @@ function startPractice(session,chapter,level,count) {
 function startExam(session,evalId) {
   const user=user_(session);if(user.role==='teacher')throw new Error('Utilisez un compte étudiant.');
   const exam=find_('EVALUATIONS',text_(evalId,80),'id');if(!exam||!visible_(exam,user))throw new Error('Évaluation fermée ou inaccessible.');
-  return buildAttempt_(user,'exam',String(exam.id),String(exam.chapitres),String(exam.niveau),Number(exam.nb_questions),Number(exam.duree_minutes),Number(exam.tentatives_max));
+  return buildAttempt_(user,'exam',String(exam.id),String(exam.chapitres),String(exam.niveau),Number(exam.nb_questions),Number(exam.duree_minutes),Number(exam.tentatives_max),exam.fermeture_iso);
 }
 function cleanAnswers_(attempt,answers) {if(!answers||typeof answers!=='object'||Array.isArray(answers))return {};const selected=JSON.parse(attempt.questions_json);const safe={};selected.forEach(item=>{const x=String(answers[item.id]||'').toUpperCase();if(item.order.includes(x))safe[item.id]=x;});return safe;}
 function saveDraft(session,id,answers) {
@@ -134,7 +152,7 @@ function adminCreateExam(session,data) {
   const start=text_(d.openAt,60),end=text_(d.closeAt,60);if(start&&!Number.isFinite(Date.parse(start)))throw new Error('Date d’ouverture invalide.');if(end&&!Number.isFinite(Date.parse(end)))throw new Error('Date de fermeture invalide.');if(start&&end&&Date.parse(end)<=Date.parse(start))throw new Error('Fermeture antérieure à l’ouverture.');
   const id='EXAM_'+Utilities.getUuid().slice(0,8).toUpperCase();return lock_(()=>{append_('EVALUATIONS',{id,titre:text_(d.title,100)||'Évaluation Analyse',chapitres:chapters.join(','),niveau:level,nb_questions:count,duree_minutes:minutes,ouverture_iso:start?new Date(start).toISOString():'',fermeture_iso:end?new Date(end).toISOString():'',actif:false,tentatives_max:limit,correction_immediate:false,groupe:text_(d.group,50)});return {id,enabled:false,availableQuestions:bank_(chapters.join(','),level,'exam').length};});
 }
-function adminToggleExam(session,id,enabled) {user_(session,true);return lock_(()=>{const ex=find_('EVALUATIONS',text_(id,80),'id');if(!ex)throw new Error('Évaluation introuvable.');if(enabled&&bank_(ex.chapitres,ex.niveau,'exam').length<Number(ex.nb_questions))throw new Error('Banque EXAMEN insuffisante : ajoutez des questions privées avant activation.');patch_('EVALUATIONS',ex._row,{actif:Boolean(enabled)});return {id,enabled:Boolean(enabled)};});}
+function adminToggleExam(session,id,enabled) {user_(session,true);return lock_(()=>{const ex=find_('EVALUATIONS',text_(id,80),'id');if(!ex)throw new Error('Évaluation introuvable.');if(enabled&&bank_(ex.chapitres,ex.niveau,'exam').length<Number(ex.nb_questions))throw new Error('Banque EXAMEN insuffisante : ajoutez des questions privées avant activation.');if(enabled&&examState_({...ex,actif:true})==='indisponible')throw new Error('Dates de programmation invalides : corrigez le calendrier avant publication.');patch_('EVALUATIONS',ex._row,{actif:Boolean(enabled)});return {id,enabled:Boolean(enabled)};});}
 /** À exécuter une fois manuellement dans l'éditeur Apps Script par le propriétaire. */
 function installMailTrigger() {ScriptApp.getProjectTriggers().filter(t=>t.getHandlerFunction()==='processMailQueue').forEach(ScriptApp.deleteTrigger);ScriptApp.newTrigger('processMailQueue').timeBased().everyHours(1).create();}
 /** Un envoi par étudiant et par tentative, dans la limite du quota Gmail réel.

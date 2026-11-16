@@ -17,6 +17,7 @@ Plateforme de ressources pédagogiques du module **MTH 1101 — Analyse**, à l�
 | Applications hydrologiques | [Applications](applications-hydrologie/) | Exemples pédagogiques |
 | Bibliographie | [Références](bibliographie/) | Livres et dossier OneDrive |
 | Auto-évaluation | [QCM des chapitres 1 à 7](evaluation/) | 210 QCM : niveaux facile, moyen et difficile, chronométrés, corrigés affichés à l'écran |
+| Évaluations officielles | [Calendrier et accès sécurisé](evaluation/officielle/) | Connexion Google des étudiants inscrits, épreuves publiées visibles à l'avance et démarrage limité à leur créneau horaire. Les questions et notes restent privées. |
 
 Le volume proposé est de **45 heures** (25 h CM, 15 h TD, 5 h TP), pour **3 crédits**, avec une progression indicative de 15 semaines.
 
