@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b3954">
+  <meta name="description" content="Auto-évaluation en Analyse L1 Hydrologie : QCM aléatoires par niveau, chronométrés, avec correction pédagogique.">
+  <title>Auto-évaluation — Analyse L1 Hydrologie</title>
+  <style>
+    :root{--marine:#0b3954;--eau:#087c91;--fond:#f3f8fa;--texte:#173449;--bord:#d9e6eb;--blanc:white;--vert:#11734d;--rouge:#ae3c36}
+    *{box-sizing:border-box}body{margin:0;background:var(--fond);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--texte)}
+    a{color:#086b80}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e9b63c;outline-offset:3px}
+    header{background:linear-gradient(118deg,#07344e,#087e90);color:white;padding:32px 0 38px}header a{color:#e2f8fb}
+    .wrap{width:min(900px,calc(100% - 30px));margin:auto}.eyebrow{font-size:.8rem;letter-spacing:.11em;text-transform:uppercase;color:#c6edf1;font-weight:750}
+    h1{font-size:clamp(1.9rem,5vw,3rem);line-height:1.15;margin:12px 0}h2{font-size:1.45rem}h3{margin:0 0 13px;font-size:1.12rem}
+    header p{max-width:670px;margin:0;color:#ecf8f9}.panel{background:var(--blanc);border:1px solid var(--bord);border-radius:17px;padding:25px;margin:22px 0;box-shadow:0 8px 27px #14374e0a}
+    .notice{border-left:4px solid #e1ac33;background:#fff6df;padding:12px 17px;margin:20px 0;border-radius:5px;color:#674d15}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.field label{display:block;font-weight:700;margin-bottom:8px}
+    select{width:100%;background:white;border:1px solid #9db6c4;border-radius:9px;padding:12px;font:inherit;color:inherit}
+    .button{appearance:none;border:0;border-radius:10px;background:var(--marine);color:white;padding:13px 20px;font:700 1rem system-ui;cursor:pointer}
+    .button:hover{background:#075b73}.button:disabled{background:#91a9b5;cursor:not-allowed}.button.secondary{background:#e3f1f4;color:var(--marine)}
+    .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}.muted{color:#617b87;font-size:.93rem}.pill{display:inline-block;border-radius:30px;padding:5px 12px;background:#dff0f3;color:#14586e;font-size:.84rem;font-weight:750}
+    .status{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}.timer{background:#e6f2f5;border-radius:10px;padding:9px 15px;font-weight:800;font-variant-numeric:tabular-nums;color:#0b3954}
+    .timer.urgent{background:#ffebdf;color:#a34120}.question{border-top:1px solid var(--bord);padding:20px 0}.question:first-of-type{border:0}
+    .question h3{font-weight:700;font-size:1.03rem}.choices{display:grid;gap:9px}.choice{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--bord);border-radius:10px;padding:10px 13px;cursor:pointer}
+    .choice:hover{background:#f0f9fb}.choice:has(input:checked){background:#e4f6f7;border-color:#0794a6}.choice input{margin-top:6px;accent-color:var(--eau)}
+    .feedback{border-left:4px solid var(--eau);background:#eef7f8;padding:10px 14px;margin-top:10px}.feedback.bad{border-color:var(--rouge);background:#fff1ef}
+    .score{font-weight:850;font-size:3rem;letter-spacing:-.05em;color:var(--marine);margin:5px 0}.result-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.result-stats>div{border-radius:12px;background:#eff7f9;padding:13px}
+    footer{padding:30px 0;color:#496777;text-align:center}.hidden{display:none!important}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}.panel{padding:18px}.result-stats{grid-template-columns:1fr}header{padding:26px 0}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap">
+    <div class="eyebrow">Université de N’Zérékoré · Licence 1 Hydrologie</div>
+    <h1>Évaluez vos connaissances</h1>
+    <p>Entraînement en Analyse avec des questions renouvelées, un temps de réflexion adapté et des explications pour progresser.</p>
+    <p style="margin-top:18px"><a href="../">← Revenir à la plateforme pédagogique</a></p>
+  </div></header>
+  <main class="wrap">
+    <div class="notice" role="status"><strong>Version de démonstration.</strong> Les résultats de cette page restent sur cet appareil et ne constituent pas une note officielle. Le relevé centralisé, les e-mails et les examens surveillés seront activés après configuration du service privé Google.</div>
+    <section class="panel" id="setup" aria-labelledby="setupTitle">
+      <h2 id="setupTitle">Préparer une auto-évaluation</h2>
+      <div class="grid">
+        <div class="field"><label for="chapter">Chapitre</label><select id="chapter"><option value="2">2 — Suites et séries positives</option></select></div>
+        <div class="field"><label for="level">Difficulté</label><select id="level"><option value="facile">Facile</option><option value="moyen" selected>Moyen</option><option value="difficile">Difficile</option></select></div>
+        <div class="field"><label for="count">Nombre de QCM</label><select id="count"><option value="5">5 questions</option><option value="10" selected>10 questions</option></select></div>
+      </div>
+      <p class="muted" id="timing">Durée maximale conseillée : 25 minutes.</p>
+      <div class="actions"><button class="button" id="start">Commencer la tentative</button><span class="pill">Questions et réponses mélangées à chaque essai</span></div>
+    </section>
+    <section class="panel hidden" id="quiz" aria-live="polite">
+      <div class="status"><div><span class="pill" id="progress">0/10 réponses</span><p class="muted" id="quizLabel"></p></div><div class="timer" id="timer" role="timer" aria-live="off">25:00</div></div>
+      <div id="questions"></div>
+      <div class="actions"><button class="button" id="submit">Terminer et corriger</button><span class="muted">Les réponses non choisies comptent comme incorrectes.</span></div>
+    </section>
+    <section class="panel hidden" id="results" aria-live="polite"><h2>Votre résultat</h2><div class="score" id="score">—</div><p id="resultSummary"></p><div class="result-stats"><div><strong>Durée utilisée</strong><p id="elapsed"></p></div><div><strong>Niveau</strong><p id="resultLevel"></p></div></div><h3 style="margin-top:25px">Correction pédagogique</h3><div id="corrections"></div><div class="actions"><button class="button" id="retry">Nouvelle tentative aléatoire</button><button class="button secondary" id="back">Changer les paramètres</button></div></section>
+    <section class="panel"><h2>Comment fonctionne l’évaluation officielle ?</h2><p>Après déploiement du service Google privé, l’enseignant pourra ouvrir un examen sur un ou plusieurs chapitres, limiter les tentatives et consulter les notes dans un tableau protégé. Les réponses officielles ne seront pas placées dans le code public de ce site.</p><p class="muted">Enseignant : M. Bakary TRAORE · Module Analyse L1 Hydrologie</p></section>
+  </main>
+  <footer><div class="wrap">Analyse — Licence 1 Hydrologie · Année universitaire 2026–2027</div></footer>
+  <script src="quiz-data.js"></script>
+  <script>
+  (()=>{
+    'use strict';
+    const $=id=>document.getElementById(id);
+    const labels={facile:'Facile',moyen:'Moyen',difficile:'Difficile'};
+    const secondsPerItem={facile:90,moyen:150,difficile:210};
+    let current=null,interval=null,deadline=0,started=0,locked=false;
+    function shuffled(items){const a=items.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+    function show(name){['setup','quiz','results'].forEach(id=>$(id).classList.toggle('hidden',id!==name));}
+    function clearTimer(){if(interval!==null){clearInterval(interval);interval=null;}}
+    function updateTiming(){const sec=Number($('count').value)*secondsPerItem[$('level').value];$('timing').textContent=`Durée maximale conseillée : ${Math.ceil(sec/60)} minutes.`;}
+    function fmt(seconds){const s=Math.max(0,Math.ceil(seconds));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
+    function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
+    function tick(){const left=(deadline-Date.now())/1000;$('timer').textContent=fmt(left);$('timer').classList.toggle('urgent',left<=60);if(left<=0)finish(true);}
+    function start(){clearTimer();locked=false;const level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce niveau.');return;}
+      current={level,items:shuffled(pool).slice(0,count).map(q=>({...q,order:shuffled([0,1,2,3])})),answers:{}};
+      $('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${item.q}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${item.a[option]}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
+      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre 2 · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
+    }
+    function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=20*correct/current.items.length;
+      $('score').textContent=`${score.toFixed(1).replace('.',',')}/20`;$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
+      $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=`Réponse attendue : ${item.a[item.correct]}. ${item.why}`;box.append(name,p);list.appendChild(box);});show('results');window.scrollTo(0,0);
+    }
+    $('start').addEventListener('click',start);$('submit').addEventListener('click',()=>finish(false));$('retry').addEventListener('click',start);$('back').addEventListener('click',()=>{clearTimer();show('setup');});$('level').addEventListener('change',updateTiming);$('count').addEventListener('change',updateTiming);updateTiming();
+  })();
+  </script>
+</body></html>
