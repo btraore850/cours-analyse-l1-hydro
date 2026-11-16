@@ -9,12 +9,11 @@ main{width:min(980px,calc(100% - 30px));margin:25px auto 70px}.card{background:w
 .alert{border-left:4px solid #d9a43d;background:#fff5df;padding:12px 15px;margin-bottom:15px}.feedback{padding:12px;background:#eaf7f1;border-left:4px solid var(--good);margin:10px 0}.feedback.bad{background:#fff1ef;border-color:var(--bad)}table{border-collapse:collapse;width:100%;font-size:.91rem}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#edf5f7} .scroll{overflow-x:auto}.hidden{display:none!important}.checkrow{display:flex;gap:9px;align-items:center;font-weight:500;margin:4px 0}.score{font-size:2.7rem;font-weight:800;color:var(--navy)}.message{min-height:20px;color:#a42e22;font-weight:650;margin:9px 0}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:15px}
 @media(max-width:690px){.grid{grid-template-columns:1fr}.card{padding:17px}th,td{padding:6px;font-size:.85rem}}
 </style>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head><body>
 <header><div><small>Université de N’Zérékoré · Licence 1 Hydrologie</small><h1>Évaluations d'Analyse</h1><p>QCM aléatoires, scores privés et suivi des apprentissages</p></div></header>
 <main>
   <div class="message" role="alert" id="error"></div>
-  <section class="card" id="login"><h2>Connexion avec Gmail</h2><p>Connectez-vous avec l'adresse inscrite auprès de l'enseignant. Votre identité sera vérifiée avant l'accès aux résultats.</p><div id="g_id_onload" data-client_id="<?= clientId ?>" data-callback="googleLoginCallback" data-auto_prompt="false"></div><div class="g_id_signin" data-type="standard" data-size="large" data-shape="pill"></div><p class="muted">Si le bouton Google ne s'affiche pas, vérifiez la configuration OAuth et l'origine autorisée de cette application.</p></section>
+  <section class="card" id="login"><h2>Connexion sécurisée en cours</h2><p>Connectez-vous depuis la page « Évaluations officielles » du site pédagogique. Votre identité Google sera ensuite vérifiée par le serveur avant tout accès aux notes.</p><p class="muted">Cette fenêtre Apps Script ne doit pas afficher de bouton de connexion Google.</p></section>
   <section class="card hidden" id="welcome"><div class="row"><div><h2 id="hello"></h2><span class="tag" id="role"></span></div><button class="button secondary" id="refresh">Actualiser les résultats</button></div></section>
   <div class="hidden" id="student">
     <section class="card" id="practiceSetup"><h2>Auto-évaluation libre</h2><div class="grid"><div><label for="chapter">Chapitre</label><select id="chapter"><option value="2">2 — Suites et séries positives</option></select></div><div><label for="level">Niveau</label><select id="level"><option value="facile">Facile</option><option value="moyen" selected>Moyen</option><option value="difficile">Difficile</option></select></div><div><label for="count">Questions</label><select id="count"><option value="5">5</option><option value="10" selected>10</option></select></div></div><p class="muted" id="duration">Durée : 25 minutes.</p><button class="button" id="startPractice">Commencer</button></section>
@@ -33,13 +32,34 @@ main{width:min(980px,calc(100% - 30px));margin:25px auto 70px}.card{background:w
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);let session='',profile=null,dashboard=null,attempt=null,answers={},timerInterval=null,saveInterval=null,submitting=false;
+const BRIDGE_NONCE=<?!= JSON.stringify(bridgeNonce) ?>;
+const TRUSTED_ORIGIN='https://btraore850.github.io';
+let loginReceived=false;
+function reportToPortal(kind,extra={}){
+  // Le navigateur vérifie targetOrigin : aucun jeton ni résultat ne part ailleurs.
+  window.top.postMessage({kind,nonce:BRIDGE_NONCE,...extra},TRUSTED_ORIGIN);
+}
+window.addEventListener('message',event=>{
+  if(event.origin!==TRUSTED_ORIGIN)return;
+  const data=event.data;
+  if(!data||data.kind!=='hydro-auth-token'||data.nonce!==BRIDGE_NONCE||loginReceived)return;
+  if(typeof data.token!=='string'||data.token.length<100||data.token.length>6000)return;
+  loginReceived=true;
+  window.googleLoginCallback({credential:data.token});
+});
+function reportHeight(){reportToPortal('hydro-frame-height',{height:document.documentElement.scrollHeight});}
+window.addEventListener('load',()=>{
+  reportToPortal('hydro-frame-ready');
+  reportHeight();
+  if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
+});
 function error(err){$('error').textContent=err&&err.message?err.message:String(err);setTimeout(()=>{$('error').textContent='';},12000);}
 function request(name,...params){return new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...params));}
 function safeDate(value){if(!value)return '—';const t=new Date(value);return Number.isNaN(t.getTime())?'—':t.toLocaleString('fr-FR');}
 function show(id,yes){$(id).classList.toggle('hidden',!yes);}
 function seconds(n){const v=Math.max(0,Math.ceil(n));return String(Math.floor(v/60)).padStart(2,'0')+':'+String(v%60).padStart(2,'0');}
 function node(tag,txt,cls){const el=document.createElement(tag);if(txt!==undefined)el.textContent=txt;if(cls)el.className=cls;return el;}
-window.googleLoginCallback=async ({credential})=>{try{const response=await request('signIn',credential);session=response.session;profile=response.profile;show('login',false);show('welcome',true);$('hello').textContent='Bienvenue, '+profile.name;$('role').textContent=profile.role==='teacher'?'Enseignant':'Étudiant';await refresh();}catch(e){error(e);}};
+window.googleLoginCallback=async ({credential})=>{try{const response=await request('signIn',credential);session=response.session;profile=response.profile;show('login',false);show('welcome',true);$('hello').textContent='Bienvenue, '+profile.name;$('role').textContent=profile.role==='teacher'?'Enseignant':'Étudiant';await refresh();reportToPortal('hydro-auth-result',{ok:true,role:profile.role});reportHeight();}catch(e){error(e);reportToPortal('hydro-auth-result',{ok:false,message:String(e&&e.message||e).slice(0,200)});loginReceived=false;}};
 async function refresh(){if(!session)return;try{dashboard=await request('getDashboard',session);show('student',dashboard.role==='student');show('teacher',dashboard.role==='teacher');if(dashboard.role==='student'){renderStudent();}else{renderTeacher();}}catch(e){error(e);}}
 function renderStudent(){const exams=$('examList');exams.replaceChildren();if(!dashboard.exams.length)exams.append(node('p','Aucune évaluation officielle n’est ouverte actuellement.'));dashboard.exams.forEach(ex=>{const row=node('div',undefined,'row');row.style.padding='11px 0';const text=node('div');text.append(node('strong',ex.titre),node('p','Chapitres '+ex.chapitres+' · '+ex.nb_questions+' QCM · '+ex.duree_minutes+' min','muted'));const btn=node('button','Commencer','button');btn.addEventListener('click',()=>begin('exam',ex.id));row.append(text,btn);exams.append(row);});const tb=$('myHistory');tb.replaceChildren();dashboard.attempts.forEach(at=>{const tr=node('tr');[safeDate(at.debut_iso),at.evaluation_id,at.note_sur_20===''?'—':String(at.note_sur_20),at.statut].forEach(value=>tr.append(node('td',value)));tb.append(tr);});}
 function renderTeacher(){ $('sheetLink').href=dashboard.sheetUrl;const t=$('teacherExams');t.replaceChildren();dashboard.exams.forEach(ex=>{const tr=node('tr');tr.append(node('td',ex.titre+' ('+ex.id+')'),node('td',ex.chapitres),node('td',safeDate(ex.ouverture_iso)+' – '+safeDate(ex.fermeture_iso)));const td=node('td');const active=ex.actif===true||String(ex.actif).toLowerCase()==='true';const b=node('button',active?'Désactiver':'Activer','button secondary');b.addEventListener('click',async()=>{b.disabled=true;try{await request('adminToggleExam',session,ex.id,!active);await refresh();}catch(e){error(e);b.disabled=false;}});td.append(b);tr.append(td);t.append(tr);});const hist=$('teacherAttempts');hist.replaceChildren();dashboard.attempts.slice(-150).reverse().forEach(at=>{const row=node('tr');[at.email,at.evaluation_id,safeDate(at.debut_iso),at.note_sur_20===''?'—':String(at.note_sur_20)].forEach(x=>row.append(node('td',x)));hist.append(row);});}

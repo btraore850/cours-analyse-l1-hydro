@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0b3954">
+  <title>Évaluations officielles — Analyse L1 Hydrologie</title>
+  <style>
+    :root{--navy:#0b3954;--teal:#087c91;--ink:#17374c;--bg:#f5f9fb;--line:#dce7ed}
+    *{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+    header{background:linear-gradient(110deg,#07344e,#08818e);color:white;padding:30px max(20px,calc((100% - 980px)/2))}
+    header h1{font-size:clamp(1.7rem,4vw,2.6rem);margin:10px 0 4px}header p{margin:0;color:#e6f6f7}
+    header a{color:#e5f8fc}main{width:min(980px,calc(100% - 30px));margin:28px auto 65px}
+    .card{background:white;border:1px solid var(--line);border-radius:15px;padding:23px;margin-bottom:18px;box-shadow:0 5px 20px #14374e0a}
+    h2{font-size:1.35rem;margin:0 0 12px}.muted{color:#5d7583;font-size:.91rem}
+    .notice{padding:13px 16px;background:#eaf5f7;border-left:4px solid var(--teal);border-radius:5px}
+    #status{margin:16px 0 0;min-height:24px;font-weight:650}#status[data-state="error"]{color:#aa322c}#status[data-state="success"]{color:#12683f}
+    #googleButton{min-height:44px;margin-top:12px}.app-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .button{border:0;background:#e5f2f5;color:var(--navy);border-radius:8px;padding:10px 14px;font:700 14px system-ui;cursor:pointer}
+    #app{border:0;display:block;width:100%;height:750px;background:white;border-radius:10px}
+    [hidden]{display:none!important}
+    @media(max-width:690px){.card{padding:15px}main{width:min(100% - 18px,980px)}header{padding:25px 16px}}
+  </style>
+  <script src="config.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="portal.js" defer></script>
+</head>
+<body>
+<header>
+  <div><small>Université de N’Zérékoré · Licence 1 Hydrologie</small>
+    <h1>Évaluations officielles d'Analyse</h1>
+    <p>Accès réservé à l'enseignant et aux étudiants inscrits.</p>
+    <p style="margin-top:12px"><a href="../">← Revenir à l'auto-évaluation libre</a></p>
+  </div>
+</header>
+<main>
+  <section id="loginPanel" class="card">
+    <h2>Connexion avec votre compte Google</h2>
+    <p>Choisissez le compte Gmail enregistré auprès de l'enseignant. Votre identité et vos droits seront vérifiés côté serveur avant l'accès aux évaluations.</p>
+    <div id="googleButton"></div>
+    <p id="status" role="status" aria-live="polite">Chargement de la connexion Google…</p>
+    <p class="muted">Ne saisissez jamais votre mot de passe Google dans un formulaire de cette plateforme. La connexion s'effectue exclusivement chez Google.</p>
+  </section>
+  <section class="card" id="appPanel" hidden>
+    <div class="app-title"><h2>Espace d'évaluation</h2><button id="logout" class="button" type="button">Changer de compte</button></div>
+    <iframe id="app" title="Espace d'évaluation privé" referrerpolicy="no-referrer" loading="eager"></iframe>
+  </section>
+  <section class="notice">
+    <strong>Phase de vérification.</strong> La programmation des examens et l'accès des étudiants doivent être testés avant l'ouverture officielle. Les questions d'examen et les notes ne figurent pas dans ce site public.
+  </section>
+</main>
+</body>
+</html>

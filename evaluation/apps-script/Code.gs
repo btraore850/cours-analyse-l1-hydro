@@ -15,7 +15,27 @@ const TABLES = Object.freeze({
 });
 const TIME_PER_QUESTION = {facile:90,moyen:150,difficile:210};
 
-function doGet() {const page=HtmlService.createTemplateFromFile('Index');page.clientId=prop_('GOOGLE_CLIENT_ID');return page.evaluate().setTitle('Évaluations — Analyse L1 Hydrologie').addMetaTag('viewport','width=device-width, initial-scale=1');}
+/**
+ * Le formulaire OAuth vit sur GitHub Pages (origine autorisée dans Google Cloud).
+ * Cette page est uniquement le relais privé des appels google.script.run.
+ * Le nonce lie le cadre Apps Script à l'onglet GitHub qui l'a ouvert.
+ */
+function doGet(e) {
+  const nonce=String(e&&e.parameter&&e.parameter.bridge||'');
+  if(!/^[a-f0-9]{64}$/.test(nonce)) {
+    return HtmlService.createHtmlOutput(
+      '<p>Ouvrez les évaluations officielles depuis la plateforme pédagogique GitHub Pages.</p>'
+    ).setTitle('Évaluations — accès via la plateforme');
+  }
+  const page=HtmlService.createTemplateFromFile('Index');
+  page.bridgeNonce=nonce;
+  // Le cadre ne rend aucun résultat avant validation d'un ID Token Google côté serveur.
+  // Son JavaScript n'accepte les messages que de l'origine GitHub autorisée.
+  return page.evaluate()
+    .setTitle('Évaluations — Analyse L1 Hydrologie')
+    .addMetaTag('viewport','width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
 function include(name) {return HtmlService.createHtmlOutputFromFile(name).getContent();}
 function prop_(name) {const value=PropertiesService.getScriptProperties().getProperty(name);if(!value)throw new Error('Configuration manquante : '+name);return value;}
 function db_() {return SpreadsheetApp.openById(prop_('SPREADSHEET_ID'));}

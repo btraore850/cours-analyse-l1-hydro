@@ -3,7 +3,8 @@
 Ce dossier comprend deux éléments distincts :
 
 1. `index.html` + `quiz-data.js` + `questions/chapter-{1,3,4,5,6,7}.js` + `paraphrases.js` : **démonstration publique** de **210 QCM**, soit 30 questions par chapitre (10 faciles, 10 moyennes et 10 difficiles). **Les 210 QCM possèdent chacun une reformulation pédagogique validée** : certains énoncés changent aléatoirement à chaque tentative sans modifier les données mathématiques, la notation ou la bonne réponse. Le score d'auto-évaluation est affiché **sur 10**, avec les appréciations indicatives : moins de 5 « Insuffisant », de 5 à moins de 6 « Passable », de 6 à moins de 7 « Assez bien », de 7 à moins de 8 « Bien », de 8 à moins de 9 « Très bien », de 9 à 10 « Excellent ». Les réponses et les corrigés sont visibles dans le code ; cette page n'est **pas** destinée aux examens notés. Aucun score n'est transmis au serveur et aucun courriel n'est envoyé.
-2. `apps-script/Code.gs` + `apps-script/Index.html` : application de production à installer dans le **compte Google de l'enseignant**. Elle conserve les notes dans un Google Sheet privé, vérifie les droits et corrige les réponses côté serveur.
+2. `officielle/index.html` + `officielle/portal.js` + `officielle/config.js` : **interface de connexion Google sur GitHub Pages**, à l'origine OAuth `https://btraore850.github.io`.
+3. `apps-script/Code.gs` + `apps-script/Index.html` : **service privé Apps Script**. Il vérifie les jetons Google, applique les droits d'accès, conserve les notes dans un Google Sheet privé et corrige les réponses côté serveur. Sa page HTML reçoit le jeton depuis GitHub Pages dans un cadre sécurisé, puis utilise `google.script.run` : aucune connexion OAuth n'est lancée dans le cadre Apps Script.
 
 ## 1. Préparer Google Sheets
 
@@ -19,7 +20,7 @@ Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
 
 1. Ouvrir https://script.google.com/ avec le compte Gmail de l'enseignant et créer un projet autonome intitulé `Evaluations Analyse L1 Hydrologie`.
 2. Coller le contenu de `apps-script/Code.gs` dans le fichier `Code.gs`.
-3. Ajouter un fichier HTML appelé **Index** et y coller `apps-script/Index.html`.
+3. Ajouter un fichier HTML appelé **Index** et y coller `apps-script/Index.html`. Si un projet Apps Script est déjà déployé, **remplacer le contenu des deux fichiers par les versions corrigées**, puis créer une nouvelle version du déploiement.
 4. Ouvrir **Paramètres du projet → Propriétés du script** et ajouter :
    - `SPREADSHEET_ID` : l'identifiant du Google Sheet privé (entre `/d/` et `/edit` dans son URL) ;
    - `TEACHER_EMAIL` : votre adresse Gmail ;
@@ -30,12 +31,19 @@ Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
 ## 3. Configurer l'identité Google
 
 1. Dans https://console.cloud.google.com/, créer ou sélectionner un projet Google Cloud et configurer **Google Auth Platform / Écran de consentement OAuth**.
-2. Créer un **ID client OAuth 2.0 de type application Web** et configurer les origines JavaScript utilisées par le déploiement Apps Script. Les domaines d'origine réels du cadre HTML doivent être confirmés avec le navigateur, notamment à cause du mode iframe d'Apps Script.
+2. Créer un **ID client OAuth 2.0 de type application Web** et inscrire **exactement** `https://btraore850.github.io` dans **Origines JavaScript autorisées**. Il n'est pas nécessaire d'autoriser `script.google.com` ou `googleusercontent.com`, puisque le bouton Google ne s'y trouve plus.
 3. Inscrire cet ID client dans `GOOGLE_CLIENT_ID`.
-4. Déployer Apps Script comme **Application Web**, exécution **en tant que vous**, accès aux visiteurs autorisés par le déploiement. **Ne jamais** déployer le Google Sheet ni partager son accès en écriture.
-5. Tester la connexion d'un compte étudiant présent dans `ETUDIANTS`, puis d'un Gmail absent de la liste (qui doit être refusé).
+4. Déployer Apps Script comme **Application Web**, exécution **en tant que vous**. Pour le **premier essai avec l'enseignant**, conserver **Only myself**. Lors des tests ultérieurs avec un étudiant, l'accès au service devra être adapté de façon contrôlée ; la restriction effective des étudiants autorisés reste assurée par `signIn()` côté serveur. **Ne jamais** partager le Google Sheet en écriture.
+5. Copier l'URL du déploiement Apps Script qui se termine par `/exec`.
+6. Dans `officielle/config.js`, remplacer les deux textes `REMPLACER_PAR_...` par :
+   - `googleClientId` : l'**ID client OAuth Web**, se terminant par `.apps.googleusercontent.com` ;
+   - `appsScriptUrl` : l'**URL du déploiement Web Apps Script**, se terminant par `/exec`.
+7. Héberger les trois fichiers de `officielle/` sous le site GitHub Pages existant, **après accord explicite de publication**, et ouvrir `https://btraore850.github.io/cours-analyse-l1-hydro/evaluation/officielle/`.
+8. Tester la connexion enseignant puis un compte étudiant autorisé, enfin un compte absent de `ETUDIANTS` qui doit être refusé. Vérifier le rôle, les notes et le filtrage des évaluations. Une fois le déploiement validé, vous pourrez ajouter un lien vers cette page depuis le site pédagogique.
 
-Le bouton « Se connecter avec Google » peut rencontrer des limitations d'origine et de cookies dans les iframes Apps Script. **La connexion doit être validée dans un vrai navigateur avant publication aux étudiants.** Ne pas demander aux étudiants de saisir leurs identifiants Google dans un formulaire personnalisé. Si ce mécanisme ne fonctionne pas pour le déploiement choisi, reprendre la configuration d'identité avant d'autoriser une évaluation officielle.
+**Correction de l'erreur `400: origin_mismatch` :** l'ancienne version tentait d'ouvrir Google Identity Services depuis l'iframe Apps Script. Le domaine réellement utilisé par cet iframe ne correspondait pas à l'origine autorisée, et les domaines `googleusercontent.com` ne sont pas acceptés comme origines JavaScript OAuth. Dans la version corrigée, le bouton vit sur GitHub Pages et l'Apps Script reçoit le jeton par `postMessage` avec un nonce imprévisible et un contrôle strict de l'origine `https://btraore850.github.io`. Apps Script valide ensuite le jeton avant toute lecture des données privées.
+
+**À valider dans un navigateur réel :** l'intégration Apps Script par iframe utilise `XFrameOptionsMode.ALLOWALL`, requis pour l'intégration, et une communication restreinte par origine et nonce. Certains navigateurs bloquent cependant les cookies tiers : tester l'affichage du cadre et la connexion pour chaque profil avant de diffuser le lien. Aucun mot de passe, « Client secret », question privée ou liste d'étudiants ne doit être ajouté aux fichiers GitHub publics.
 
 Le moteur valide le jeton Google par l'endpoint `tokeninfo` pour une première installation pédagogique. Google recommande, pour la production à grande échelle, de vérifier localement la signature des jetons avec ses clés publiques. **Ce prototype doit passer une revue de sécurité avant des examens à fort enjeu.**
 
