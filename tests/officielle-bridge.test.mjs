@@ -144,3 +144,16 @@ test('l’espace officiel ne présente plus le formulaire d’auto-évaluation l
   const home=read('../index.html');
   assert.ok(home.includes('href="evaluation/">Faire un QCM'));
 });
+
+test('l’accueil regroupe les deux cartes sous Évaluations',()=>{
+  const html=read('../index.html');
+  const documents=html.split('<section id="documents">')[1].split('</section>')[0];
+  const exams=html.split('<section id="evaluations"')[1].split('</section>')[0];
+  assert.ok(!documents.includes('<h3>Auto-évaluation</h3>'));
+  assert.match(exams,/<h2 id="evaluations-title">Évaluations<\/h2>/);
+  assert.match(exams,/<h3>Auto-évaluation<\/h3>/);
+  assert.match(exams,/<h3>Évaluation officielle<\/h3>/);
+  assert.match(exams,/href="evaluation\/">Faire un QCM/);
+  assert.match(exams,/href="evaluation\/officielle\/">Voir les évaluations programmées/);
+  assert.match(html,/<a href="#evaluations">Évaluations<\/a>/);
+});
