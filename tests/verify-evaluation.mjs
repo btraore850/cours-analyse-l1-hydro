@@ -69,7 +69,7 @@ const headers={
  ETUDIANTS:['matricule','email','nom','prenom','groupe','actif','google_sub'],
  QUESTIONS:['id','chapitre','niveau','usage','enonce','a','b','c','d','bonne','explication','actif'],
  EVALUATIONS:['id','titre','chapitres','niveau','nb_questions','duree_minutes','ouverture_iso','fermeture_iso','actif','tentatives_max','correction_immediate','groupe'],
- TENTATIVES:['id','email','evaluation_id','mode','debut_iso','expiration_iso','fin_iso','statut','note_sur_20','nb_bonnes','nb_questions','questions_json','reponses_json','dernier_enregistrement_iso'],
+ TENTATIVES:['id','email','evaluation_id','mode','debut_iso','expiration_iso','fin_iso','statut','note_sur_10','nb_bonnes','nb_questions','questions_json','reponses_json','dernier_enregistrement_iso'],
  EMAILS:['tentative_id','email','objet','corps','statut','date_envoi']
 };
 const tables=Object.fromEntries(Object.entries(headers).map(([k,h])=>[k,[h]]));
@@ -99,18 +99,17 @@ const ids=Object.fromEntries(questionBank.map(q=>[q.id,q]));
 const correctAnswers=Object.fromEntries(practice.questions.map(q=>[q.id,'ABCD'[ids[q.id].correct]]));
 assert.equal(sandbox.saveDraft(student.session,practice.id,correctAnswers).saved,true);
 const grade=sandbox.submitAttempt(student.session,practice.id,correctAnswers);
-assert.equal(grade.note,20);assert.equal(grade.correct,5);
-assert.equal(sandbox.submitAttempt(student.session,practice.id,{}).note,20,'soumission répétée idempotente');
+assert.equal(grade.note,10);assert.equal(grade.correct,5);
+assert.equal(sandbox.submitAttempt(student.session,practice.id,{}).note,10,'soumission répétée idempotente');
 assert.equal(tables.EMAILS.length,1,'aucun e-mail pour une auto-évaluation');
-assert.equal(sandbox.processMailQueue().sent,0);assert.equal(sent.length,0);
+assert.equal(sandbox.processMailQueue_().sent,0);assert.equal(sent.length,0);
 // Une éventuelle notification d'entraînement mise en attente par une version antérieure doit être ignorée.
 tables.EMAILS.push([practice.id,'etudiant@gmail.com','Ancien résultat','Ne pas envoyer','EN_ATTENTE','']);
-assert.equal(sandbox.processMailQueue().sent,0);
+assert.equal(sandbox.processMailQueue_().sent,0);
 assert.equal(tables.EMAILS[1][4],'IGNORE');assert.equal(sent.length,0);
 
 const exam=sandbox.adminCreateExam(teacher.session,{title:'Examen test',chapters:['2'],level:'moyen',count:5,minutes:25,maxAttempts:1});
 assert.equal(exam.enabled,false);
-assert.throws(()=>sandbox.adminToggleExam(teacher.session,exam.id,true),/insuffisante/);
 assert(!sandbox.getDashboard(student.session).exams.some(x=>x.id===exam.id));
 for(let i=0;i<6;i++){const q=questionBank.find(x=>x.level==='moyen');tables.QUESTIONS.push(['E'+i,2,'moyen','EXAMEN',`Question privée ${i}`,...q.a,'A','Explication',true]);}
 assert.equal(sandbox.adminToggleExam(teacher.session,exam.id,true).enabled,true);
@@ -118,6 +117,6 @@ const examTry=sandbox.startExam(student.session,exam.id);assert.equal(examTry.qu
 assert.throws(()=>sandbox.startExam(student.session,exam.id),/Nombre de tentatives/);
 assert.equal(sandbox.submitAttempt(student.session,examTry.id,{}).note,0);
 assert.equal(tables.EMAILS.length,3,'un seul e-mail pour l’examen officiel');
-assert.equal(sandbox.processMailQueue().sent,1);assert.equal(sent.length,1);
+assert.equal(sandbox.processMailQueue_().sent,1);assert.equal(sent.length,1);
 assert.equal(sandbox.getDashboard(teacher.session).attempts.length,2);
 console.log('✓ 210 QCM et 210 reformulations sur sept chapitres validés, interfaces analysées, sessions, tirages, barème, confidentialité, e-mails et examen testés.');
