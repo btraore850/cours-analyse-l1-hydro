@@ -52,7 +52,7 @@
       <div class="grid">
         <div class="field"><label for="chapter">Chapitre</label><select id="chapter"><option value="1">1 — Rappels fondamentaux d'analyse</option><option value="2">2 — Suites et séries positives</option><option value="3">3 — Séries à termes quelconques</option><option value="4">4 — Suites et séries de fonctions</option><option value="5">5 — Séries entières et Taylor</option><option value="6">6 — Séries de Fourier</option><option value="7">7 — Équations différentielles et bilans</option></select></div>
         <div class="field"><label for="level">Difficulté</label><select id="level"><option value="facile">Facile</option><option value="moyen" selected>Moyen</option><option value="difficile">Difficile</option></select></div>
-        <div class="field"><label for="count">Nombre de QCM</label><select id="count"><option value="5">5 questions</option><option value="10" selected>10 questions</option></select></div>
+        <div class="field"><label for="count">Nombre de QCM</label><select id="count"><option value="5">5 questions</option><option value="10" selected>10 questions</option><option value="15">15 questions</option></select></div>
       </div>
       <p class="muted" id="timing">Durée maximale conseillée : 25 minutes.</p>
       <div class="actions"><button class="button" id="start" disabled>Commencer la tentative</button><span class="muted" id="startStatus" role="status"></span></div>
@@ -80,6 +80,9 @@
   <script src="questions/chapter-6.js?v=20261116"></script>
   <script src="questions/chapter-7.js?v=20261116-corrected"></script>
   <script src="paraphrases.js?v=20261116-complete"></script>
+  <script src="extra-questions.js?v=20261119-2"></script>
+  <script src="math-notation.js?v=20261119-2"></script>
+  <script src="diverse-selection.js?v=20261119-2"></script>
   <script src="officielle/config.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="practice-tracker.js?v=20261116-1"></script>
@@ -88,7 +91,7 @@
     'use strict';
     const $=id=>document.getElementById(id);
     const labels={facile:'Facile',moyen:'Moyen',difficile:'Difficile'};
-    const secondsPerItem={facile:90,moyen:150,difficile:210};
+    const secondsPerItem={facile:120,moyen:180,difficile:240};
     let current=null,interval=null,deadline=0,started=0,locked=false;
     function shuffled(items){const a=items.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
     function withParaphrases(items){
@@ -110,18 +113,18 @@
     async function start(){if(!window.HYDRO_PRACTICE_TRACKER?.ready()){alert('Connectez-vous avec Google pour enregistrer vos tentatives. Aucune inscription préalable n’est nécessaire.');return;}
       clearTimer();locked=false;const chapter=Number($('chapter').value),level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>Number(q.chapter||2)===chapter&&q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce chapitre et ce niveau.');return;}
       $('start').disabled=true;$('startStatus').textContent='Enregistrement du début de la tentative…';
-      const items=withParaphrases(shuffled(pool).slice(0,count));
+      const items=withParaphrases(window.L1_DIVERSE.select(pool,count));
       let recorded;
       try{recorded=await window.HYDRO_PRACTICE_TRACKER.start({id:'AUTO_'+window.crypto.randomUUID(),chapter,level,count,questionIds:items.map(item=>item.id)});}
       catch(error){$('startStatus').textContent='Échec de l’enregistrement : '+String(error.message||error);$('start').disabled=false;return;}
       $('start').disabled=false;$('startStatus').textContent='';
       current={chapter,level,items,answers:{},trackingId:recorded.id};
-      clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${item.displayQuestion}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${item.a[option]}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
+      clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${window.CHEM_MATH.format(item.displayQuestion)}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${window.CHEM_MATH.format(item.a[option])}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
       started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
     }
     function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=10*correct/current.items.length;
       $('score').textContent=`${score.toFixed(1).replace('.',',')}/10`;$('appreciation').textContent=appreciationFor(score);$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
-      $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');clearMath(list);list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=`Réponse attendue : ${item.a[item.correct]}. ${item.why}`;box.append(name,p);list.appendChild(box);});show('results');typesetMath(list);window.scrollTo(0,0);
+      $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');clearMath(list);list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=window.CHEM_MATH.format(`Réponse attendue : ${item.a[item.correct]}. ${item.why}`);box.append(name,p);list.appendChild(box);});show('results');typesetMath(list);window.scrollTo(0,0);
       current.submitAnswers=Object.fromEntries(current.items.filter(item=>current.answers[item.id]!==undefined).map(item=>[item.id,'ABCD'[current.answers[item.id]]]));
       recordFinish(current);
     }
