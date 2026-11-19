@@ -1,0 +1,61 @@
+name: Compiler les documents LaTeX
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*.tex'
+      - '.github/workflows/compiler-latex.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  compilation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+
+      - name: Detecter les sources LaTeX
+        id: sources
+        shell: bash
+        run: |
+          if find . -type f -name '*.tex' ! -path './.git/*' -print -quit | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "Aucun fichier .tex disponible pour le moment." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Compiler tous les documents LaTeX
+        if: steps.sources.outputs.present == 'true'
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: '**/*.tex'
+          work_in_root_file_dir: true
+
+      - name: Rassembler les PDF generes
+        if: steps.sources.outputs.present == 'true'
+        shell: bash
+        run: |
+          mkdir -p pdf-compiles
+          while IFS= read -r -d '' src; do
+            relative="${src#./}"
+            pdf="${src%.tex}.pdf"
+            if [[ ! -s "$pdf" ]]; then
+              echo "::error file=$relative::PDF absent apres compilation"
+              exit 1
+            fi
+            target="pdf-compiles/${relative%.tex}.pdf"
+            mkdir -p "$(dirname "$target")"
+            cp "$pdf" "$target"
+          done < <(find . -path './pdf-compiles' -prune -o -type f -name '*.tex' ! -path './.git/*' -print0)
+
+      - name: Mettre les PDF a disposition
+        if: steps.sources.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-latex-${{ github.run_number }}
+          path: pdf-compiles/
+          if-no-files-found: error
