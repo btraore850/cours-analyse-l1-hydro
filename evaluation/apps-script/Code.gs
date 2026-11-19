@@ -14,7 +14,7 @@ const TABLES = Object.freeze({
   AUTO_TENTATIVES: ['id','email','debut_iso','fin_iso','chapitre','niveau','nb_questions','nb_bonnes','note_sur_10','statut','questions_json'],
   EMAILS: ['tentative_id','email','objet','corps','statut','date_envoi']
 });
-const TIME_PER_QUESTION = {facile:90,moyen:150,difficile:210};
+const TIME_PER_QUESTION = {facile:120,moyen:180,difficile:240};
 
 /**
  * Le formulaire OAuth vit sur GitHub Pages (origine autorisée dans Google Cloud).
@@ -143,7 +143,7 @@ function verifyPublicPracticeIdentity(idToken) {return {email:googleIdentity_(id
 function startPublicPractice(idToken,data) {
   const user=googleIdentity_(idToken),d=data||{},chapter=Number(d.chapter),level=String(d.level||'').toLowerCase(),count=Number(d.count);
   const id=String(d.id||'');
-  if(!Number.isInteger(chapter)||chapter<1||chapter>7||!TIME_PER_QUESTION[level]||![5,10].includes(count)||!/^AUTO_[a-f0-9-]{36}$/.test(id))throw new Error('Paramètres de révision invalides.');
+  if(!Number.isInteger(chapter)||chapter<1||chapter>7||!TIME_PER_QUESTION[level]||![5,10,15].includes(count)||!/^AUTO_[a-f0-9-]{36}$/.test(id))throw new Error('Paramètres de révision invalides.');
   if(!Array.isArray(d.questionIds)||d.questionIds.length!==count)throw new Error('Liste de questions invalide.');
   const pool=bank_(String(chapter),level,'practice'),available=new Set(pool.map(q=>String(q.id)));
   const ids=d.questionIds.map(value=>{
