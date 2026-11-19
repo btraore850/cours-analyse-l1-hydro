@@ -20,9 +20,9 @@
     .button:hover{background:#075b73}.button:disabled{background:#91a9b5;cursor:not-allowed}.button.secondary{background:#e3f1f4;color:var(--marine)}
     .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}.muted{color:#617b87;font-size:.93rem}.pill{display:inline-block;border-radius:30px;padding:5px 12px;background:#dff0f3;color:#14586e;font-size:.84rem;font-weight:750}
     .identity{border-left:4px solid var(--eau);background:#eaf5f7}.identity-status{margin:10px 0 0;font-weight:650}.identity-email{font-weight:750;color:#14586e}
-    .status{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}.timer{background:#e6f2f5;border-radius:10px;padding:9px 15px;font-weight:800;font-variant-numeric:tabular-nums;color:#0b3954}
+    .status{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;position:sticky;top:8px;z-index:3;background:#fff;border:1px solid var(--bord);border-radius:12px;padding:10px;box-shadow:0 3px 12px #0b39541c}.timer{background:#e6f2f5;border-radius:10px;padding:9px 15px;font-weight:800;font-variant-numeric:tabular-nums;color:#0b3954}
     .timer.urgent{background:#ffebee;color:#b42318}.timer.critical{background:#b42318;color:#fff;font-size:1.55rem;outline:3px solid #fecaca;animation:timer-pulse 1s ease-in-out infinite}
-    .time-warning{margin:-8px 0 14px;padding:10px 14px;border-radius:10px;background:#fff4e2;color:#865322;font-weight:700}
+    .time-warning{flex:1 1 100%;margin:0;padding:10px 14px;border-radius:10px;background:#fff4e2;color:#865322;font-weight:700}
     .time-warning.critical{background:#fff0f0;color:#b42318;border:2px solid #ef4444}
     @keyframes timer-pulse{50%{transform:scale(1.08)}}
     @media(prefers-reduced-motion:reduce){.timer.critical{animation:none}}
@@ -63,8 +63,7 @@
       <div class="actions"><button class="button" id="start" disabled>Commencer la tentative</button><span class="muted" id="startStatus" role="status"></span></div>
     </section>
     <section class="panel hidden" id="quiz" aria-live="polite">
-      <div class="status"><div><span class="pill" id="progress">0/10 réponses</span><p class="muted" id="quizLabel"></p></div><div class="timer" id="timer" role="timer" aria-live="off">15:00</div></div>
-      <p class="time-warning" id="timeWarning" role="status" aria-live="polite" aria-atomic="true" hidden></p>
+      <div class="status"><div><span class="pill" id="progress">0/10 réponses</span><p class="muted" id="quizLabel"></p></div><div class="timer" id="timer" role="timer" aria-live="off">15:00</div><p class="time-warning" id="timeWarning" role="status" aria-live="polite" aria-atomic="true" hidden></p></div>
       <div id="questions"></div>
       <div class="actions"><button class="button" id="submit">Terminer et corriger</button><span class="muted">Les réponses non choisies comptent comme incorrectes.</span></div>
     </section>
