@@ -54,11 +54,11 @@
         <div class="field"><label for="level">Difficulté</label><select id="level"><option value="facile">Facile</option><option value="moyen" selected>Moyen</option><option value="difficile">Difficile</option></select></div>
         <div class="field"><label for="count">Nombre de QCM</label><select id="count"><option value="5">5 questions</option><option value="10" selected>10 questions</option><option value="15">15 questions</option></select></div>
       </div>
-      <p class="muted" id="timing">Durée maximale conseillée : 25 minutes.</p>
+      <p class="muted" id="timing">Durée maximale : 15 min.</p>
       <div class="actions"><button class="button" id="start" disabled>Commencer la tentative</button><span class="muted" id="startStatus" role="status"></span></div>
     </section>
     <section class="panel hidden" id="quiz" aria-live="polite">
-      <div class="status"><div><span class="pill" id="progress">0/10 réponses</span><p class="muted" id="quizLabel"></p></div><div class="timer" id="timer" role="timer" aria-live="off">25:00</div></div>
+      <div class="status"><div><span class="pill" id="progress">0/10 réponses</span><p class="muted" id="quizLabel"></p></div><div class="timer" id="timer" role="timer" aria-live="off">15:00</div></div>
       <div id="questions"></div>
       <div class="actions"><button class="button" id="submit">Terminer et corriger</button><span class="muted">Les réponses non choisies comptent comme incorrectes.</span></div>
     </section>
@@ -91,7 +91,7 @@
     'use strict';
     const $=id=>document.getElementById(id);
     const labels={facile:'Facile',moyen:'Moyen',difficile:'Difficile'};
-    const secondsPerItem={facile:120,moyen:180,difficile:240};
+    const secondsPerItem={facile:30,moyen:90,difficile:150};
     let current=null,interval=null,deadline=0,started=0,locked=false;
     function shuffled(items){const a=items.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
     function withParaphrases(items){
@@ -105,7 +105,7 @@
     function clearTimer(){if(interval!==null){clearInterval(interval);interval=null;}}
     function typesetMath(element){if(window.MathJax&&typeof window.MathJax.typesetPromise==='function')window.MathJax.typesetPromise([element]).catch(error=>console.warn('Affichage mathématique :',error));}
     function clearMath(element){if(window.MathJax&&typeof window.MathJax.typesetClear==='function')window.MathJax.typesetClear([element]);}
-    function updateTiming(){const sec=Number($('count').value)*secondsPerItem[$('level').value];$('timing').textContent=`Durée maximale conseillée : ${Math.ceil(sec/60)} minutes.`;}
+    function updateTiming(){const sec=Number($('count').value)*secondsPerItem[$('level').value];const min=Math.floor(sec/60),reste=sec%60;$('timing').textContent=`Durée maximale : ${min} min${reste?' '+reste+' s':''}.`;}
     function fmt(seconds){const s=Math.max(0,Math.ceil(seconds));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
     function appreciationFor(score){if(score<5)return 'Insuffisant';if(score<6)return 'Passable';if(score<7)return 'Assez bien';if(score<8)return 'Bien';if(score<9)return 'Très bien';return 'Excellent';}
     function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
