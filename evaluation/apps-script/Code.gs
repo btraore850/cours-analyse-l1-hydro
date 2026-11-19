@@ -14,7 +14,7 @@ const TABLES = Object.freeze({
   AUTO_TENTATIVES: ['id','email','debut_iso','fin_iso','chapitre','niveau','nb_questions','nb_bonnes','note_sur_10','statut','questions_json'],
   EMAILS: ['tentative_id','email','objet','corps','statut','date_envoi']
 });
-const TIME_PER_QUESTION = {facile:120,moyen:180,difficile:240};
+const TIME_PER_QUESTION = {facile:30,moyen:90,difficile:150};
 
 /**
  * Le formulaire OAuth vit sur GitHub Pages (origine autorisée dans Google Cloud).
