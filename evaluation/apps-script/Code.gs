@@ -153,6 +153,19 @@ function bank_(chapters,level,mode) {
   const usages=mode==='exam'?['EXAMEN','ENTRAINEMENT']:['ENTRAINEMENT'];
   return records_('QUESTIONS').filter(q=>yes_(q.actif)&&choices.includes(String(q.chapitre).trim())&&(level==='tous'||String(q.niveau).toLowerCase()===level)&&usages.includes(String(q.usage).toUpperCase())&&['A','B','C','D'].includes(String(q.bonne).toUpperCase()));
 }
+/** Deux identifiants QCM peuvent désigner le même énoncé avec des réponses permutées. */
+function questionKey_(q) {
+  return String(q&&q.enonce||'').normalize('NFKC')
+    .replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/\s+/g,' ').trim().toLocaleLowerCase('fr');
+}
+function uniqueQuestions_(pool) {
+  const ids=new Set(),texts=new Set();
+  return shuffle_(pool).filter(q=>{
+    const id=String(q.id),text=questionKey_(q);
+    if(!text||ids.has(id)||texts.has(text))return false;
+    ids.add(id);texts.add(text);return true;
+  });
+}
 /** Révisions libres : aucun contrôle de présence dans ETUDIANTS.
  * Le compte Google est toutefois vérifié par le serveur pour suivre chaque adresse.
  */
@@ -170,6 +183,8 @@ function startPublicPractice(idToken,data) {
     return normalized;
   });
   if(new Set(ids).size!==count)throw new Error('Questions répétées dans la tentative.');
+  const byId=new Map(pool.map(q=>[String(q.id),q]));
+  if(new Set(ids.map(qid=>questionKey_(byId.get(qid)))).size!==count)throw new Error('Énoncés répétés : recommencez le tirage des QCM.');
   return lock_(()=>{
     const existing=find_('AUTO_TENTATIVES',id,'id');
     if(existing){if(String(existing.email)!==user.email)throw new Error('Identifiant de tentative déjà utilisé.');return {id,email:user.email,alreadyStarted:true};}
@@ -228,7 +243,7 @@ function buildAttempt_(user,mode,evalId,chapters,level,count,minutes,maxAttempts
   if(!Number.isInteger(count)||count<1||count>40||!Number.isFinite(minutes)||minutes<1||minutes>180)throw new Error('Paramètres d’évaluation invalides.');
   return lock_(()=>{
     if(mode==='exam'&&records_('TENTATIVES').filter(t=>t.email===user.email&&t.evaluation_id===evalId).length>=maxAttempts)throw new Error('Nombre de tentatives autorisées atteint.');
-    const pool=bank_(chapters,level,mode);if(pool.length<count)throw new Error('Banque insuffisante : '+pool.length+' question(s) disponibles pour '+count+' demandées.');
+    const pool=uniqueQuestions_(bank_(chapters,level,mode));if(pool.length<count)throw new Error('Banque insuffisante : '+pool.length+' question(s) disponibles pour '+count+' demandées.');
     const questions=mode==='exam'?selectDistinctExamQuestions_(pool,level,count,evalId):selectQuestions_(pool,level,count,mode);
     const selected=questions.map(q=>({id:String(q.id),order:shuffle_(['A','B','C','D'])}));
     const now=new Date();const close=closeAt?Date.parse(closeAt):Infinity;
@@ -279,9 +294,9 @@ function adminCreateExam(session,data) {
   const count=Number(d.count),minutes=Number(d.minutes),limit=Number(d.maxAttempts);if(!Number.isInteger(count)||count<1||count>40||!Number.isInteger(minutes)||minutes<1||minutes>180||!Number.isInteger(limit)||limit<1||limit>10)throw new Error('Nombre, durée ou tentatives invalides.');
   const start=text_(d.openAt,60),end=text_(d.closeAt,60);if(start&&!Number.isFinite(Date.parse(start)))throw new Error('Date d’ouverture invalide.');if(end&&!Number.isFinite(Date.parse(end)))throw new Error('Date de fermeture invalide.');if(start&&end&&Date.parse(end)<=Date.parse(start))throw new Error('Fermeture antérieure à l’ouverture.');
   const chapterValue=[...new Set(chapters)].join(';');
-  const id='EXAM_'+Utilities.getUuid().slice(0,8).toUpperCase();return lock_(()=>{append_('EVALUATIONS',{id,titre:text_(d.title,100)||'Évaluation Analyse',chapitres:chapterValue,niveau:level,nb_questions:count,duree_minutes:minutes,ouverture_iso:start?new Date(start).toISOString():'',fermeture_iso:end?new Date(end).toISOString():'',actif:false,tentatives_max:limit,groupe:text_(d.group,50)});return {id,enabled:false,availableQuestions:bank_(chapterValue,level,'exam').length};});
+  const id='EXAM_'+Utilities.getUuid().slice(0,8).toUpperCase();return lock_(()=>{append_('EVALUATIONS',{id,titre:text_(d.title,100)||'Évaluation Analyse',chapitres:chapterValue,niveau:level,nb_questions:count,duree_minutes:minutes,ouverture_iso:start?new Date(start).toISOString():'',fermeture_iso:end?new Date(end).toISOString():'',actif:false,tentatives_max:limit,groupe:text_(d.group,50)});return {id,enabled:false,availableQuestions:uniqueQuestions_(bank_(chapterValue,level,'exam')).length};});
 }
-function adminToggleExam(session,id,enabled) {user_(session,true);return lock_(()=>{const ex=find_('EVALUATIONS',text_(id,80),'id');if(!ex)throw new Error('Évaluation introuvable.');if(enabled&&bank_(ex.chapitres,ex.niveau,'exam').length<Number(ex.nb_questions))throw new Error('Banque de QCM insuffisante : vérifiez les chapitres, le niveau et le nombre de questions.');if(enabled&&examState_({...ex,actif:true})==='indisponible')throw new Error('Dates de programmation invalides : corrigez le calendrier avant publication.');patch_('EVALUATIONS',ex._row,{actif:Boolean(enabled)});return {id,enabled:Boolean(enabled)};});}
+function adminToggleExam(session,id,enabled) {user_(session,true);return lock_(()=>{const ex=find_('EVALUATIONS',text_(id,80),'id');if(!ex)throw new Error('Évaluation introuvable.');if(enabled&&uniqueQuestions_(bank_(ex.chapitres,ex.niveau,'exam')).length<Number(ex.nb_questions))throw new Error('Banque de QCM insuffisante : vérifiez les chapitres, le niveau et le nombre de questions.');if(enabled&&examState_({...ex,actif:true})==='indisponible')throw new Error('Dates de programmation invalides : corrigez le calendrier avant publication.');patch_('EVALUATIONS',ex._row,{actif:Boolean(enabled)});return {id,enabled:Boolean(enabled)};});}
 /** Les éventuels anciens déclencheurs doivent rester inoffensifs. */
 function processMailQueue_() {return {sent:0,disabled:true};}
 function removeMailTriggers_() {
