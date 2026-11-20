@@ -12,7 +12,7 @@ Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
 
 - `ETUDIANTS` : renseigner le matricule, l'adresse Gmail officielle, le nom, le prénom et le groupe ; mettre `actif` à `TRUE`. Laisser `google_sub` vide (il sera renseigné lors de la première connexion).
 - `QUESTIONS` : le classeur privé contient désormais **210 QCM d'entraînement**, soit 30 par chapitre pour les sept chapitres, avec `usage=ENTRAINEMENT` et `actif=TRUE`. Les examens notés doivent utiliser des **questions privées différentes**, marquées `usage=EXAMEN` et `actif=TRUE`. `bonne` contient une lettre A, B, C ou D.
-- `EVALUATIONS`, `TENTATIVES`, `EMAILS` : ne pas supprimer ou déplacer les colonnes ; le programme écrit automatiquement les lignes.
+- `EVALUATIONS`, `TENTATIVES` : ne pas supprimer ou déplacer les colonnes nécessaires ; le programme écrit automatiquement les lignes. Les résultats officiels sont consultés dans l'espace privé, sans feuille de courriels.
 - `AUTO_TENTATIVES` : un enregistrement par auto-évaluation commencée, avec l'e-mail Google vérifié, la date, le chapitre, le niveau, le statut et la note sur 10 lorsque la tentative est terminée. Les étudiants ne doivent pas accéder directement à cet onglet.
 
 **Ne pas partager le classeur avec les étudiants.** Il contient les corrigés et les notes individuelles.
@@ -26,8 +26,8 @@ Utiliser le classeur `EVALUATIONS_ANALYSE_L1_HYDROLOGIE` fourni séparément :
    - `SPREADSHEET_ID` : l'identifiant du Google Sheet privé (entre `/d/` et `/edit` dans son URL) ;
    - `TEACHER_EMAIL` : votre adresse Gmail ;
    - `GOOGLE_CLIENT_ID` : l'identifiant OAuth 2.0 Web obtenu à l'étape 3.
-5. Exécuter une première fois `initializeMissingSheets` dans l'éditeur si vous n'avez pas utilisé le classeur modèle. Autoriser les accès **Sheets**, **Mail**, **URL Fetch** nécessaires.
-6. Exécuter `installMailTrigger` une seule fois pour programmer les e-mails en attente.
+5. Exécuter une première fois `initializeMissingSheets` dans l'éditeur si vous n'avez pas utilisé le classeur modèle. Autoriser les accès **Sheets** et **URL Fetch** nécessaires.
+6. Ne pas installer de déclencheur d'e-mail : les résultats sont consultés exclusivement dans l'espace privé.
 
 ## 3. Configurer l'identité Google
 
@@ -68,11 +68,13 @@ L'activation n'est possible qu'une fois la banque privée `EXAMEN` suffisamment 
 
 Pour tester : créer une épreuve de 5 QCM sur le chapitre 2 et la laisser désactivée, puis inscrire **au moins cinq questions privées** de même niveau avant son activation.
 
-## 5. Scores à l'écran, courriels d'examen et export Excel
+## 5. Consultation privée des notes et export Excel
 
 **Auto-évaluations libres :** le score et le corrigé restent affichés immédiatement à l'étudiant. Chaque participant se connecte avec Google, mais n'a pas besoin de figurer dans `ETUDIANTS`. Une ligne est créée dans `AUTO_TENTATIVES` au début ; la note est enregistrée à la fin. Aucun courriel n'est envoyé. L'enseignant peut voir les fréquences de tentatives, les étudiants actifs et les inscrits n'ayant aucune tentative enregistrée. Sans liste complète d'étudiants, il est impossible d'identifier tous ceux qui ne révisent pas.
 
-**Examens officiels (`exam`) uniquement :** le résultat est enregistré, puis un message est placé dans la feuille `EMAILS`. `processMailQueue` peut envoyer jusqu'à 20 messages par passage si le quota restant le permet. Pour 200–500 étudiants, les courriels peuvent être différés par les quotas Gmail ; la note reste consultable dans l'application.
+**Examens officiels (`exam`) uniquement :** la note sur 10 est enregistrée dans `TENTATIVES`. Après soumission ou expiration du chronomètre, l'étudiant peut consulter son résultat en se reconnectant à son espace personnel. Aucun courriel de résultat ni de notification n'est généré.
+
+Les nouvelles références de tentative sont courtes (`T-` et 16 caractères hexadécimaux pour les évaluations officielles ; `A-` et 16 caractères pour les entraînements). Le champ `google_sub` conserve une empreinte stable abrégée du compte Google (`G-` et 12 caractères), sans supprimer les anciens enregistrements encore nécessaires à l'historique.
 
 Pour exporter les résultats, ouvrir le lien privé « Ouvrir les notes » puis sélectionner **Fichier → Télécharger → Microsoft Excel (.xlsx)** dans Google Sheets. La feuille `TENTATIVES` conserve une ligne par essai.
 
@@ -81,7 +83,7 @@ Pour exporter les résultats, ouvrir le lien privé « Ouvrir les notes » puis 
 - Connexion autorisée/refusée et vérification du rôle enseignant.
 - Conservation des réponses après une interruption réseau ; note juste, unique et non modifiable par l'étudiant.
 - Expiration côté serveur et traitement des brouillons.
-- Deux soumissions simultanées du même essai : une seule note, aucun e-mail pour l'entraînement, au plus un e-mail pour l'examen officiel.
+- Deux soumissions simultanées du même essai : une seule note, sans e-mail pour l'entraînement ni pour l'examen officiel.
 - Créneau de fermeture et nombre maximal de tentatives.
 - Essais progressifs à 5, 20 puis 50 étudiants ; surveiller erreurs Apps Script, verrous Google Sheets et quotas.
 - Pour les examens à fort enjeu avec 200–500 étudiants en même temps : réaliser des essais de charge réalistes et prévoir plusieurs groupes. La capacité de 500 simultanés **n'est pas garantie** par l'offre gratuite.
