@@ -20,6 +20,7 @@
   function updateExamTimer(){
     if(!examDeadline)return;
     const remaining=Math.max(0,Math.ceil((examDeadline-Date.now())/1000));
+    if(remaining===0)window.COURSE_SCREEN_AWAKE?.stop();
     const widget=$('examTimer');
     $('examTimerValue').textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(remaining%60).padStart(2,'0');
     widget.classList.toggle('warning',remaining<=60&&remaining>30);
@@ -112,7 +113,7 @@
       const height=Number(data.height);
       if(Number.isFinite(height)&&height>0)$('app').style.height=Math.max(550,Math.min(18000,Math.ceil(height)+24))+'px';
     }else if(data.kind==='hydro-exam-timer'){
-      if(data.visible!==true){examDeadline=0;$('examTimer').hidden=true;return;}
+      if(data.visible!==true){examDeadline=0;window.COURSE_SCREEN_AWAKE?.stop();$('examTimer').hidden=true;return;}
       const value=Date.parse(String(data.deadline||''));
       if(!Number.isFinite(value)||Math.abs(value-Date.now())>86400000)return;
       // Le cadre renvoie un signal chaque seconde : ne réarmer la remise
@@ -120,6 +121,7 @@
       if(examDeadline!==value)expirySignalSent=false;
       examDeadline=value;
       $('examTimer').hidden=false;
+      if(value>Date.now())window.COURSE_SCREEN_AWAKE?.start();
       updateExamTimer();
     }
   });
