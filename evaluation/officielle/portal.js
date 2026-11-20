@@ -113,8 +113,10 @@
       if(data.visible!==true){examDeadline=0;$('examTimer').hidden=true;return;}
       const value=Date.parse(String(data.deadline||''));
       if(!Number.isFinite(value)||Math.abs(value-Date.now())>86400000)return;
+      // Le cadre renvoie un signal chaque seconde : ne réarmer la remise
+      // automatique que lorsqu'une nouvelle tentative a un autre délai.
+      if(examDeadline!==value)expirySignalSent=false;
       examDeadline=value;
-      expirySignalSent=false;
       $('examTimer').hidden=false;
       updateExamTimer();
     }
