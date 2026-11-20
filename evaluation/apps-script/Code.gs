@@ -109,6 +109,30 @@ function examState_(exam,now) {
   return time<from?'a_venir':time>=to?'terminee':'ouverte';
 }
 function visible_(exam,user) {return examGroupAllowed_(exam,user)&&examState_(exam)==='ouverte';}
+/** Une remise réseau manquée ne doit pas laisser une épreuve expirée sans note. */
+function finalizeExpiredExams_() {
+  return lock_(()=>{
+    const now=Date.now();
+    const pending=records_('TENTATIVES').filter(a=>String(a.mode)==='exam'&&String(a.statut)==='EN_COURS'&&Number.isFinite(Date.parse(a.expiration_iso))&&Date.parse(a.expiration_iso)<=now);
+    if(!pending.length)return 0;
+    const bank=new Map(records_('QUESTIONS').map(q=>[String(q.id),q]));
+    let finished=0;
+    pending.forEach(a=>{
+      try{
+        const questions=JSON.parse(String(a.questions_json||'[]'));
+        const answers=JSON.parse(String(a.reponses_json||'{}'));
+        if(!Array.isArray(questions)||!questions.length||!answers||typeof answers!=='object'||Array.isArray(answers))return;
+        if(questions.some(q=>!q||!bank.has(String(q.id))))return;
+        const correct=questions.filter(item=>String(answers[item.id]||'').toUpperCase()===String(bank.get(String(item.id)).bonne).toUpperCase()).length;
+        const note=Math.round(100*(10*correct/questions.length))/100;
+        // Colonnes G:J : fin, statut, note /10 et nombre de réponses correctes.
+        tab_('TENTATIVES').getRange(a._row,7,1,4).setValues([[String(a.expiration_iso),'TERMINE_TEMPS',note,correct]]);
+        finished++;
+      }catch(e){console.warn('Tentative expirée non régularisée, ligne '+a._row+': '+e.message);}
+    });
+    return finished;
+  });
+}
 function revisionDashboard_() {
   const enrolled=records_('ETUDIANTS').filter(s=>yes_(s.actif)&&String(s.email||'').trim());
   const attempts=records_('AUTO_TENTATIVES');
@@ -131,7 +155,7 @@ function revisionDashboard_() {
   return {rows,summary:{inscrits:enrolled.length,sansTentative:rows.filter(p=>p.inscrit&&!p.commencees).length,actifs7j:rows.filter(p=>p.inscrit&&p.septJours>0).length,visiteurs:rows.filter(p=>!p.inscrit).length}};
 }
 function getDashboard(session) {
-  const user=user_(session);const exams=records_('EVALUATIONS');const attempts=records_('TENTATIVES');
+  const user=user_(session);finalizeExpiredExams_();const exams=records_('EVALUATIONS');const attempts=records_('TENTATIVES');
   if(user.role==='teacher')return {role:'teacher',name:user.name,exams:exams.map(({_row,...r})=>r),attempts:attempts.map(({questions_json,reponses_json,_row,...r})=>r),revisions:revisionDashboard_(),sheetUrl:'https://docs.google.com/spreadsheets/d/'+prop_('SPREADSHEET_ID')+'/edit'};
   // La programmation publiée est consultable avant l'ouverture, sans jamais
   // exposer les questions, réponses, étudiants, notes ou brouillons.
