@@ -193,13 +193,27 @@ function selectQuestions_(pool,level,count,mode) {
   chosen.push(...shuffle_(pool.filter(q=>!used.has(String(q.id)))).slice(0,count-chosen.length));
   return shuffle_(chosen);
 }
+function selectDistinctExamQuestions_(pool,level,count,evalId) {
+  const previous=new Set(records_('TENTATIVES')
+    .filter(t=>String(t.mode)==='exam'&&String(t.evaluation_id)===String(evalId))
+    .map(t=>{try{return JSON.parse(String(t.questions_json||'[]')).map(q=>String(q.id)).sort().join('|');}catch(e){return '';}})
+    .filter(Boolean));
+  let chosen=selectQuestions_(pool,level,count,'exam');
+  if(pool.length<=count||!previous.size)return chosen;
+  for(let i=0;i<20;i++){
+    if(!previous.has(chosen.map(q=>String(q.id)).sort().join('|')))break;
+    chosen=selectQuestions_(pool,level,count,'exam');
+  }
+  return chosen;
+}
 function publicQuestion_(q,order) {return {id:String(q.id),text:String(q.enonce),choices:order.map(k=>({id:k,text:String(q[k.toLowerCase()])}))};}
 function buildAttempt_(user,mode,evalId,chapters,level,count,minutes,maxAttempts,closeAt) {
   if(!Number.isInteger(count)||count<1||count>40||!Number.isFinite(minutes)||minutes<1||minutes>180)throw new Error('Paramètres d’évaluation invalides.');
   return lock_(()=>{
     if(mode==='exam'&&records_('TENTATIVES').filter(t=>t.email===user.email&&t.evaluation_id===evalId).length>=maxAttempts)throw new Error('Nombre de tentatives autorisées atteint.');
     const pool=bank_(chapters,level,mode);if(pool.length<count)throw new Error('Banque insuffisante : '+pool.length+' question(s) disponibles pour '+count+' demandées.');
-    const selected=selectQuestions_(pool,level,count,mode).map(q=>({id:String(q.id),order:shuffle_(['A','B','C','D'])}));
+    const questions=mode==='exam'?selectDistinctExamQuestions_(pool,level,count,evalId):selectQuestions_(pool,level,count,mode);
+    const selected=questions.map(q=>({id:String(q.id),order:shuffle_(['A','B','C','D'])}));
     const now=new Date();const close=closeAt?Date.parse(closeAt):Infinity;
     if(!Number.isFinite(close)&&closeAt)throw new Error('Date de fermeture invalide.');
     const end=new Date(Math.min(now.getTime()+minutes*60000,close));const id=Utilities.getUuid();
@@ -227,9 +241,12 @@ function saveDraft(session,id,answers) {
 function submitAttempt(session,id,answers) {
   const user=user_(session);return lock_(()=>{
     const attempt=find_('TENTATIVES',text_(id,80),'id');if(!attempt||String(attempt.email)!==user.email)throw new Error('Tentative inaccessible.');
-    if(attempt.statut!=='EN_COURS')return {note:Number(attempt.note_sur_10),correct:Number(attempt.nb_bonnes),count:Number(attempt.nb_questions),alreadySubmitted:true};
-    const expired=Date.now()>Date.parse(attempt.expiration_iso);const saved=JSON.parse(attempt.reponses_json||'{}');const selected=JSON.parse(attempt.questions_json);
-    const provided=expired?saved:cleanAnswers_(attempt,answers);const bank=new Map(records_('QUESTIONS').map(q=>[String(q.id),q]));
+    if(attempt.statut!=='EN_COURS')return {note:Number(attempt.note_sur_10),correct:Number(attempt.nb_bonnes),count:Number(attempt.nb_questions),answered:Object.keys(JSON.parse(attempt.reponses_json||'{}')).length,alreadySubmitted:true};
+    const deadline=Date.parse(attempt.expiration_iso),receivedAt=Date.now(),expired=receivedAt>=deadline;
+    const saved=JSON.parse(attempt.reponses_json||'{}'),live=cleanAnswers_(attempt,answers),selected=JSON.parse(attempt.questions_json);
+    // 5 secondes maximum pour recevoir la remise lancée à 00:00.
+    const provided=expired?(receivedAt-deadline<=5000?{...saved,...live}:saved):live;
+    const bank=new Map(records_('QUESTIONS').map(q=>[String(q.id),q]));
     let correct=0;selected.forEach(item=>{const q=bank.get(item.id);if(!q)throw new Error('Question introuvable : '+item.id);if(String(provided[item.id]||'')===String(q.bonne).toUpperCase())correct++;});
     const count=selected.length;const note=Math.round(100*(10*correct/count))/100;const now=iso_();
     patch_('TENTATIVES',attempt._row,{reponses_json:JSON.stringify(provided),statut:expired?'TERMINE_TEMPS':'TERMINE',fin_iso:now,note_sur_10:note,nb_bonnes:correct,dernier_enregistrement_iso:now});
@@ -238,7 +255,7 @@ function submitAttempt(session,id,answers) {
     if(attempt.mode==='exam'){
       const email=user.email;append_('EMAILS',{tentative_id:id,email,objet:'Résultat Analyse L1 Hydrologie — '+attempt.evaluation_id,corps:'Bonjour,\n\nVotre tentative '+id+' est terminée.\nNote : '+note+'/10 ('+correct+'/'+count+' réponses correctes).\nDate : '+now+'\n\nM. Bakary TRAORE',statut:'EN_ATTENTE'});
     }
-    const output={note,correct,count,expired,attemptId:id};
+    const output={note,correct,count,answered:Object.keys(provided).length,expired,attemptId:id};
     if(attempt.mode==='practice'){output.explanations=selected.map(item=>{const q=bank.get(item.id);return {id:item.id,answer:String(q.bonne),explanation:String(q.explication),good:provided[item.id]===String(q.bonne).toUpperCase()};});}
     return output;
   });

@@ -14,6 +14,25 @@
   let bridgeOrigin='';
   let timer=null;
   let authenticated=false;
+  let examDeadline=0;
+  let expirySignalSent=false;
+
+  function updateExamTimer(){
+    if(!examDeadline)return;
+    const remaining=Math.max(0,Math.ceil((examDeadline-Date.now())/1000));
+    const widget=$('examTimer');
+    $('examTimerValue').textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(remaining%60).padStart(2,'0');
+    widget.classList.toggle('urgent',remaining<=10);
+    const stage=remaining===0?'termine':remaining<=10?'10':remaining<=30?'30':remaining<=60?'60':'normal';
+    if(widget.dataset.stage!==stage){
+      widget.dataset.stage=stage;
+      $('examTimerNotice').textContent=stage==='termine'?'Remise automatique en cours':stage==='10'?'Dernières 10 secondes':stage==='30'?'Plus que 30 secondes':stage==='60'?'Plus que 60 secondes':'Temps restant';
+    }
+    if(remaining===0&&!expirySignalSent&&bridgeWindow&&bridgeOrigin){
+      expirySignalSent=true;
+      bridgeWindow.postMessage({kind:'hydro-force-submit',nonce},bridgeOrigin);
+    }
+  }
 
   function status(message,state='info'){
     $('status').textContent=message;
@@ -90,10 +109,19 @@
     }else if(data.kind==='hydro-frame-height'){
       const height=Number(data.height);
       if(Number.isFinite(height)&&height>0)$('app').style.height=Math.max(550,Math.min(18000,Math.ceil(height)+24))+'px';
+    }else if(data.kind==='hydro-exam-timer'){
+      if(data.visible!==true){examDeadline=0;$('examTimer').hidden=true;return;}
+      const value=Date.parse(String(data.deadline||''));
+      if(!Number.isFinite(value)||Math.abs(value-Date.now())>86400000)return;
+      examDeadline=value;
+      expirySignalSent=false;
+      $('examTimer').hidden=false;
+      updateExamTimer();
     }
   });
 
   $('logout').addEventListener('click',()=>window.location.reload());
+  window.setInterval(updateExamTimer,1000);
   window.addEventListener('load',()=>{
     if(trustedOrigin!=='https://btraore850.github.io'){
       status('Cette connexion doit être ouverte depuis le site officiel btraore850.github.io.','error');
