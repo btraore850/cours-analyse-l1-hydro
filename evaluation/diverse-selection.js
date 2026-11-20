@@ -9,17 +9,19 @@
     for(let i=items.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[items[i],items[j]]=[items[j],items[i]];}
     return items;
   }
+  function prompt(item){
+    return String(item.q||'').normalize('NFKC')
+      .replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/\s+/g,' ').trim().toLocaleLowerCase('fr');
+  }
   function family(item){
-    const normalized=String(item.q||'').toLowerCase().normalize('NFC')
-      .replace(/[0-9]+(?:[.,][0-9]+)?/g,'#')
-      .replace(/\s+/g,' ').trim();
+    const normalized=prompt(item).replace(/[0-9]+(?:[.,][0-9]+)?/g,'#');
     return String(item.chapter)+'|'+String(item.level)+'|'+normalized;
   }
   function select(pool,count,random=Math.random){
     const groups=new Map();
     const seenIds=new Set(),seenTexts=new Set();
     for(const q of shuffled(pool,random)){
-      const id=String(q.id),text=String(q.q||'').trim().toLowerCase();
+      const id=String(q.id),text=prompt(q);
       if(seenIds.has(id)||seenTexts.has(text))continue;
       seenIds.add(id);seenTexts.add(text);
       const key=family(q);
