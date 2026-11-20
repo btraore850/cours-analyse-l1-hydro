@@ -22,7 +22,8 @@
     const remaining=Math.max(0,Math.ceil((examDeadline-Date.now())/1000));
     const widget=$('examTimer');
     $('examTimerValue').textContent=String(Math.floor(remaining/60)).padStart(2,'0')+':'+String(remaining%60).padStart(2,'0');
-    widget.classList.toggle('warning',remaining<=60&&remaining>10);
+    widget.classList.toggle('warning',remaining<=60&&remaining>30);
+    widget.classList.toggle('caution',remaining<=30&&remaining>10);
     widget.classList.toggle('urgent',remaining<=10);
     const stage=remaining===0?'termine':remaining<=10?'10':remaining<=30?'30':remaining<=60?'60':'normal';
     if(widget.dataset.stage!==stage){
