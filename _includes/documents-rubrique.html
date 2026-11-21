@@ -1,0 +1,17 @@
+{% assign prefix = '/' | append: include.dossier | append: '/' %}
+{% assign extensions = '.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.ods,.odt,.odp,.csv,.zip,.r,.py,.tex,.ipynb,.rmd,.qmd' | split: ',' %}
+{% assign files = site.static_files | sort: 'path' %}
+{% assign count = 0 %}
+<section class="panel">
+<h2>Documents de la rubrique</h2>
+{% for file in files %}
+  {% assign start = file.path | slice: 0, prefix.size %}
+  {% assign extension = file.extname | downcase %}
+  {% if start == prefix and extensions contains extension %}
+    {% if count == 0 %}<ul>{% endif %}
+    {% assign count = count | plus: 1 %}
+    <li><a href="{{ file.path | relative_url | uri_escape | escape }}">{{ file.path | remove_first: prefix | escape }}</a></li>
+  {% endif %}
+{% endfor %}
+{% if count > 0 %}</ul>{% else %}<p>Aucun document déposé pour le moment.</p>{% endif %}
+</section>
