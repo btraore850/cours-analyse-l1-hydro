@@ -23,6 +23,7 @@ const id=i+1,detail=mk('details','chapter'),summary=mk('summary',''),num=mk('spa
 summary.append(num,title);detail.append(summary);
 const area=mk('div','chapter-detail'),note=mk('p','', 'Ressources du chapitre '+id),links=mk('div','chapter-links'),list=mk('div','chapter-files');
 for(const set of sets)addLink(links,set.folder+'/',set.icon+' '+set.label);
+addLink(links,cfg.application+'/#audios-applications','🎧 Audios');
 area.append(note,links,list);detail.append(area);root.append(detail);
 return {number:id,list};
 });
@@ -33,6 +34,7 @@ jobs.push(timeoutFetch(api+encodeURIComponent(cfg.videosFolder)+'/videos.json?re
 if(!entry||typeof entry.content!=='string')return {video:[]};
 const raw=entry.content.replace(/\s/g,'');try{return {video:JSON.parse(decodeURIComponent(escape(atob(raw)))).videos||[]};}catch{return {video:[]}};
 }).catch(()=>({video:[]})));
+jobs.push(fetch(cfg.application+'/audios.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Audio');return r.json();}).then(d=>({audio:Array.isArray(d.audios)?d.audios:[]})).catch(()=>({audio:[]})));
 Promise.all(jobs).then(data=>{
 const resources=data.filter(x=>x.folder),known=[];
 for(const group of resources){
@@ -42,6 +44,10 @@ const videoSet=data.find(x=>x.video)?.video||[];
 for(const v of videoSet){
  const n=Number(v.chapitre);if(!Number.isInteger(n)||n<1||n>panels.length||!/^https:\/\//.test(v.url||''))continue;
  const line=mk('div','');const link=addLink(line,v.url,'▶ '+(v.titre||'Vidéo du chapitre '+n));link.target='_blank';link.rel='noopener noreferrer';panels[n-1].list.append(line);
+}
+for(const v of (data.find(x=>x.audio)?.audio||[])){
+ const n=Number(v.chapitre);if(!Number.isInteger(n)||n<1||n>panels.length||!/^https:\/\//.test(v.url||''))continue;
+ const line=mk('div','');const link=addLink(line,v.url,'🎧 '+(v.titre||'Audio du chapitre '+n));link.target='_blank';link.rel='noopener noreferrer';panels[n-1].list.append(line);
 }
 const safeRecent=known.filter(x=>x.file.name.toLowerCase().endsWith('.pdf')).slice(0,3);
 recent.replaceChildren();
