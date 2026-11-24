@@ -28,24 +28,25 @@ layout: null
 <article class="card"><div class="symbol" aria-hidden="true">💦</div><h3>Écoulement et infiltration</h3><p>Étudier des variations temporelles et les hypothèses d'un modèle d'écoulement.</p></article>
 <article class="card"><div class="symbol" aria-hidden="true">🏞️</div><h3>Réservoir et bassin versant</h3><p>Modéliser la variation du stock d'eau d'un réservoir ou bassin versant à partir des apports, sorties et pertes.</p></article>
 <article class="card"><div class="symbol" aria-hidden="true">📈</div><h3>Cycles saisonniers</h3><p>Introduire les séries de Fourier pour des variations périodiques idéalisées.</p></article>
-</div><section class="panel" id="videos-applications" aria-labelledby="titre-videos-applications"><h2 id="titre-videos-applications">Vidéos d'application par chapitre</h2><p>Choisissez un chapitre pour consulter les vidéos disponibles. Les liens sont ajoutés progressivement, sans héberger les fichiers vidéo dans GitHub.</p><div id="chapitres-videos" aria-live="polite"><p>Chargement du catalogue…</p></div></section><section class="panel" style="margin-top:20px"><h2>Pour approfondir</h2><p>Voir les <a href="../programme.html">objectifs et chapitres du programme</a> les <a href="../tp/">travaux pratiques proposés</a> et les <a href="../bibliographie/">références utiles</a>.</p></section>{% include documents-rubrique.html dossier="applications-hydrologie" %}
+</div><section class="panel" id="videos-applications" aria-labelledby="titre-videos-applications"><h2 id="titre-videos-applications">Vidéos d'application par chapitre</h2><p>Choisissez un chapitre pour consulter les vidéos disponibles. Les liens sont ajoutés progressivement, sans héberger les fichiers vidéo dans GitHub.</p><div id="chapitres-videos" aria-live="polite"><p>Chargement du catalogue…</p></div></section><section class="panel" id="audios-applications" aria-labelledby="titre-audios-applications"><h2 id="titre-audios-applications">🎧 Audios d'application par chapitre</h2><p>Écoutez les explications qui relient les notions mathématiques du cours aux applications dans votre domaine de spécialité. Choisissez un chapitre, puis appuyez sur « Écouter » lorsque des audios sont disponibles.</p><div id="chapitres-audios" aria-live="polite"><p>Chargement des audios…</p></div><noscript><p>Activez JavaScript pour consulter le catalogue des audios.</p></noscript></section><section class="panel" style="margin-top:20px"><h2>Pour approfondir</h2><p>Voir les <a href="../programme.html">objectifs et chapitres du programme</a> les <a href="../tp/">travaux pratiques proposés</a> et les <a href="../bibliographie/">références utiles</a>.</p></section>{% include documents-rubrique.html dossier="applications-hydrologie" %}
 </main>
 <footer><div class="wrap">Université de N’Zérékoré · Licence 1 Hydrologie · Analyse MTH 1101 · <a href="../index.html">Retour à la plateforme</a></div></footer>
 <style>
-#chapitres-videos .video-chapters{display:grid;gap:10px;margin:16px 0}
-#chapitres-videos .video-chapter{border:1px solid #d4e5ec;border-radius:11px;background:#fff;overflow:hidden}
-#chapitres-videos .video-summary{cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-#chapitres-videos .video-summary:hover{background:#eef7f9}
-#chapitres-videos .video-summary strong{font-size:.98rem;color:#0b3954}
-#chapitres-videos .video-count{white-space:nowrap;font-size:.8rem;color:#176378;background:#e7f5f7;border-radius:999px;padding:3px 10px}
-#chapitres-videos .video-content{padding:0 16px 15px}
-#chapitres-videos .video-empty,#chapitres-videos .video-small{color:#587080;font-size:.9rem;margin:8px 0}
-#chapitres-videos .video-entry{padding:13px 0;border-top:1px solid #e3edf1}
-#chapitres-videos .video-entry h3{margin:0 0 6px;font-size:1rem}
-#chapitres-videos .video-button{display:inline-block;background:#0b3954;color:#fff;border-radius:8px;text-decoration:none;font-size:.92rem;font-weight:700;padding:9px 13px;margin-top:8px}
-#chapitres-videos .video-button:hover{background:#11607a}
-#chapitres-videos .video-pending{border:1px solid #bcd9e1;border-radius:12px;padding:18px;margin-top:18px;background:#f1f9fa}
-#chapitres-videos .video-pending h3{margin:0 0 6px}
+:is(#chapitres-videos,#chapitres-audios) .video-chapters{display:grid;gap:10px;margin:16px 0}
+:is(#chapitres-videos,#chapitres-audios) .video-chapter{border:1px solid #d4e5ec;border-radius:11px;background:#fff;overflow:hidden}
+:is(#chapitres-videos,#chapitres-audios) .video-summary{cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+:is(#chapitres-videos,#chapitres-audios) .video-summary:hover{background:#eef7f9}
+:is(#chapitres-videos,#chapitres-audios) .video-summary strong{font-size:.98rem;color:#0b3954}
+:is(#chapitres-videos,#chapitres-audios) .video-count{white-space:nowrap;font-size:.8rem;color:#176378;background:#e7f5f7;border-radius:999px;padding:3px 10px}
+:is(#chapitres-videos,#chapitres-audios) .video-content{padding:0 16px 15px}
+:is(#chapitres-videos,#chapitres-audios) .video-empty,:is(#chapitres-videos,#chapitres-audios) .video-small{color:#587080;font-size:.9rem;margin:8px 0}
+:is(#chapitres-videos,#chapitres-audios) .video-entry{padding:13px 0;border-top:1px solid #e3edf1}
+:is(#chapitres-videos,#chapitres-audios) .video-entry h3{margin:0 0 6px;font-size:1rem}
+:is(#chapitres-videos,#chapitres-audios) .video-button{display:inline-block;background:#0b3954;color:#fff;border-radius:8px;text-decoration:none;font-size:.92rem;font-weight:700;padding:9px 13px;margin-top:8px}
+:is(#chapitres-videos,#chapitres-audios) .video-button:hover{background:#11607a}
+:is(#chapitres-videos,#chapitres-audios) .video-pending{border:1px solid #bcd9e1;border-radius:12px;padding:18px;margin-top:18px;background:#f1f9fa}
+:is(#chapitres-videos,#chapitres-audios) .video-pending h3{margin:0 0 6px}
 </style>
 <script src="videos.js" defer></script>
+<script src="audios.js" defer></script>
 </body></html>
