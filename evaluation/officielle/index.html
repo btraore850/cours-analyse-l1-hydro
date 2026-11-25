@@ -23,6 +23,18 @@
     .exam-timer strong{font-size:1.35rem}.exam-timer span{font-size:.75rem;text-align:center;font-weight:750;max-width:180px}.exam-timer.warning{background:#fff6bf;border-color:#caa500;color:#735600}.exam-timer.caution{background:#ffe3c2;border-color:#cf6d1c;color:#8b3e0b}.exam-timer.urgent{background:#fee0dc;border-color:#c34636;color:#962b1d}
     [hidden]{display:none!important}
     @media(max-width:690px){.card{padding:15px}main{width:min(100% - 18px,980px)}header{padding:25px 16px}}
+
+    .app-title h2{margin:0}.app-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-left:auto}
+    .rules-button{background:#0b3954;color:white}.rules-button:focus-visible,.rules-close:focus-visible{outline:3px solid #087c91;outline-offset:3px}
+    #examRules{width:min(680px,calc(100% - 24px));max-height:calc(100% - 24px);max-height:calc(100dvh - 24px);margin:auto;padding:0;border:1px solid var(--line);border-radius:14px;color:var(--ink);background:white;box-shadow:0 15px 60px #0b39544d;overflow:hidden}
+    #examRules::backdrop{background:#102b3c99}
+    .rules-layout{display:flex;flex-direction:column;max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px)}
+    .rules-heading,.rules-footer{padding:14px 18px;background:#f5f9fb;flex:none}.rules-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}
+    .rules-heading h2{font-size:1.12rem;margin:0;line-height:1.35}.rules-close{min-width:44px;min-height:44px;padding:8px;font-size:1.3rem;line-height:1}
+    .rules-body{padding:12px 18px;overflow:auto;overscroll-behavior:contain;flex:1;min-height:0}.rules-body h3{font-size:1rem;margin:16px 0 6px}.rules-body h3:first-child{margin-top:0}
+    .rules-body ul{margin:0 0 12px;padding-left:1.3em}.rules-body li{margin:5px 0}.rules-footer{border-top:1px solid var(--line);display:flex;justify-content:flex-end}.rules-footer .button{min-height:44px}
+    .rules-login{margin:10px 0 0}.rules-timer-note{margin:0 0 10px;font-size:.9rem;color:#5d7583}
+    @media(max-width:480px){.app-title{gap:10px}.app-actions{margin-left:0;width:100%}.app-actions .button{flex:1;padding:10px 8px;min-height:44px}.rules-body,.rules-heading,.rules-footer{padding-left:13px;padding-right:13px}}
   </style>
   <script src="config.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -43,16 +55,52 @@
     <h2>Connexion avec votre compte Google</h2>
     <p>Choisissez le compte Gmail enregistré auprès de l'enseignant. Après connexion, vous verrez les évaluations programmées pour votre groupe, avec leurs dates et leur statut. Les questionnaires restent verrouillés jusqu'à l'ouverture prévue.</p>
     <div id="googleButton"></div>
+    <p class="rules-login"><button class="button rules-button" type="button" data-open-rules aria-haspopup="dialog" aria-controls="examRules">📋 Consignes</button></p>
     <p id="status" role="status" aria-live="polite">Chargement de la connexion Google…</p>
     <p class="muted">Ne saisissez jamais votre mot de passe Google dans un formulaire de cette plateforme. La connexion s'effectue exclusivement chez Google.</p>
   </section>
   <section class="card" id="appPanel" hidden>
-    <div class="app-title"><h2>Espace d'évaluation</h2><button id="logout" class="button" type="button">Changer de compte</button></div>
+    <div class="app-title"><h2>Espace d'évaluation</h2><div class="app-actions"><button class="button rules-button" type="button" data-open-rules aria-haspopup="dialog" aria-controls="examRules">📋 Consignes</button><button id="logout" class="button" type="button">Changer de compte</button></div></div>
     <iframe id="app" title="Espace d'évaluation privé" referrerpolicy="no-referrer" loading="eager"></iframe>
   </section>
   <section class="notice">
     <strong>Confidentialité et accès.</strong> Une évaluation publiée apparaît au calendrier des étudiants concernés avant son ouverture ; le bouton « Commencer » devient disponible seulement pendant la période fixée. Les brouillons, questions, réponses et notes ne sont pas publiés sur ce site.
   </section>
 </main>
+
+<dialog id="examRules" aria-labelledby="examRulesTitle">
+  <div class="rules-layout">
+    <div class="rules-heading"><h2 id="examRulesTitle">📋 CONSIGNES D’ÉVALUATION OFFICIELLE</h2><button class="button rules-close" type="button" data-close-rules aria-label="Fermer les consignes">×</button></div>
+    <div class="rules-body" tabindex="0">
+      <h3>1. Avant l’évaluation</h3>
+      <ul><li>Disposer d’une connexion Internet stable et d’un appareil suffisamment chargé.</li><li>Se connecter avec son adresse Gmail d’inscription, 15 minutes avant l’ouverture.</li><li>Commencer l’évaluation pendant la fenêtre de démarrage autorisée.</li></ul>
+      <h3>2. Pendant l’évaluation</h3>
+      <ul><li>Bénéficier de la totalité de la durée individuelle accordée, même après la fermeture des accès.</li><li>Composer individuellement, sans assistance extérieure.</li><li><strong>Utiliser un brouillon pour les calculs, opérations, raisonnements et démonstrations est autorisé.</strong></li><li>Surveiller le chronomètre.</li><li>Ne pas quitter ni actualiser la page pendant la tentative.</li></ul>
+      <h3>3. À la fin de l’évaluation</h3>
+      <ul><li>Soumettre sa tentative avant l’expiration du chronomètre. À défaut, la soumission est automatiquement déclenchée.</li><li>Vérifier l’affichage de sa note sur 10.</li><li>Seules les réponses enregistrées sont notées. Les questions sans réponse valent zéro.</li></ul>
+      <h3>4. Informations importantes</h3>
+      <ul><li>Tous les horaires sont exprimés en <strong>heure de Guinée (UTC+0)</strong>.</li><li>En cas de problème technique, faire une capture d’écran et contacter immédiatement l’enseignant au <strong>+224 625 28 06 25</strong>.</li></ul>
+      <p><strong>Bonne composition à toutes et à tous !</strong></p>
+      <p id="rulesTimerNote" class="rules-timer-note" hidden>Le chronomètre continue pendant la consultation des consignes.</p>
+    </div>
+    <div class="rules-footer"><button class="button rules-button" type="button" data-close-rules>Fermer</button></div>
+  </div>
+</dialog>
+<script>
+(()=>{'use strict';
+  const dialog=document.getElementById('examRules');
+  let opener=null;
+  const scrollArea=dialog.querySelector('.rules-body');
+  function showRules(event){
+    opener=event.currentTarget;
+    document.getElementById('rulesTimerNote').hidden=document.getElementById('examTimer').hidden;
+    if(!dialog.open)dialog.showModal();
+    scrollArea.scrollTop=0;
+  }
+  document.querySelectorAll('[data-open-rules]').forEach(button=>button.addEventListener('click',showRules));
+  dialog.querySelectorAll('[data-close-rules]').forEach(button=>button.addEventListener('click',()=>dialog.close()));
+  dialog.addEventListener('close',()=>{if(opener&&!opener.closest('[hidden]'))opener.focus();});
+})();
+</script>
 </body>
 </html>
