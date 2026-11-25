@@ -21,7 +21,7 @@
     .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}.muted{color:#617b87;font-size:.93rem}.pill{display:inline-block;border-radius:30px;padding:5px 12px;background:#dff0f3;color:#14586e;font-size:.84rem;font-weight:750}
     .identity{border-left:4px solid var(--eau);background:#eaf5f7}.identity-status{margin:10px 0 0;font-weight:650}.identity-email{font-weight:750;color:#14586e}
     .status{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;position:sticky;top:8px;z-index:3;background:#fff;border:1px solid var(--bord);border-radius:12px;padding:10px;box-shadow:0 3px 12px #0b39541c}.timer{background:#e6f2f5;border-radius:10px;padding:9px 15px;font-weight:800;font-variant-numeric:tabular-nums;color:#0b3954}
-    .timer.urgent{background:#ffebee;color:#b42318}.timer.critical{background:#b42318;color:#fff;font-size:1.55rem;outline:3px solid #fecaca;animation:timer-pulse 1s ease-in-out infinite}
+    .timer.warning{background:#fff4d5;color:#875600}.timer.urgent{background:#ffebee;color:#b42318}.timer.critical{background:#b42318;color:#fff;font-size:1.55rem;outline:3px solid #fecaca;animation:timer-pulse 1s ease-in-out infinite}
     .time-warning{flex:1 1 100%;margin:0;padding:10px 14px;border-radius:10px;background:#fff4e2;color:#865322;font-weight:700}
     .time-warning.critical{background:#fff0f0;color:#b42318;border:2px solid #ef4444}
     @keyframes timer-pulse{50%{transform:scale(1.08)}}
@@ -77,13 +77,13 @@
     window.MathJax={tex:{inlineMath:[['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
-  <script src="qcm-v2/chapter-1.js?v=20261125-complet"></script>
-  <script src="qcm-v2/chapter-2.js?v=20261125-complet"></script>
-  <script src="qcm-v2/chapter-3.js?v=20261125-complet"></script>
-  <script src="qcm-v2/chapter-4.js?v=20261125-complet"></script>
-  <script src="qcm-v2/chapter-5.js?v=20261125-complet"></script>
-  <script src="qcm-v2/chapter-6.js?v=20261125-complet"></script>
-  <script src="qcm-v2/chapter-7.js?v=20261125-complet"></script>
+  <script src="qcm-v2/chapter-1.js?v=20261125-sync2"></script>
+  <script src="qcm-v2/chapter-2.js?v=20261125-sync2"></script>
+  <script src="qcm-v2/chapter-3.js?v=20261125-sync2"></script>
+  <script src="qcm-v2/chapter-4.js?v=20261125-sync2"></script>
+  <script src="qcm-v2/chapter-5.js?v=20261125-sync2"></script>
+  <script src="qcm-v2/chapter-6.js?v=20261125-sync2"></script>
+  <script src="qcm-v2/chapter-7.js?v=20261125-sync2"></script>
   <script src="math-notation.js?v=20261119-2"></script>
   <script src="diverse-selection.js?v=20261125-complet"></script>
   <script src="officielle/config.js"></script>
@@ -113,7 +113,7 @@
     function fmt(seconds){const s=Math.max(0,Math.ceil(seconds));return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
     function appreciationFor(score){if(score<5)return 'Insuffisant';if(score<6)return 'Passable';if(score<7)return 'Assez bien';if(score<8)return 'Bien';if(score<9)return 'Très bien';return 'Excellent';}
     function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
-    function tick(){const left=(deadline-Date.now())/1000,remaining=Math.max(0,Math.ceil(left)),warning=$('timeWarning');$('timer').textContent=fmt(left);$('timer').classList.toggle('urgent',remaining<=30);$('timer').classList.toggle('critical',remaining<=10);const message=remaining<=10?'Dernières 10 secondes : terminez votre réponse !':remaining<=60?'Attention, il vous reste une minute !':'';warning.hidden=!message;warning.classList.toggle('critical',remaining<=10);if(warning.textContent!==message)warning.textContent=message;if(left<=0)finish(true);}
+    function tick(){const left=(deadline-Date.now())/1000,remaining=Math.max(0,Math.ceil(left)),warning=$('timeWarning');$('timer').textContent=fmt(left);$('timer').classList.toggle('warning',remaining<=60&&remaining>30);$('timer').classList.toggle('urgent',remaining<=30);$('timer').classList.toggle('critical',remaining<=10);const message=remaining<=10?'Dernières 10 secondes : terminez votre réponse !':remaining<=60?'Attention, il vous reste une minute !':'';warning.hidden=!message;warning.classList.toggle('critical',remaining<=10);if(warning.textContent!==message)warning.textContent=message;if(left<=0)finish(true);}
     async function start(){if(!window.HYDRO_PRACTICE_TRACKER?.ready()){alert('Connectez-vous avec Google pour enregistrer vos tentatives. Aucune inscription préalable n’est nécessaire.');return;}
       clearTimer();locked=false;const chapter=Number($('chapter').value),level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>Number(q.chapter||2)===chapter&&q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce chapitre et ce niveau.');return;}
       $('start').disabled=true;$('startStatus').textContent='Enregistrement du début de la tentative…';
