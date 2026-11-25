@@ -36,11 +36,12 @@
     .rules-login{margin:10px 0 0}.rules-timer-note{margin:0 0 10px;font-size:.9rem;color:#5d7583}
     @media(max-width:480px){.app-title{gap:10px}.app-actions{margin-left:0;width:100%}.app-actions .button{flex:1;padding:10px 8px;min-height:44px}.rules-body,.rules-heading,.rules-footer{padding-left:13px;padding-right:13px}}
     .rules-body .rules-subtitle{font-size:1.05rem;color:var(--navy);line-height:1.45}.rules-body p{margin:0 0 12px}.rules-schedule{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 16px;font-variant-numeric:tabular-nums;font-size:.94rem}.rules-schedule th,.rules-schedule td{border:1px solid var(--line);padding:8px;text-align:left;overflow-wrap:anywhere}.rules-schedule th{background:#e5f2f5;color:var(--navy)}.rules-schedule th:first-child{width:42%}.rules-body a{color:var(--navy);overflow-wrap:anywhere}
+    .pin-form{max-width:480px;margin:12px 0 18px}.pin-form label{display:block;font-weight:650;margin:10px 0 5px}.pin-form input{width:100%;border:1px solid #a9c0cb;border-radius:8px;padding:11px 12px;font:inherit;color:var(--ink);background:white}.pin-form .button{margin-top:14px;min-height:44px}.pin-form .button:disabled{opacity:.55;cursor:not-allowed}.google-alternative{padding-top:16px;border-top:1px solid var(--line);margin-top:16px}.google-alternative h3{font-size:1rem;margin:0 0 6px}
   </style>
   <script src="config.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="../screen-awake.js?v=20261120-1" defer></script>
-  <script src="portal.js?v=20261120-screen-awake" defer></script>
+  <script src="portal-pin.js?v=20261125-pin" defer></script>
 </head>
 <body>
 <div id="examTimer" class="exam-timer" hidden aria-label="Chronomètre de l'évaluation"><strong id="examTimerValue">--:--</strong><span id="examTimerNotice" role="status" aria-live="polite"></span></div>
@@ -53,12 +54,20 @@
 </header>
 <main>
   <section id="loginPanel" class="card">
-    <h2>Connexion avec votre compte Google</h2>
-    <p>Choisissez le compte Gmail enregistré auprès de l'enseignant. Après connexion, vous verrez les évaluations programmées pour votre groupe, avec leurs dates et leur statut. Les questionnaires restent verrouillés jusqu'à l'ouverture prévue.</p>
-    <div id="googleButton"></div>
+    <h2>Accès aux évaluations officielles</h2>
+    <p>Utilisez votre adresse Gmail d’inscription et le PIN individuel à six chiffres communiqué par votre enseignant. Aucun mot de passe Google ni ajout de compte à l’appareil n’est nécessaire.</p>
+    <form id="pinForm" class="pin-form" autocomplete="off">
+      <label for="pinEmail">Adresse Gmail d’inscription</label>
+      <input id="pinEmail" type="email" maxlength="254" autocomplete="off" autocapitalize="none" spellcheck="false" required placeholder="etudiant@gmail.com">
+      <label for="pinCode">Code PIN individuel (6 chiffres)</label>
+      <input id="pinCode" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="off" required placeholder="••••••">
+      <button id="pinSubmit" class="button rules-button" type="submit">Vérifier et accéder</button>
+    </form>
+    <p class="muted">Ne partagez pas votre PIN. Si vous ne l’avez pas encore reçu, contactez l’enseignant ou utilisez la connexion Google ci-dessous.</p>
+    <div class="google-alternative"><h3>Connexion Google (enseignant ou étudiant)</h3><p>Vous pouvez également utiliser votre compte Google habituel.</p><div id="googleButton"></div></div>
     <p class="rules-login"><button class="button rules-button" type="button" data-open-rules aria-haspopup="dialog" aria-controls="examRules">📋 Consignes</button></p>
     <p id="status" role="status" aria-live="polite">Chargement de la connexion Google…</p>
-    <p class="muted">Ne saisissez jamais votre mot de passe Google dans un formulaire de cette plateforme. La connexion s'effectue exclusivement chez Google.</p>
+    <p class="muted">Ne saisissez jamais votre mot de passe Google dans un formulaire de cette plateforme. Le PIN est un code distinct, attribué par l’enseignant.</p>
   </section>
   <section class="card" id="appPanel" hidden>
     <div class="app-title"><h2>Espace d'évaluation</h2><div class="app-actions"><button class="button rules-button" type="button" data-open-rules aria-haspopup="dialog" aria-controls="examRules">📋 Consignes</button><button id="logout" class="button" type="button">Changer de compte</button></div></div>
