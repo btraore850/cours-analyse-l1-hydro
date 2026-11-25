@@ -35,6 +35,7 @@
     .rules-body ul{margin:0 0 12px;padding-left:1.3em}.rules-body li{margin:5px 0}.rules-footer{border-top:1px solid var(--line);display:flex;justify-content:flex-end}.rules-footer .button{min-height:44px}
     .rules-login{margin:10px 0 0}.rules-timer-note{margin:0 0 10px;font-size:.9rem;color:#5d7583}
     @media(max-width:480px){.app-title{gap:10px}.app-actions{margin-left:0;width:100%}.app-actions .button{flex:1;padding:10px 8px;min-height:44px}.rules-body,.rules-heading,.rules-footer{padding-left:13px;padding-right:13px}}
+    .rules-body .rules-subtitle{font-size:1.05rem;color:var(--navy);line-height:1.45}.rules-body p{margin:0 0 12px}.rules-schedule{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0 16px;font-variant-numeric:tabular-nums;font-size:.94rem}.rules-schedule th,.rules-schedule td{border:1px solid var(--line);padding:8px;text-align:left;overflow-wrap:anywhere}.rules-schedule th{background:#e5f2f5;color:var(--navy)}.rules-schedule th:first-child{width:42%}.rules-body a{color:var(--navy);overflow-wrap:anywhere}
   </style>
   <script src="config.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -70,17 +71,63 @@
 
 <dialog id="examRules" aria-labelledby="examRulesTitle">
   <div class="rules-layout">
-    <div class="rules-heading"><h2 id="examRulesTitle">📋 CONSIGNES D’ÉVALUATION OFFICIELLE</h2><button class="button rules-close" type="button" data-close-rules aria-label="Fermer les consignes">×</button></div>
+    <div class="rules-heading"><h2 id="examRulesTitle">📢 NOTE À L’ATTENTION DES ÉTUDIANTS</h2><button class="button rules-close" type="button" data-close-rules aria-label="Fermer les consignes">×</button></div>
     <div class="rules-body" tabindex="0">
+      <h3 class="rules-subtitle">CONSIGNES RELATIVES AUX ÉVALUATIONS OFFICIELLES EN LIGNE</h3>
+      <p>Afin de garantir le bon déroulement des évaluations officielles sur les plateformes pédagogiques, tous les étudiants sont invités à respecter les consignes suivantes.</p>
       <h3>1. Avant l’évaluation</h3>
-      <ul><li>Disposer d’une connexion Internet stable et d’un appareil suffisamment chargé.</li><li>Se connecter avec son adresse Gmail d’inscription, 15 minutes avant l’ouverture.</li><li>Commencer l’évaluation pendant la fenêtre de démarrage autorisée.</li></ul>
-      <h3>2. Pendant l’évaluation</h3>
-      <ul><li>Bénéficier de la totalité de la durée individuelle accordée, même après la fermeture des accès.</li><li>Composer individuellement, sans assistance extérieure.</li><li><strong>Utiliser un brouillon pour les calculs, opérations, raisonnements et démonstrations est autorisé.</strong></li><li>Surveiller le chronomètre.</li><li>Ne pas quitter ni actualiser la page pendant la tentative.</li></ul>
-      <h3>3. À la fin de l’évaluation</h3>
-      <ul><li>Soumettre sa tentative avant l’expiration du chronomètre. À défaut, la soumission est automatiquement déclenchée.</li><li>Vérifier l’affichage de sa note sur 10.</li><li>Seules les réponses enregistrées sont notées. Les questions sans réponse valent zéro.</li></ul>
-      <h3>4. Informations importantes</h3>
-      <ul><li>Tous les horaires sont exprimés en <strong>heure de Guinée (UTC+0)</strong>.</li><li>En cas de problème technique, faire une capture d’écran et contacter immédiatement l’enseignant au <strong>+224 625 28 06 25</strong>.</li></ul>
-      <p><strong>Bonne composition à toutes et à tous !</strong></p>
+      <ul>
+        <li>Disposer d’une connexion Internet stable et d’un forfait Internet suffisant.</li>
+        <li>S’assurer que son téléphone ou son ordinateur est suffisamment chargé.</li>
+        <li>Utiliser de préférence Google Chrome ou Safari.</li>
+        <li>Activer le réglage automatique de la date et de l’heure de son appareil.</li>
+        <li>Fermer puis rouvrir la plateforme pour bénéficier des dernières mises à jour.</li>
+        <li>Se connecter avec l’adresse Gmail utilisée lors de son inscription.</li>
+        <li>Accéder à la plateforme au moins 15 minutes avant l’heure d’ouverture.</li>
+        <li>Vérifier les horaires, les chapitres concernés, le nombre de QCM et la durée de l’évaluation.</li>
+      </ul>
+      <h3>2. Respect des horaires et de la durée de composition</h3>
+      <p>Il est important de distinguer deux notions :</p>
+      <ul>
+        <li><strong>La fenêtre de démarrage :</strong> période pendant laquelle l’étudiant est autorisé à commencer son évaluation.</li>
+        <li><strong>La durée de composition :</strong> temps individuel accordé à chaque étudiant à compter du lancement de sa tentative.</li>
+      </ul>
+      <p>Tout étudiant qui commence son évaluation pendant la fenêtre autorisée bénéficie de la totalité du temps de composition prévu, même si sa tentative se poursuit au-delà de l’heure de fermeture des accès.</p>
+      <p><strong>Exemple :</strong> pour une évaluation accessible de 17 h à 18 h, avec une durée individuelle de 25 minutes :</p>
+      <table class="rules-schedule">
+        <thead><tr><th scope="col">Heure de début</th><th scope="col">Heure limite de composition</th></tr></thead>
+        <tbody><tr><td>17 h 00</td><td>17 h 25</td></tr><tr><td>17 h 15</td><td>17 h 40</td></tr><tr><td>17 h 30</td><td>17 h 55</td></tr><tr><td>17 h 45</td><td>18 h 10</td></tr><tr><td>17 h 59</td><td>18 h 24</td></tr></tbody>
+      </table>
+      <p>À partir de 18 h 00, aucune nouvelle tentative ne pourra être lancée. Cependant, les étudiants ayant déjà commencé pourront poursuivre normalement leur composition.</p>
+      <p>Il est fortement recommandé de commencer dès l’ouverture de l’évaluation afin d’éviter les difficultés techniques de dernière minute.</p>
+      <p><strong>Tous les horaires sont exprimés en heure de Guinée (UTC+0).</strong></p>
+      <h3>3. Pendant l’évaluation</h3>
+      <ul>
+        <li>Lire attentivement chaque question avant de sélectionner une réponse.</li>
+        <li>Surveiller régulièrement le chronomètre.</li>
+        <li>Tenir compte des avertissements du chronomètre à 60, 30 et 10 secondes.</li>
+        <li>Ne pas actualiser la page, fermer le navigateur ou changer de compte Google.</li>
+        <li>Éviter les appels téléphoniques et l’utilisation d’autres applications.</li>
+        <li>Composer individuellement, sans assistance extérieure.</li>
+        <li>Éviter toute action susceptible d’interrompre la connexion Internet.</li>
+        <li>Ne pas attendre les dernières secondes pour soumettre sa tentative.</li>
+      </ul>
+      <h3>4. Soumission et notation</h3>
+      <ul>
+        <li>Cliquer sur « Soumettre ma tentative » dès que le travail est terminé.</li>
+        <li>Attendre la confirmation de l’enregistrement et l’affichage de la note.</li>
+        <li>À l’expiration du chronomètre individuel, la soumission est automatiquement déclenchée.</li>
+        <li>En cas d’interruption de la connexion, les réponses déjà sauvegardées sur le serveur seront prises en compte.</li>
+        <li>Les questions sans réponse valent zéro.</li>
+        <li>La note finale est calculée sur 10.</li>
+        <li>Le nombre de tentatives autorisées doit être strictement respecté.</li>
+      </ul>
+      <h3>5. Dispositions générales</h3>
+      <p>Les questions et les réponses proposées sont organisées de manière aléatoire. Deux étudiants peuvent donc recevoir des questions différentes ou présentées dans un ordre différent.</p>
+      <p>L’accès aux évaluations officielles est exclusivement réservé aux étudiants autorisés.</p>
+      <p>En cas de difficulté technique, effectuer une capture d’écran du problème et contacter immédiatement l’enseignant.</p>
+      <h3>6. Assistance technique</h3>
+      <p><strong>WhatsApp :</strong> +224 625 28 06 25<br><strong>E-mail :</strong> <a href="mailto:btraore850@gmail.com">btraore850@gmail.com</a></p>
       <p id="rulesTimerNote" class="rules-timer-note" hidden>Le chronomètre continue pendant la consultation des consignes.</p>
     </div>
     <div class="rules-footer"><button class="button rules-button" type="button" data-close-rules>Fermer</button></div>
