@@ -53,6 +53,12 @@
   }
 
   let authWatchdog=null;
+  // V34: navigation et visibilité de la tentative (aucune donnée de réponse dans le portail).
+  const navigationReload=performance.getEntriesByType('navigation')[0]?.type==='reload';
+  function examActive(){return authenticated&&examDeadline>0&&!$('examTimer').hidden;}
+  document.addEventListener('visibilitychange',()=>{if(examActive()&&bridgeWindow&&bridgeOrigin)bridgeWindow.postMessage({kind:'hydro-visibility',nonce,hidden:document.hidden},bridgeOrigin);});
+  window.addEventListener('beforeunload',event=>{if(examActive()){event.preventDefault();event.returnValue='';}});
+  document.addEventListener('keydown',event=>{if(examActive()&&(event.key==='F5'||((event.ctrlKey||event.metaKey)&&String(event.key).toLowerCase()==='r')))event.preventDefault();},true);
   function updateExamTimer(){
     if(!examDeadline)return;
     const remaining=Math.max(0,Math.ceil((examDeadline-Date.now())/1000));
@@ -161,6 +167,7 @@
         credential=null;
         $('pinEmail').value='';$('loginPanel').hidden=true;
         window.scrollTo(0,0);
+        if(navigationReload&&bridgeWindow&&bridgeOrigin)bridgeWindow.postMessage({kind:'hydro-resume-after-reload',nonce},bridgeOrigin);
       }else{
         $('appPanel').hidden=true;status('Connexion refusée : '+String(data.message||'compte non autorisé').slice(0,200),'error');
       }
