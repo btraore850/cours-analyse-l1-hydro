@@ -36,6 +36,7 @@
     footer{padding:30px 0;color:#496777;text-align:center}.hidden{display:none!important}
     @media(max-width:640px){.grid{grid-template-columns:1fr}.panel{padding:18px}.result-stats{grid-template-columns:1fr}.scale ul{columns:1}header{padding:26px 0}}
   </style>
+<style id="qcm-protection-v30">#questions{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}#questions .question{position:relative;isolation:isolate}#questions .question::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background-image:var(--qcm-mark,none);background-repeat:repeat;opacity:.12;border-radius:inherit}#questions .qcm-ref{font-size:10px;line-height:1.4;color:#64748b;text-align:right;margin:.35rem 0 0;overflow-wrap:anywhere}#questions.qcm-masked{visibility:hidden}#qcm-privacy-note{font-size:.85rem;color:#64748b;margin:.5rem 0}#qcm-privacy-note[hidden]{display:none!important}@media print{#quiz,#questions,#qcm-privacy-note{display:none!important}}</style>
 </head>
 <body>
   <header><div class="wrap">
@@ -105,6 +106,24 @@
       const chosen=new Set(eligible.slice(0,Math.min(eligible.length,Math.max(1,Math.floor(items.length*0.3)))));
       return items.map(q=>({...q,displayQuestion:chosen.has(q.id)?shuffled(variants[q.id])[0]:q.q,order:shuffled([0,1,2,3])}));
     }
+    const QCM_PROTECTION=(()=>{
+ const root=document.getElementById('questions'),quiz=document.getElementById('quiz');let timer=null,reference='';
+ if(!root||!quiz)return {mark(){}};
+ const notice=document.createElement('p');notice.id='qcm-privacy-note';notice.textContent='Questionnaire personnel — reproduction, impression et partage interdits. Référence de tentative affichée sur les QCM.';root.before(notice);
+ const active=()=>!quiz.classList.contains('hidden')&&!quiz.hidden;
+ for(const type of ['copy','cut','contextmenu','dragstart'])root.addEventListener(type,event=>{if(active())event.preventDefault();});
+ function mask(){if(active())root.classList.add('qcm-masked');}
+ function restore(){if(!document.hidden)root.classList.remove('qcm-masked');}
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)mask();else restore();});
+ window.addEventListener('pagehide',mask);window.addEventListener('pageshow',restore);
+ document.addEventListener('keydown',e=>{if(!active())return;if(e.key==='PrintScreen'){e.preventDefault();mask();clearTimeout(timer);timer=setTimeout(restore,1200);}else if((e.ctrlKey||e.metaKey)&&['p','s'].includes(String(e.key).toLowerCase())){e.preventDefault();}},true);
+ function mark(id){reference=String(id||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40);if(!reference)return;const label='QCM '+reference;
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" width="260" height="125" viewBox="0 0 260 125"><text x="12" y="75" font-size="12" font-family="sans-serif" fill="#64748b" transform="rotate(-17 130 62)">'+label+'</text></svg>';
+ root.style.setProperty('--qcm-mark','url("data:image/svg+xml,'+encodeURIComponent(svg)+'")');
+ for(const question of root.querySelectorAll('.question')){let ref=question.querySelector('.qcm-ref');if(!ref){ref=document.createElement('p');ref.className='qcm-ref';question.appendChild(ref);}ref.textContent='Réf. '+reference;}
+ restore();}
+ return {mark};
+})();
     function show(name){['setup','quiz','results'].forEach(id=>$(id).classList.toggle('hidden',id!==name));}
     function clearTimer(){if(interval!==null){clearInterval(interval);interval=null;}window.COURSE_SCREEN_AWAKE?.stop();}
     function typesetMath(element){if(window.MathJax&&typeof window.MathJax.typesetPromise==='function')window.MathJax.typesetPromise([element]).catch(error=>console.warn('Affichage mathématique :',error));}
@@ -124,7 +143,7 @@
       $('start').disabled=false;$('startStatus').textContent='';
       current={chapter,level,items,answers:{},trackingId:recorded.id};
       clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${window.CHEM_MATH.format(item.displayQuestion)}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${window.CHEM_MATH.format(item.a[option])}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
-      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');window.COURSE_SCREEN_AWAKE?.start();typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
+      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');QCM_PROTECTION.mark(current.trackingId);window.COURSE_SCREEN_AWAKE?.start();typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
     }
     function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=10*correct/current.items.length;
       $('score').textContent=`${score.toFixed(1).replace('.',',')}/10`;$('appreciation').textContent=appreciationFor(score);$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
