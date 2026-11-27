@@ -110,6 +110,7 @@
       $('identityEmail').textContent='Compte vérifié : '+email;
       $('start').disabled=false;
       status('Vous pouvez commencer. Aucune inscription préalable n’est nécessaire.');
+      window.dispatchEvent(new CustomEvent('l1-practice-verified'));
     }catch(error){
       credential='';email='';$('start').disabled=true;
       status(error.message||String(error),true);
