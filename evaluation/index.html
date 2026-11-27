@@ -89,7 +89,7 @@
   <script src="diverse-selection.js?v=20261125-complet"></script>
   <script src="officielle/config.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="practice-tracker.js?v=20261127-v33"></script>
+  <script src="practice-tracker.js?v=20261127-v34"></script>
   <script src="screen-awake.js?v=20261120-1"></script>
   <script>
   (()=>{
@@ -124,6 +124,28 @@
  restore();}
  return {mark};
 })();
+
+    let practiceHidden=0,practiceExitTimer=null,practiceStarting=false;
+    const practiceKey='qcm-v34-practice:'+location.pathname.split('/')[1];
+    function practiceActive(){return current&&!locked&&!$('quiz').classList.contains('hidden');}
+    function practicePersist(){if(!current||!current.trackingId)return;try{sessionStorage.setItem(practiceKey,JSON.stringify({owner:window.HYDRO_PRACTICE_TRACKER.email(),current,started,deadline}));}catch(e){}}
+    function practiceClear(id){try{const old=JSON.parse(sessionStorage.getItem(practiceKey)||'null');if(old?.current?.trackingId===id)sessionStorage.removeItem(practiceKey);}catch(e){}}
+    function practiceWatch(){if(!practiceActive())return;if(document.hidden){if(practiceHidden)return;practiceHidden=Date.now();practicePersist();$('timeWarning').textContent='Restez sur le questionnaire. Retour sous 5 secondes.';practiceExitTimer=setTimeout(()=>{if(practiceHidden&&practiceActive())finish(false,true);},5000);}else{const elapsed=practiceHidden?Date.now()-practiceHidden:0;clearTimeout(practiceExitTimer);practiceExitTimer=null;practiceHidden=0;if(elapsed>=5000)finish(false,true);}}
+    document.addEventListener('visibilitychange',practiceWatch);
+    window.addEventListener('beforeunload',event=>{if(practiceActive()){practicePersist();event.preventDefault();event.returnValue='';}});
+    window.addEventListener('pagehide',()=>{clearTimeout(practiceExitTimer);practiceHidden=0;if(practiceActive())practicePersist();});
+    document.addEventListener('keydown',event=>{if(practiceActive()&&(event.key==='F5'||((event.ctrlKey||event.metaKey)&&String(event.key).toLowerCase()==='r')))event.preventDefault();},true);
+    window.addEventListener('online',()=>{if(current?.ended&&!current.saved)recordFinish(current);});
+    window.addEventListener('l1-practice-verified',()=>{
+      if(current)return;
+      try{const old=JSON.parse(sessionStorage.getItem(practiceKey)||'null');if(!old||old.owner!==window.HYDRO_PRACTICE_TRACKER.email()||!old.current?.trackingId||!Array.isArray(old.current.items)||!Number.isFinite(old.deadline)||!Number.isFinite(old.started))return;
+        current=old.current;current.sending=false;started=old.started;deadline=old.deadline;locked=false;
+        const reload=performance.getEntriesByType('navigation')[0]?.type==='reload';
+        if(current.ended||Date.now()>=deadline||!reload){finish(Date.now()>=deadline,Boolean(current.exitReason||!reload));return;}
+        renderPracticeQuiz();
+      }catch(e){console.warn('Reprise locale non disponible',e);}
+    });
+
     function show(name){['setup','quiz','results'].forEach(id=>$(id).classList.toggle('hidden',id!==name));}
     function clearTimer(){if(interval!==null){clearInterval(interval);interval=null;}window.COURSE_SCREEN_AWAKE?.stop();}
     function typesetMath(element){if(window.MathJax&&typeof window.MathJax.typesetPromise==='function')window.MathJax.typesetPromise([element]).catch(error=>console.warn('Affichage mathématique :',error));}
@@ -133,29 +155,33 @@
     function appreciationFor(score){if(score<5)return 'Insuffisant';if(score<6)return 'Passable';if(score<7)return 'Assez bien';if(score<8)return 'Bien';if(score<9)return 'Très bien';return 'Excellent';}
     function updateProgress(){const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;$('progress').textContent=`${answered}/${current.items.length} réponses`;}
     function tick(){const left=(deadline-Date.now())/1000,remaining=Math.max(0,Math.ceil(left)),warning=$('timeWarning');$('timer').textContent=fmt(left);$('timer').classList.toggle('warning',remaining<=60&&remaining>30);$('timer').classList.toggle('urgent',remaining<=30);$('timer').classList.toggle('critical',remaining<=10);const message=remaining<=10?'Dernières 10 secondes : terminez votre réponse !':remaining<=60?'Attention, il vous reste une minute !':'';warning.hidden=!message;warning.classList.toggle('critical',remaining<=10);if(warning.textContent!==message)warning.textContent=message;if(left<=0)finish(true);}
-    async function start(){if(!window.HYDRO_PRACTICE_TRACKER?.ready()){alert('Connectez-vous avec Google pour enregistrer vos tentatives. Aucune inscription préalable n’est nécessaire.');return;}
+    async function start(){if(practiceStarting||practiceActive())return;if(current?.ended&&!current.saved){alert('Enregistrez la tentative précédente avant de recommencer.');return;}if(!window.HYDRO_PRACTICE_TRACKER?.ready()){alert('Connectez-vous avec Google pour enregistrer vos tentatives. Aucune inscription préalable n’est nécessaire.');return;}
       clearTimer();locked=false;const chapter=Number($('chapter').value),level=$('level').value,count=Number($('count').value);const pool=window.HYDRO_DEMO_QUESTIONS.filter(q=>Number(q.chapter||2)===chapter&&q.level===level);if(pool.length<count){alert('Banque de questions insuffisante pour ce chapitre et ce niveau.');return;}
+      if(!confirm('Auto-évaluation surveillée : si vous quittez le questionnaire pendant 5 secondes, vos réponses seront remises. Continuer ?'))return;practiceStarting=true;
       $('start').disabled=true;$('startStatus').textContent='Enregistrement du début de la tentative…';
       const items=withParaphrases(window.L1_DIVERSE.select(pool,count));
       let recorded;
       try{const bits=window.crypto.getRandomValues(new Uint8Array(8));const id='A-'+Array.from(bits,b=>b.toString(16).padStart(2,'0')).join('');recorded=await window.HYDRO_PRACTICE_TRACKER.start({id,chapter,level,count,questionIds:items.map(item=>item.id)});}
-      catch(error){$('startStatus').textContent='Échec de l’enregistrement : '+String(error.message||error);$('start').disabled=false;return;}
-      $('start').disabled=false;$('startStatus').textContent='';
+      catch(error){$('startStatus').textContent='Échec de l’enregistrement : '+String(error.message||error);$('start').disabled=false;practiceStarting=false;return;}
+      practiceStarting=false;$('start').disabled=false;$('startStatus').textContent='';
       current={chapter,level,items,answers:{},trackingId:recorded.id};
-      clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${window.CHEM_MATH.format(item.displayQuestion)}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.addEventListener('change',()=>{current.answers[item.id]=option;updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${window.CHEM_MATH.format(item.a[option])}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
-      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;$('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');QCM_PROTECTION.mark(current.trackingId);window.COURSE_SCREEN_AWAKE?.start();typesetMath($('questions'));updateProgress();tick();interval=setInterval(tick,1000);window.scrollTo(0,0);
+      started=Date.now();deadline=started+count*secondsPerItem[level]*1000;practicePersist();renderPracticeQuiz();
     }
-    function finish(expired){if(locked||!current)return;locked=true;clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=10*correct/current.items.length;
-      $('score').textContent=`${score.toFixed(1).replace('.',',')}/10`;$('appreciation').textContent=appreciationFor(score);$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':''}.`;
+    function renderPracticeQuiz(){const {chapter,level,items}=current,count=items.length;
+      clearMath($('questions'));$('questions').replaceChildren();current.items.forEach((item,i)=>{const section=document.createElement('section');section.className='question';const title=document.createElement('h3');title.textContent=`Question ${i+1}. ${window.CHEM_MATH.format(item.displayQuestion)}`;section.appendChild(title);const choices=document.createElement('div');choices.className='choices';item.order.forEach((option,j)=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='answer-'+item.id;input.value=String(option);input.checked=current.answers[item.id]===option;input.addEventListener('change',()=>{if(locked)return;current.answers[item.id]=option;practicePersist();updateProgress();});const text=document.createElement('span');text.textContent=`${'ABCD'[j]}. ${window.CHEM_MATH.format(item.a[option])}`;label.append(input,text);choices.appendChild(label);});section.appendChild(choices);$('questions').appendChild(section);});
+      $('quizLabel').textContent=`Chapitre ${chapter} · ${labels[level]} · ${count} questions`;$('timer').classList.remove('urgent');show('quiz');QCM_PROTECTION.mark(current.trackingId);window.COURSE_SCREEN_AWAKE?.start();typesetMath($('questions'));updateProgress();interval=setInterval(tick,1000);tick();if(document.hidden)practiceWatch();window.scrollTo(0,0);
+    }
+    function finish(expired,exit=false){if(locked||!current)return;locked=true;clearTimeout(practiceExitTimer);practiceHidden=0;current.ended=true;current.exitReason=exit||current.exitReason||false;practicePersist();clearTimer();const answered=current.items.filter(item=>current.answers[item.id]!==undefined).length;const correct=current.items.filter(item=>current.answers[item.id]===item.correct).length;const score=10*correct/current.items.length;
+      $('score').textContent=`${score.toFixed(1).replace('.',',')}/10`;$('appreciation').textContent=appreciationFor(score);$('resultSummary').textContent=`${correct} bonne(s) réponse(s) sur ${current.items.length} · ${answered} question(s) traitée(s)${expired?' · Temps écoulé':current.exitReason?' · Sortie détectée : remise anticipée':''}.`;
       $('elapsed').textContent=fmt((Date.now()-started)/1000);$('resultLevel').textContent=labels[current.level];const list=$('corrections');clearMath(list);list.replaceChildren();current.items.forEach((item,i)=>{const good=current.answers[item.id]===item.correct;const box=document.createElement('div');box.className='feedback'+(good?'':' bad');const name=document.createElement('strong');name.textContent=`Q${i+1} — ${good?'Bonne réponse':'À revoir'}`;const p=document.createElement('p');p.textContent=window.CHEM_MATH.format(`Réponse attendue : ${item.a[item.correct]}. ${item.why}`);box.append(name,p);list.appendChild(box);});show('results');typesetMath(list);window.scrollTo(0,0);
       current.submitAnswers=Object.fromEntries(current.items.filter(item=>current.answers[item.id]!==undefined).map(item=>[item.id,'ABCD'[current.answers[item.id]]]));
-      recordFinish(current);
+      practicePersist();recordFinish(current);
     }
-    async function recordFinish(finished){if(!finished?.trackingId)return;$('retryTracking').hidden=true;$('trackingResult').textContent='Enregistrement de votre tentative en cours…';
+    async function recordFinish(finished){if(!finished?.trackingId||finished.sending||finished.saved)return;finished.sending=true;$('retryTracking').hidden=true;$('trackingResult').textContent='Enregistrement de votre tentative en cours…';
       try{const saved=await window.HYDRO_PRACTICE_TRACKER.finish(finished.trackingId,finished.submitAnswers);if(current!==finished)return;
         const officialScore=Number(saved.note);if(Number.isFinite(officialScore))$('score').textContent=officialScore.toFixed(1).replace('.',',')+'/10';
-        $('trackingResult').textContent='Votre révision a été enregistrée dans votre historique privé.';}
-      catch(error){if(current!==finished)return;$('trackingResult').textContent='Votre note est affichée, mais l’enregistrement a échoué : '+String(error.message||error);$('retryTracking').hidden=false;}
+        finished.saved=true;practiceClear(finished.trackingId);$('trackingResult').textContent='Votre révision a été enregistrée dans votre historique privé.';}
+      catch(error){if(current!==finished)return;$('trackingResult').textContent='Votre note est affichée, mais l’enregistrement a échoué : '+String(error.message||error);$('retryTracking').hidden=false;}finally{finished.sending=false;}
     }
     window.addEventListener('load',()=>{if(!current)return;typesetMath($('results').classList.contains('hidden')?$('questions'):$('corrections'));});
     $('start').addEventListener('click',start);$('submit').addEventListener('click',()=>finish(false));$('retry').addEventListener('click',start);$('retryTracking').addEventListener('click',()=>recordFinish(current));$('back').addEventListener('click',()=>{clearTimer();show('setup');});$('level').addEventListener('change',updateTiming);$('count').addEventListener('change',updateTiming);updateTiming();
