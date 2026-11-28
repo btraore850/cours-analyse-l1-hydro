@@ -30,5 +30,14 @@
       "titre": "Équations différentielles et lois de conservation"
     }
   ],
-  "videos": []
+  "videos": [
+    {
+      "id": "video-001",
+      "chapitre": 2,
+      "section": "",
+      "titre": "Applications des suites et séries numériques à termes positifs en hydrologie",
+      "url": "https://1drv.ms/v/c/96b64801aa91c5f7/IQDRoGkNVKRwTLy0VIapkGERAR0DRtWHA6WY4MQYU6A0vXg?e=E8ukBH",
+      "plateforme": "OneDrive"
+    }
+  ]
 }
